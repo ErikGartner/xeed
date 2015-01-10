@@ -37,14 +37,14 @@ public class clsEngine {
      * Constants
      */
     public static final boolean DeveloperMode = true;
-    public static final String szUpdateURL = "http://xeed.smoiz.se/static/xeed/updates/info";
-    public static final String szDevUpdateURL = "http://xeed.smoiz.se/static/xeed/updates/beta/info";
-    public static final String szTemplateListURL = "http://xeed.smoiz.se/static/xeed/templates/info";
-    public static final String szTemplateUploadURL = "http://xeed.smoiz.se/upload/templates/uploader.php";
-    public static final long lngBuild = 45;
-    public static final String szVersion = "2.0 Beta 7";
-    public static final String szCompiledOn = "2012-10-03";
-    public static final String szHomePage = "http://smoiz.se";
+    public static final String szUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/info";
+    public static final String szDevUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/beta/info";
+    public static final String szTemplateListURL = "http://xeed.smoiz.com/static/xeed/templates/info";
+    public static final String szTemplateUploadURL = "http://xeed.smoiz.com/upload/templates/uploader.php";
+    public static final long lngBuild = 46;
+    public static final String szVersion = "2.0 Beta 8";
+    public static final String szCompiledOn = "2015-01-10";
+    public static final String szHomePage = "http://smoiz.com";
     public static final String[] szCredits = {"All registered trademarks belong to their respective owners.", "Most icons come from famfamfam.com.", "Uses the JUNG library.", "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster", "Kuslix"};
     public static String szArguments[] = null;      //Inte en konstant per se, men den ska inte ändras efter den har deklarerats
     /*
