@@ -1,3 +1,10 @@
-# README #
+XEED
+=========
+XEED is a tool that organises role-playing settings. It focuses on story driven games and have not map support.
 
-XEED is a tool that helps a GM organise a setting.
+## Tests
+None
+
+## Contributors
+Reach me at @erik_gartner.
+
