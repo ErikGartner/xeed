@@ -1,0 +1,64 @@
+build - build
+
+setting_info - 1
+name - 2
+revision - 3
+character - 4
+type - 5
+
+name - 6
+birth - 7
+embrace - 8
+clan - 9
+sire - 10
+generation - 11
+nature - 12
+demeanor - 13
+appearance - 14
+havens - 15
+description - 16
+status - 17
+attributes - 18
+disciplines - 19
+misc - 20
+affiliations - 21
+details - 22
+value - 23
+property - 24
+age - 25
+family - 26
+domitor - 27
+duties - 28
+id - 35
+//dead - 36	(används inte från och med build 32)
+time_of_death -37
+sire_id - 46
+domitor_id -47
+feeding - 48
+influences - 49
+secrets - 50
+concept -51
+player - 52
+
+//manifests
+id - 38
+
+//groups
+id - 39
+members - 40
+name - 41
+description - 42
+
+
+//Setting texter
+title - 29
+folder - 30
+parent - 31
+id - 32
+data - 33
+note - 34
+
+//relations
+targetid - 43
+type - 44
+relation - 45
