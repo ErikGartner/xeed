@@ -13,78 +13,75 @@ import xeed.XEED;
  */
 public class CheckboxPanel extends javax.swing.JPanel {
 
-    public Character character;
-    public String itemIdentifier;
+   public Character character;
+   public String itemIdentifier;
 
-    public CheckboxPanel(Character c, String id, String name) {
-        itemIdentifier = id;
-        character = c;
-        initComponents();
-        lblName.setText(name);
-        LoadData();
-    }
+   public CheckboxPanel(Character c, String id, String name) {
+      itemIdentifier = id;
+      character = c;
+      initComponents();
+      lblName.setText(name);
+      LoadData();
+   }
 
-    public void SaveData() {
+   public void SaveData() {
 
-        if (character == null) {
-            return;
-        }
-        character.szData.put(itemIdentifier, Boolean.toString(chkRow.isSelected()));
+      if (character == null) {
+         return;
+      }
+      character.szData.put(itemIdentifier, Boolean.toString(chkRow.isSelected()));
 
-        Character[] affectedcharacters = new Character[1];
-        affectedcharacters[0] = character;
-        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false,false,false);
+      Character[] affectedcharacters = new Character[1];
+      affectedcharacters[0] = character;
+      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
 
-    }
+   }
 
-    public void LoadData() {
+   public void LoadData() {
 
-        if (character == null) {
-            return;
-        }
+      if (character == null) {
+         return;
+      }
 
-        Object o = character.szData.get(itemIdentifier);
+      Object o = character.szData.get(itemIdentifier);
 
-        if (o == null) {
-            return;
-        }
+      if (o == null) {
+         return;
+      }
 
-        if (o.getClass().equals(String.class)) {
-            chkRow.setSelected(Boolean.parseBoolean((String) o));
-        } else {
-            System.out.println(lblName.getText() + " loaded invalid data");
-        }
+      if (o.getClass().equals(String.class)) {
+         chkRow.setSelected(Boolean.parseBoolean((String) o));
+      } else {
+         System.out.println(lblName.getText() + " loaded invalid data");
+      }
 
-    }
+   }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+   @SuppressWarnings("unchecked")
+   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+   private void initComponents() {
 
-        lblName = new javax.swing.JLabel();
-        chkRow = new javax.swing.JCheckBox();
+      lblName = new javax.swing.JLabel();
+      chkRow = new javax.swing.JCheckBox();
 
-        lblName.setText("LABEL");
+      lblName.setText("LABEL");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkRow, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+      this.setLayout(layout);
+      layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+            layout.createSequentialGroup()
+                  .addContainerGap()
+                  .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 73,
+                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                  .addComponent(chkRow, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE).addContainerGap()));
+      layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(chkRow, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(lblName)
-        );
-    }// </editor-fold>//GEN-END:initComponents
+            .addComponent(lblName));
+   }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox chkRow;
-    public javax.swing.JLabel lblName;
-    // End of variables declaration//GEN-END:variables
+
+   private javax.swing.JCheckBox chkRow;
+   public javax.swing.JLabel lblName;
+   // End of variables declaration//GEN-END:variables
 }

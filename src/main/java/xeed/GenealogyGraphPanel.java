@@ -13,40 +13,36 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.*;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Paint;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *
  * @author Erik
  */
 public class GenealogyGraphPanel extends javax.swing.JPanel {
 
+    private final int ImageMaxSize = 32;
     Forest<CharacterNode, Integer> graph;
-    Factory<DirectedGraph<CharacterNode, Integer>> graphFactory =
-            new Factory<DirectedGraph<CharacterNode, Integer>>() {
+    Factory<DirectedGraph<CharacterNode, Integer>> graphFactory = new Factory<DirectedGraph<CharacterNode, Integer>>() {
 
-                @Override
-                public DirectedGraph<CharacterNode, Integer> create() {
-                    return new DirectedSparseMultigraph<CharacterNode, Integer>();
-                }
-            };
-    Factory<Tree<CharacterNode, Integer>> treeFactory =
-            new Factory<Tree<CharacterNode, Integer>>() {
+        @Override
+        public DirectedGraph<CharacterNode, Integer> create() {
+            return new DirectedSparseMultigraph<CharacterNode, Integer>();
+        }
+    };
+    Factory<Tree<CharacterNode, Integer>> treeFactory = new Factory<Tree<CharacterNode, Integer>>() {
 
-                @Override
-                public Tree<CharacterNode, Integer> create() {
-                    return new DelegateTree<CharacterNode, Integer>(graphFactory);
-                }
-            };
+        @Override
+        public Tree<CharacterNode, Integer> create() {
+            return new DelegateTree<CharacterNode, Integer>(graphFactory);
+        }
+    };
     Factory<Integer> edgeFactory = new Factory<Integer>() {
 
         int i = 0;
@@ -59,13 +55,13 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
     VisualizationViewer<CharacterNode, Integer> vv;
     TreeLayout<CharacterNode, Integer> treeLayout;
     CharacterNode[] characters;
-    private final int ImageMaxSize = 32;
 
     public GenealogyGraphPanel() {
         initComponents();
     }
 
-    public void InitiateGraph(Character[] cs, Template[] templates, Color[] colors, String[] picture_keys, String[] extra_keys) {
+    public void InitiateGraph(Character[] cs, Template[] templates, Color[] colors, String[] picture_keys,
+                              String[] extra_keys) {
 
         Map<CharacterNode, Icon> iconMap = new HashMap<CharacterNode, Icon>();
 
@@ -81,7 +77,8 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
                     characters[x].color = colors[y];
                     characters[x].extra_key = extra_keys[y];
 
-                    ImageIcon img = XEED.RescaleImageIcon((ImageIcon) cs[x].imgData.get(picture_keys[y]), ImageMaxSize, ImageMaxSize);
+                    ImageIcon img = XEED.RescaleImageIcon((ImageIcon) cs[x].imgData.get(picture_keys[y]), ImageMaxSize,
+                            ImageMaxSize);
 
                     if (img != null) {
                         iconMap.put(characters[x], new LayeredIcon(img.getImage()));
@@ -94,7 +91,6 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
 
         // creates the graph
         graph = new DelegateForest<CharacterNode, Integer>();
-        
 
         //Loads the tree data
         createTree();
@@ -103,7 +99,8 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
         Transformer<CharacterNode, Paint> vertexPaint = new Transformer<CharacterNode, Paint>() {
 
             @Override
-            public Paint transform(CharacterNode cn) {;
+            public Paint transform(CharacterNode cn) {
+                ;
                 return cn.color;
             }
         };
@@ -111,14 +108,15 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
         final DefaultVertexIconTransformer<CharacterNode> vertexIconFunction = new DefaultVertexIconTransformer<CharacterNode>();
         vertexIconFunction.setIconMap(iconMap);
 
-        final VertexIconShapeTransformer<CharacterNode> vertexImageShapeFunction = new VertexIconShapeTransformer<CharacterNode>(new EllipseVertexShapeTransformer<CharacterNode>());
+        final VertexIconShapeTransformer<CharacterNode> vertexImageShapeFunction = new VertexIconShapeTransformer<CharacterNode>(
+                new EllipseVertexShapeTransformer<CharacterNode>());
         vertexImageShapeFunction.setIconMap(iconMap);
-        
-        treeLayout = new TreeLayout<CharacterNode, Integer>(graph,TreeLayout.DEFAULT_DISTX * 3);
-        
+
+        treeLayout = new TreeLayout<CharacterNode, Integer>(graph, TreeLayout.DEFAULT_DISTX * 3);
+
         //Skriva en anpassad metod för att bestämma platser.
         //använd treeLayout.setLocation();
-        
+
         vv = new VisualizationViewer<CharacterNode, Integer>(treeLayout);
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line());
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
@@ -144,7 +142,7 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
     }
 
     private void createTree() {
-        
+
         for (int x = 0; x < characters.length; x++) {
 
             Character c = characters[x].character;
@@ -183,9 +181,9 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     class CharacterNode {
 
-        Character character;
         public Color color = Color.RED;
         public String extra_key = "";
+        Character character;
 
         public CharacterNode(Character c) {
             this.character = c;
@@ -196,8 +194,7 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
 
             String extra = "";
             if (character.szData.get(extra_key) != null) {
-                String s =
-                        (String) character.szData.get(extra_key);
+                String s = (String) character.szData.get(extra_key);
                 if (!s.isEmpty()) {
                     extra += " (" + s + ")";
                 }

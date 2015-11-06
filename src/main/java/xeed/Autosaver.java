@@ -4,25 +4,24 @@
  */
 package xeed;
 
+import javax.swing.*;
 import java.io.File;
-import javax.swing.JOptionPane;
 
 /**
- *
  * @author Erik
  */
 public class Autosaver implements Runnable {
 
     /*Settings*/
-    private int intSaveInterval = 600;  //Seconds - 300 = 5 min, 600 = 10 min
+    private int intSaveInterval = 600; //Seconds - 300 = 5 min, 600 = 10 min
     private Thread WorkerThread = null;
     private boolean Working = false;
-    private String szPath = "";         //Were the last save was stored
+    private String szPath = ""; //Were the last save was stored
     private boolean boolWork = true;
     private FileLocker hwndFileLocker = null;
 
     public Autosaver(FileLocker fl) {
-        hwndFileLocker = fl;            //Use local handle just incase
+        hwndFileLocker = fl; //Use local handle just incase
         WorkerThread = new Thread(this);
         WorkerThread.start();
     }
@@ -55,12 +54,12 @@ public class Autosaver implements Runnable {
     private void DoSave() {
 
         try {
-            
+
             File f = File.createTempFile("xeed_autosaves", ".xdf");
             szPath = f.getAbsolutePath();
-            
-            Thread.sleep(250);      //Gives the os time to create the file.
-            
+
+            Thread.sleep(250); //Gives the os time to create the file.
+
             XDF XDF = new xeed.XDF(szPath);
             XDF.UpdateCurrentDirectory = false;
             XDF.AutoSaves = true;
@@ -76,7 +75,7 @@ public class Autosaver implements Runnable {
                     return;
                 }
             }
-            
+
             XDF = null;
 
         } catch (Exception e) {

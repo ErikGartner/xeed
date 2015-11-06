@@ -1,0 +1,21 @@
+<!DOCTYPE walkmod PUBLIC "-//WALKMOD//DTD"  "http://www.walkmod.com/dtd/walkmod-1.0.dtd" >
+<walkmod>
+    <plugins>
+        <plugin groupId="org.walkmod" artifactId="walkmod-imports-cleaner-plugin" version="[2.0.0, )" />
+        <plugin groupId="org.walkmod" artifactId="walkmod-maven-plugin" version="[1.1.1,)" />
+        <plugin groupId="org.walkmod" artifactId="walkmod-refactor-plugin" version="[2.0,)" />
+        <plugin groupId="org.walkmod" artifactId="walkmod-java-formatter-plugin" version="[2.3.1,)" />
+    </plugins>
+    <conf-providers>
+        <conf-provider type="walkmod:commons:maven"></conf-provider>
+    </conf-providers>
+    <chain name="main-chain">
+        <transformation type="walkmod:commons:import-cleaner" />
+        <transformation type="walkmod:commons:method-refactor">
+            <param name="refactoringConfigFile">src/main/walkmod/refactor/refactoring-methods.json</param>
+        </transformation>
+        <transformation type="walkmod:commons:class-refactor">
+            <param name="refactoringConfigFile">src/main/walkmod/refactor/refactoring-classes.json</param>
+        </transformation>
+    </chain>
+</walkmod>

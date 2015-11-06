@@ -11,7 +11,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
 /**
- *
  * @author Erik
  */
 public class FileLocker {
@@ -28,7 +27,7 @@ public class FileLocker {
      * Locks a setting file and starts autosaver
      */
     public FileLocker(String szP) {
-        szPath = szP+ ".lock";
+        szPath = szP + ".lock";
         szOrgSavePath = szP;
 
         LockEnabled = CreateLock();
@@ -59,7 +58,7 @@ public class FileLocker {
             }
 
             try {
-                Runtime.getRuntime().exec("cmd.exe /c attrib +h \"" + szPath + "\"");    // Bör fixas mot mer plattforms oberoende kod, kommer i jdk7
+                Runtime.getRuntime().exec("cmd.exe /c attrib +h \"" + szPath + "\""); // Bör fixas mot mer plattforms oberoende kod, kommer i jdk7
             } catch (Exception e2) {
             }
 

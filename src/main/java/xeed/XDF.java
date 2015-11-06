@@ -4,7 +4,9 @@
  */
 package xeed;
 
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -13,12 +15,8 @@ import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 /**
- *
  * @author Erik
  */
 public class XDF {
@@ -28,7 +26,7 @@ public class XDF {
      */
     public boolean UpdateCurrentDirectory = true;
     public boolean AutoSaves = false;
-    private boolean ValidateMode = false;                                       //Don't save anything loaded, just look for errors!
+    private boolean ValidateMode = false; //Don't save anything loaded, just look for errors!
     /*
      * Handle
      */
@@ -48,9 +46,10 @@ public class XDF {
      * Data about active setting
      */
     private int intBuild = -1;
-    /*
-     * Notes
-     */
+
+   /*
+    * Notes
+    */
 
     public XDF(String szFilePath) {
         szXDFPath = szFilePath;
@@ -73,7 +72,6 @@ public class XDF {
 
     private boolean WriteTemplates() {
 
-
         String szManifest = "";
         for (int x = 0; x < XEED.templateDB.size(); x++) {
             szManifest += XEED.CreateElement(XEED.templateDB.get(x).GetTemplateID(), Constants.XDF_MANIFEST_ID, false);
@@ -86,7 +84,8 @@ public class XDF {
                 if (!WriteStringToZIPEntry(szTemplates, "templates/" + XEED.templateDB.get(x).GetTemplateID() + "/info")) {
                     return false;
                 }
-                WriteStringToZIPEntry(XEED.templateDB.get(x).GetColumnConfig(), "templates/" + XEED.templateDB.get(x).GetTemplateID() + "/columns_pc"); //Not so important, allow failure.
+                WriteStringToZIPEntry(XEED.templateDB.get(x).GetColumnConfig(), "templates/"
+                        + XEED.templateDB.get(x).GetTemplateID() + "/columns_pc"); //Not so important, allow failure.
 
             } catch (Exception e) {
                 return false;
@@ -291,7 +290,8 @@ public class XDF {
                     XEED.szLastSaved = XEED.GetElement(szSetting, Constants.SETTING_LAST_SAVED, false);
 
                     try {
-                        XEED.lngSettingRevision = Long.parseLong(XEED.GetElement(szSetting, Constants.SETTING_REVISION, false));
+                        XEED.lngSettingRevision = Long.parseLong(XEED
+                                .GetElement(szSetting, Constants.SETTING_REVISION, false));
                     } catch (Exception e) {
                     }
                 }
@@ -302,7 +302,8 @@ public class XDF {
             return true;
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An error occured while reading setting info.\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occured while reading setting info.\n" + e, "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -311,12 +312,18 @@ public class XDF {
     private boolean CompatabilityChecker() {
 
         if (intBuild < 35) {
-            JOptionPane.showMessageDialog(null, "This setting file was created by an obsolete version of xeed and this version of xeed lacks backward compatability with that version.\nPlease use the appropriate version (i.e. build " + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane
+                    .showMessageDialog(
+                            null,
+                            "This setting file was created by an obsolete version of xeed and this version of xeed lacks backward compatability with that version.\nPlease use the appropriate version (i.e. build "
+                                    + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (intBuild > XEED.lngBuild) {
-            JOptionPane.showMessageDialog(null, "This setting file was created by a newer version of xeed.\nPlease use the appropriate version (i.e. build " + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "This setting file was created by a newer version of xeed.\nPlease use the appropriate version (i.e. build "
+                            + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -361,7 +368,6 @@ public class XDF {
                     s.boolFolder = Boolean.parseBoolean(XEED.GetElement(szNode, Constants.NOTE_FOLDER, false));
                     long parent = Long.parseLong(XEED.GetElement(szNode, Constants.NOTE_PARENT, false));
                     s.lngID = Long.parseLong(XEED.GetElement(szNode, Constants.NOTE_ID, false));
-
 
                     if (!s.boolFolder) {
                         s.szData = XEED.GetElement(szNode, Constants.NOTE_DATA, true);
@@ -452,7 +458,8 @@ public class XDF {
             }
 
             if (!szErrorMessage.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Server errors occured while reading and parsing the setting file:" + szErrorMessage, "Partial corruption detected!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Server errors occured while reading and parsing the setting file:"
+                        + szErrorMessage, "Partial corruption detected!", JOptionPane.ERROR_MESSAGE);
             }
 
             return true;
@@ -480,7 +487,8 @@ public class XDF {
             return (f.renameTo(f2));
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error while creating back-ups!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane
+                    .showMessageDialog(null, "Error while creating back-ups!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -513,7 +521,8 @@ public class XDF {
 
         String szManifest = "";
         for (int x = 0; x < XEED.charDB.size(); x++) {
-            szManifest += XEED.CreateElement(Long.toString(XEED.charDB.get(x).characterID), Constants.XDF_MANIFEST_ID, false);
+            szManifest += XEED.CreateElement(Long.toString(XEED.charDB.get(x).characterID), Constants.XDF_MANIFEST_ID,
+                    false);
         }
 
         WriteStringToZIPEntry(szManifest, "characters/manifest");
@@ -671,7 +680,7 @@ public class XDF {
             String szNote = XEED.CreateElement(s[x].szTitle, Constants.NOTE_TITLE, true);
             szNote += XEED.CreateElement(Boolean.toString(s[x].boolFolder), Constants.NOTE_FOLDER, false);
             szNote += XEED.CreateElement(Long.toString(Parent), Constants.NOTE_PARENT, false);
-            
+
             lngNoteID++;
             szNote += XEED.CreateElement(Long.toString(lngNoteID), Constants.NOTE_ID, false);
 
@@ -682,12 +691,12 @@ public class XDF {
 
             WriteStringToZIPEntry(szNote, "notes/" + lngNoteID);
             NotesManifest.add(Long.toString(lngNoteID));
-            lngNoteID = _writenotes(s[x].GetChildren(), lngNoteID,NotesManifest);
+            lngNoteID = _writenotes(s[x].GetChildren(), lngNoteID, NotesManifest);
 
         }
-        
-        return lngNoteID;   //return current number of notes written, which is used as ID.
-        
+
+        return lngNoteID; //return current number of notes written, which is used as ID.
+
     }
 
     private void _writerelations(String szPath, Relation[] relations) {
@@ -700,7 +709,8 @@ public class XDF {
         WriteStringToZIPEntry(szManifest, szPath + "relations/manifest");
 
         for (int x = 0; x < relations.length; x++) {
-            String szCompile = XEED.CreateElement(Long.toString(relations[x].lngTargetID), Constants.RELATION_TARGET, false);
+            String szCompile = XEED.CreateElement(Long.toString(relations[x].lngTargetID), Constants.RELATION_TARGET,
+                    false);
             szCompile += XEED.CreateElement(Long.toString(relations[x].intType), Constants.RELATION_TYPE, false);
             szCompile += XEED.CreateElement(relations[x].szRelation, Constants.RELATION_DATA, true);
             WriteStringToZIPEntry(szCompile, szPath + "relations/" + Integer.toString(x));
@@ -828,7 +838,6 @@ public class XDF {
         } catch (Exception e) {
             return false;
         }
-
 
     }
 

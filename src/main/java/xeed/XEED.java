@@ -2,8 +2,8 @@ package xeed;
 
 import forms.*;
 
-import java.awt.Desktop;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -11,13 +11,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.zip.CRC32;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
- *
  * @author SmoiZ
  */
 
@@ -39,6 +34,7 @@ public class XEED {
      * Constants
      */
     public static final boolean DeveloperMode = true;
+    public static boolean boolUpdateToBeta = DeveloperMode;
     public static final String szUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/info";
     public static final String szDevUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/beta/info";
     public static final String szTemplateListURL = "http://xeed.smoiz.com/static/xeed/templates/info";
@@ -47,24 +43,26 @@ public class XEED {
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
     public static final String szCompiledOn = "2015-01-10";
     public static final String szHomePage = "http://smoiz.com";
-    public static final String[] szCredits = {"All registered trademarks belong to their respective owners.", "Most icons come from famfamfam.com.", "Uses the JUNG library.", "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster", "Kuslix"};
-    public static String szArguments[] = null;      //Inte en konstant per se, men den ska inte ändras efter den har deklarerats
+    public static final String[] szCredits = {"All registered trademarks belong to their respective owners.",
+            "Most icons come from famfamfam.com.", "Uses the JUNG library.",
+            "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
+            "Kuslix"};
+    public static String szArguments[] = null; //Inte en konstant per se, men den ska inte ändras efter den har deklarerats
     /*
      * Databaser
      */
-    public static ArrayList<Group> groupDB = new ArrayList(0);                      // Lista med grupper
-    public static ArrayList<Template> templateDB = new ArrayList(0);                //Alla template som är laddade in i settingen.
+    public static ArrayList<Group> groupDB = new ArrayList(0); // Lista med grupper
+    public static ArrayList<Template> templateDB = new ArrayList(0); //Alla template som är laddade in i settingen.
     public static ArrayList<Character> charDB = new ArrayList(0);
     /*
      * Options
      */
     public static boolean boolUpdate = false;
     public static boolean boolBackup = true;
-    public static String szDefaultDirectory = GetCurrentDirectory();                    //The default directory for opening settings
+    public static String szDefaultDirectory = GetCurrentDirectory(); //The default directory for opening settings
     public static boolean Associated = false;
     public static boolean ReAssociate = false;
     public static boolean boolCustomRepository = false;
-    public static boolean boolUpdateToBeta = DeveloperMode;
     public static boolean boolResize = true;
     public static boolean boolCustomTemplateFolder = false;
     public static String szCustomReposityURL = "";
@@ -72,21 +70,21 @@ public class XEED {
     /*
      * Setting Data
      */
-    public static String szPath = "";                                                   // Den öppna settingfilen.
-    public static Note rootNode = null;                                              //Root noden till setting filerna
-    public static String szSettingName = "";                                            //Namnet på settingen
+    public static String szPath = ""; // Den öppna settingfilen.
+    public static Note rootNode = null; //Root noden till setting filerna
+    public static String szSettingName = ""; //Namnet på settingen
     public static String szThemes = "";
     public static String szOutline = "";
     public static String szLastSaved = "";
-    public static long lngNoteID = 0;                                                   //Används vi export av nodes för att skapa unika idn
-    public static long lngSettingRevision = 0;                                          //Setting Revision
+    public static long lngNoteID = 0; //Används vi export av nodes för att skapa unika idn
+    public static long lngSettingRevision = 0; //Setting Revision
 
     /*
      * Handles till objekt
      */
-    public static AboutForm hwndAbout = null;                                            //About Handle
-    public static NotesForm hwndNotes = null;                                        //Setting Handle
-    public static OptionsForm hwndOption = null;                                         //Options
+    public static AboutForm hwndAbout = null; //About Handle
+    public static NotesForm hwndNotes = null; //Setting Handle
+    public static OptionsForm hwndOption = null; //Options
     public static ColumnForm hwndColumns = null;
     public static MainForm hwndMain = null;
     public static GroupForm hwndGroup = null;
@@ -143,7 +141,7 @@ public class XEED {
 
         }
 
-        hwndMain = new MainForm();       //Måste få handle till frmMain INNAN man kallar initProgram.
+        hwndMain = new MainForm(); //Måste få handle till frmMain INNAN man kallar initProgram.
         hwndMain.initMain();
 
     }
@@ -164,7 +162,6 @@ public class XEED {
         } else {
             return szRet[1].substring(0, intEndPos);
         }
-
 
     }
 
@@ -280,7 +277,8 @@ public class XEED {
 
             try {
 
-                OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(GetCurrentDirectory() + File.separator + "options.ini"), "UTF-8");
+                OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(GetCurrentDirectory() + File.separator
+                        + "options.ini"), "UTF-8");
 
                 out.write(XEED.CreateElement(Long.toString(XEED.lngBuild), Constants.OPTIONS_BUILD, false));
                 out.write(XEED.CreateElement(Boolean.toString(XEED.boolUpdate), Constants.OPTIONS_UPDATEONSTART, false));
@@ -288,7 +286,8 @@ public class XEED {
                 out.write(XEED.CreateElement(Boolean.toString(XEED.Associated), Constants.OPTIONS_ASSOCIATED, false));
                 out.write(XEED.CreateElement(Boolean.toString(XEED.ReAssociate), Constants.OPTIONS_REASSOCIATE, false));
                 out.write(XEED.CreateElement(szDefaultDirectory, Constants.OPTIONS_DEFAULTDIRECTORY, false));
-                out.write(XEED.CreateElement(Boolean.toString(XEED.boolCustomRepository), Constants.OPTIONS_CUSTOMREPOSITORY, false));
+                out.write(XEED.CreateElement(Boolean.toString(XEED.boolCustomRepository),
+                        Constants.OPTIONS_CUSTOMREPOSITORY, false));
                 out.write(XEED.CreateElement(Boolean.toString(XEED.boolUpdateToBeta), Constants.OPTIONS_UPDATETOBETA, false));
                 out.write(XEED.CreateElement(Boolean.toString(XEED.boolResize), Constants.OPTIONS_RESIZEIMAGES, false));
                 out.write(XEED.CreateElement(XEED.szCustomReposityURL, Constants.OPTIONS_CUSTOMREPOSITORY_URL, false));
@@ -306,7 +305,8 @@ public class XEED {
 
                 String szDatabase = "";
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(GetCurrentDirectory() + File.separator + "options.ini"), "UTF-8"));
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(GetCurrentDirectory()
+                        + File.separator + "options.ini"), "UTF-8"));
 
                 while (br.ready()) {
                     char cbuf[] = new char[1024];
@@ -321,8 +321,10 @@ public class XEED {
                 XEED.Associated = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_ASSOCIATED, false));
                 XEED.ReAssociate = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_REASSOCIATE, false));
                 XEED.szDefaultDirectory = XEED.GetElement(szDatabase, Constants.OPTIONS_DEFAULTDIRECTORY, false);
-                XEED.boolCustomRepository = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_CUSTOMREPOSITORY, false));
-                XEED.boolUpdateToBeta = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_UPDATETOBETA, false));
+                XEED.boolCustomRepository = Boolean.parseBoolean(XEED.GetElement(szDatabase,
+                        Constants.OPTIONS_CUSTOMREPOSITORY, false));
+                XEED.boolUpdateToBeta = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_UPDATETOBETA,
+                        false));
                 XEED.boolResize = Boolean.parseBoolean(XEED.GetElement(szDatabase, Constants.OPTIONS_RESIZEIMAGES, false));
                 XEED.szCustomReposityURL = XEED.GetElement(szDatabase, Constants.OPTIONS_CUSTOMREPOSITORY_URL, false);
                 XEED.szTemplateFolder = XEED.GetElement(szDatabase, Constants.OPTIONS_CUSTOMTEMPLATEFOLDER, false);
@@ -330,7 +332,12 @@ public class XEED {
             } catch (Exception e) {
 
                 if (!XEED.boolUpdate) {
-                    int intRet = JOptionPane.showOptionDialog(null, "Do you want xeed to check for updates everytime xeed starts up?\nThis option can be changed from File>Options.", "Check for updates?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    int intRet = JOptionPane
+                            .showOptionDialog(
+                                    null,
+                                    "Do you want xeed to check for updates everytime xeed starts up?\nThis option can be changed from File>Options.",
+                                    "Check for updates?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null,
+                                    null);
                     if (intRet == 0) {
                         XEED.boolUpdate = true;
                     } else {
@@ -363,7 +370,6 @@ public class XEED {
             XEED.hwndRelations.dispose();
             XEED.hwndRelations = null;
         }
-
 
         if (XEED.hwndGraph != null) {
             XEED.hwndGraph.dispose();
@@ -406,7 +412,6 @@ public class XEED {
     }
 
     public static long CreateUniqueGroupID() {
-
 
         //Ej multitråds säker, så precis innan den läggs till!
         long lngNewID = 0;
@@ -456,7 +461,8 @@ public class XEED {
 
         CloseWindows();
         if (ask_save && !IsSettingEmpty()) {
-            if (JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == 0) {
+            if (JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == 0) {
                 SaveSetting(false, true);
             }
         }
@@ -475,25 +481,31 @@ public class XEED {
         if (!hwndFileLock.IsLocked()) {
             hwndFileLock.ReleaseLock();
             NewSetting(false);
-            JOptionPane.showMessageDialog(null, "This setting is already being used by another instance of XEED.", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "This setting is already being used by another instance of XEED.",
+                    "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         String szAutoSaves[] = hwndFileLock.GetOldBackupPaths();
         if (szAutoSaves.length > 0) {
 
-            hwndFileLock.ReleaseLock();                //Close down file properly.
+            hwndFileLock.ReleaseLock(); //Close down file properly.
             hwndFileLock = null;
 
             hwndMain.setEnabled(false);
-            JOptionPane.showMessageDialog(null, "It appears as though a previous instance of XEED wasn't shutdown properly while handling the selected setting.\nYou may now restore autosaves from that setting in order to prevent data loss.", "Autosaves found!", JOptionPane.INFORMATION_MESSAGE);
-            new RestorerForm(szAutoSaves, szPath);    //Handle list of backups
+            JOptionPane
+                    .showMessageDialog(
+                            null,
+                            "It appears as though a previous instance of XEED wasn't shutdown properly while handling the selected setting.\nYou may now restore autosaves from that setting in order to prevent data loss.",
+                            "Autosaves found!", JOptionPane.INFORMATION_MESSAGE);
+            new RestorerForm(szAutoSaves, szPath); //Handle list of backups
             return;
         }
 
         XDF x = new XDF(szPath);
         if (!x.ReadSetting()) {
-            JOptionPane.showMessageDialog(null, "An error occured while opening the setting", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occured while opening the setting", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             NewSetting(false);
         }
         x = null;
@@ -505,7 +517,8 @@ public class XEED {
     public static boolean SaveSetting(boolean ask, boolean SetNewLocation) {
 
         if (ask) {
-            int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
             if (intRet != 0) {
                 return false;
             }
@@ -520,7 +533,8 @@ public class XEED {
         XDF x = new XDF(szPath);
         if (!x.WriteSetting()) {
 
-            JOptionPane.showMessageDialog(null, "An error occured while saving the setting", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occured while saving the setting", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             szPath = "";
             return false;
 
@@ -545,14 +559,15 @@ public class XEED {
      * they want to name their setting and load templates.
      *
      * @param ask If true, the user is asked to save the current setting and
-     * asked if he he wishes to name the new setting and load templates. If
-     * false, all these question defaults to no.
+     *            asked if he he wishes to name the new setting and load templates. If
+     *            false, all these question defaults to no.
      */
     public static void NewSetting(boolean ask) {
 
         CloseWindows();
         if (ask && !IsSettingEmpty()) {
-            if (JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == 0) {
+            if (JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == 0) {
                 if (!SaveSetting(false, true)) {
                     return;
                 }
@@ -683,7 +698,12 @@ public class XEED {
         if (add) {
             try {
                 RT.exec("cmd /c assoc .xdf=xeed.Data.File");
-                RT.exec("cmd /c ftype  XEED.Data.File=" + System.getProperties().getProperty("java.home") + "\\bin\\javaw.exe" + " -jar \"" + new File(MainForm.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath() + "\" /l:%1 %*");
+                RT.exec("cmd /c ftype  XEED.Data.File="
+                        + System.getProperties().getProperty("java.home")
+                        + "\\bin\\javaw.exe"
+                        + " -jar \""
+                        + new File(MainForm.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                        .getAbsolutePath() + "\" /l:%1 %*");
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
@@ -746,7 +766,6 @@ public class XEED {
             return;
         }
 
-
         for (int x = 0; x < charDB.size(); x++) {
 
             //Removes the characters relations to others.
@@ -801,7 +820,9 @@ public class XEED {
     public static boolean LoadTemplate(Template t) {
 
         if (IsTemplateLoaded(t)) {
-            JOptionPane.showMessageDialog(null, "A template (" + t.GetName() + ") with the same ID is already loaded.\nTherefore the new template wasn't loaded.", "Error while loading: " + t.GetName(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "A template (" + t.GetName()
+                            + ") with the same ID is already loaded.\nTherefore the new template wasn't loaded.",
+                    "Error while loading: " + t.GetName(), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

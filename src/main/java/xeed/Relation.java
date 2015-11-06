@@ -5,7 +5,6 @@
 package xeed;
 
 /**
- *
  * @author Erik
  */
 public class Relation implements Cloneable {
@@ -15,11 +14,6 @@ public class Relation implements Cloneable {
     public String szRelation = "";
     public String szSummary = "";
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
     public static Relation ParseRelation(String szData) {
 
         try {
@@ -34,5 +28,10 @@ public class Relation implements Cloneable {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

@@ -6,7 +6,6 @@ package xeed;
  * 
  */
 
-
 import forms.RelationsForm;
 
 import java.awt.*;
@@ -14,22 +13,21 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- *
  * @author Erik
  */
 public class RelationGraphPanel extends javax.swing.JPanel {
 
-    private int intNoObjects = 0;               //Numbers of dots
-    private int ReservedBorders_sides = 20;     //Borders not used
+    private int intNoObjects = 0; //Numbers of dots
+    private int ReservedBorders_sides = 20; //Borders not used
     private int ReservedBorders_topbot = 10;
-    private int DotSize = 15;                   //Dot cirle diameter
-    private int Radius;                         //Radius of circle formed by dots
-    private dot[] Dots;                         //Array of dots
-    private boolean ready = false;              //Ready to paint
-    private int fontsize_names = 12;            //Font size of the names
-    private int fontsize_relation = 12;         //Font size of the relations
-    private double arg;                         //argument of polar form, args * intNoObjects = 2*PI
-    private int center[];                       //X and Y of center point of the circle of dots.
+    private int DotSize = 15; //Dot cirle diameter
+    private int Radius; //Radius of circle formed by dots
+    private dot[] Dots; //Array of dots
+    private boolean ready = false; //Ready to paint
+    private int fontsize_names = 12; //Font size of the names
+    private int fontsize_relation = 12; //Font size of the relations
+    private double arg; //argument of polar form, args * intNoObjects = 2*PI
+    private int center[]; //X and Y of center point of the circle of dots.
 
     public RelationGraphPanel() {
         initComponents();
@@ -110,20 +108,22 @@ public class RelationGraphPanel extends javax.swing.JPanel {
         FontMetrics fm = g.getFontMetrics();
         for (int x = 0; x < Dots.length; x++) {
             if (Dots[x].type == 0) {
-                ReservedBorders_sides = Math.max(ReservedBorders_sides, fm.stringWidth(((Character) Dots[x].entity).GetCharacterName()) + DotSize);
+                ReservedBorders_sides = Math.max(ReservedBorders_sides,
+                        fm.stringWidth(((Character) Dots[x].entity).GetCharacterName()) + DotSize);
             } else if (Dots[x].type == 1) {
-                ReservedBorders_sides = Math.max(ReservedBorders_sides, fm.stringWidth(((Group) Dots[x].entity).szName) + DotSize);
+                ReservedBorders_sides = Math.max(ReservedBorders_sides, fm.stringWidth(((Group) Dots[x].entity).szName)
+                        + DotSize);
             }
         }
 
         ReservedBorders_topbot = fm.getHeight() + DotSize / 2;
 
-        int D = Math.min(getWidth() - ReservedBorders_sides * 2, getHeight() - ReservedBorders_topbot * 2);         //Diameter of circle
+        int D = Math.min(getWidth() - ReservedBorders_sides * 2, getHeight() - ReservedBorders_topbot * 2); //Diameter of circle
         Radius = D / 2;
-        arg = (2 * Math.PI) / intNoObjects;                                                       //argument
+        arg = (2 * Math.PI) / intNoObjects; //argument
         center = new int[2];
         center[0] = getWidth() / 2;
-        center[1] = getHeight() / 2;                                    //Centerpoint of circle
+        center[1] = getHeight() / 2; //Centerpoint of circle
 
         for (int x = 0; x < Dots.length; x++) {
 
@@ -187,10 +187,10 @@ public class RelationGraphPanel extends javax.swing.JPanel {
                     szRelYtoX = ((Group) Dots[y].entity).GetRelation(Dots[x].lngID, Dots[x].type);
                 }
 
-
                 if (!szRelYtoX.isEmpty() || !szRelXtoY.isEmpty()) {
 
-                    g.drawLine(Dots[x].x + DotSize / 2, Dots[x].y + DotSize / 2, Dots[y].x + DotSize / 2, Dots[y].y + DotSize / 2);
+                    g.drawLine(Dots[x].x + DotSize / 2, Dots[x].y + DotSize / 2, Dots[y].x + DotSize / 2, Dots[y].y
+                            + DotSize / 2);
 
                     double deltaX = Dots[x].x - Dots[y].x;
                     double deltaY = Dots[x].y - Dots[y].y;
@@ -237,28 +237,32 @@ public class RelationGraphPanel extends javax.swing.JPanel {
                     }
 
                     g.rotate(alpha, center[0], center[1]);
-                    
-                    double distance = Math.hypot(Dots[j].x-Dots[i].x, Dots[j].y-Dots[i].y);
-                    
+
+                    double distance = Math.hypot(Dots[j].x - Dots[i].x, Dots[j].y - Dots[i].y);
+
                     double text_adjust_from_dot;
-                    if(Math.max(distance*0.15,2*DotSize)<DotSize){
-                        text_adjust_from_dot = Math.max(distance*0.15,2*DotSize);
-                    }else{
-                        text_adjust_from_dot = 3*DotSize/2;
+                    if (Math.max(distance * 0.15, 2 * DotSize) < DotSize) {
+                        text_adjust_from_dot = Math.max(distance * 0.15, 2 * DotSize);
+                    } else {
+                        text_adjust_from_dot = 3 * DotSize / 2;
                     }
-                    
+
                     int dispos_char = (int) (distance - 3 * text_adjust_from_dot / 2) / fm.charWidth('X');
-                    if(dispos_char <0){
+                    if (dispos_char < 0) {
                         dispos_char = 0;
                     }
 
                     szTo = szTo.substring(0, Math.min(szTo.length(), dispos_char)).replace('\n', ' ');
                     szBack = szBack.substring(0, Math.min(szBack.length(), dispos_char)).replace('\n', ' ');
 
-                    int x_offset = (int) Math.max((int) (distance - fm.stringWidth(szBack) - text_adjust_from_dot/2), 3*text_adjust_from_dot/2);
+                    int x_offset = (int) Math.max((int) (distance - fm.stringWidth(szBack) - text_adjust_from_dot / 2),
+                            3 * text_adjust_from_dot / 2);
 
-                    g.drawString(szTo, (int) (center[0] + Radius * Math.cos(Dots[i].angle - alpha) - DotSize / 2 + text_adjust_from_dot), (int) (center[1] + Radius * Math.sin(Dots[i].angle - alpha)) - 2);
-                    g.drawString(szBack, (int) (center[0] + Radius * Math.cos(Dots[i].angle - alpha) - DotSize / 2) + x_offset, (int) (center[1] + Radius * Math.sin(Dots[i].angle - alpha) + fm.getHeight() - 3));
+                    g.drawString(szTo,
+                            (int) (center[0] + Radius * Math.cos(Dots[i].angle - alpha) - DotSize / 2 + text_adjust_from_dot),
+                            (int) (center[1] + Radius * Math.sin(Dots[i].angle - alpha)) - 2);
+                    g.drawString(szBack, (int) (center[0] + Radius * Math.cos(Dots[i].angle - alpha) - DotSize / 2)
+                            + x_offset, (int) (center[1] + Radius * Math.sin(Dots[i].angle - alpha) + fm.getHeight() - 3));
 
                     g.rotate(-alpha, center[0], center[1]);
 
@@ -287,20 +291,9 @@ public class RelationGraphPanel extends javax.swing.JPanel {
 
     }
 
-    class dot {
-
-        int type;   //0-char,1-group
-        long lngID;  //Official id
-        int x;
-        int y;
-        double angle;
-        Object entity;
-    }
-
     @Override
     public Dimension getPreferredSize() {
-        
-        
+
         return super.getPreferredSize();
     }
 
@@ -317,14 +310,10 @@ public class RelationGraphPanel extends javax.swing.JPanel {
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 344, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 344,
+                Short.MAX_VALUE));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 303,
+                Short.MAX_VALUE));
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
@@ -353,7 +342,8 @@ public class RelationGraphPanel extends javax.swing.JPanel {
 
                     if (Dots[x].x < Dots[y].x + 2 && Dots[x].x > Dots[y].x - 2) {
 
-                        if (evt.getX() <= Dots[x].x + 8 && evt.getX() >= Dots[x].x - 8 && evt.getY() < Math.max(Dots[x].y, Dots[y].y) && evt.getY() > Math.min(Dots[x].y, Dots[y].y)) {
+                        if (evt.getX() <= Dots[x].x + 8 && evt.getX() >= Dots[x].x - 8
+                                && evt.getY() < Math.max(Dots[x].y, Dots[y].y) && evt.getY() > Math.min(Dots[x].y, Dots[y].y)) {
                             if (XEED.hwndRelations == null) {
                                 XEED.hwndRelations = new RelationsForm();
                             }
@@ -362,12 +352,14 @@ public class RelationGraphPanel extends javax.swing.JPanel {
                             return;
                         }
 
-                    } else {    //In case the line is vertical.
+                    } else { //In case the line is vertical.
 
                         double k = (double) (Dots[x].y - Dots[y].y) / (Dots[x].x - Dots[y].x);
                         double m = (double) Dots[x].y + DotSize / 2 - k * (Dots[x].x + DotSize / 2);
 
-                        if (evt.getY() <= (double) (k * evt.getX() + m + 8) && evt.getY() >= (double) (k * evt.getX() + m - 8) && evt.getX() > Math.min(Dots[x].x, Dots[y].x) && evt.getX() < Math.max(Dots[x].x, Dots[y].x)) {
+                        if (evt.getY() <= (double) (k * evt.getX() + m + 8)
+                                && evt.getY() >= (double) (k * evt.getX() + m - 8)
+                                && evt.getX() > Math.min(Dots[x].x, Dots[y].x) && evt.getX() < Math.max(Dots[x].x, Dots[y].x)) {
                             if (XEED.hwndRelations == null) {
                                 XEED.hwndRelations = new RelationsForm();
                             }
@@ -383,8 +375,17 @@ public class RelationGraphPanel extends javax.swing.JPanel {
 
         }
 
-
     }//GEN-LAST:event_formMouseReleased
+
+    class dot {
+
+        int type; //0-char,1-group
+        long lngID; //Official id
+        int x;
+        int y;
+        double angle;
+        Object entity;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }

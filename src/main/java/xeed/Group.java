@@ -7,7 +7,6 @@ package xeed;
 import java.util.ArrayList;
 
 /**
- *
  * @author Erik
  */
 public class Group implements Comparable<Group> {
@@ -17,6 +16,46 @@ public class Group implements Comparable<Group> {
     public String szDescription = "";
     public long lngID = -1;
     private ArrayList<Long> Members = new ArrayList(0);
+
+    public static void UpdateCharactersGroupList(long ID) {
+
+        Character c = XEED.GetCharacterByID(ID);
+        if (c == null) {
+            return;
+        }
+
+        String comp = "";
+        for (int x = 0; x < XEED.groupDB.size(); x++) {
+            if (XEED.groupDB.get(x).IsMember(c.characterID)) {
+                comp += XEED.groupDB.get(x).szName + ", ";
+            }
+        }
+        if (!comp.isEmpty()) {
+            comp = comp.substring(0, comp.length() - ", ".length());
+        }
+        c.szData.put(Constants.CHARACTER_GROUPS, comp);
+    }
+
+    public static Group ParseGroup(String szData) {
+
+        try {
+            String[] szMembers = XEED.GetElements(szData, Constants.GROUP_MEMBERS, false);
+
+            Group g = new Group();
+            g.lngID = Long.parseLong(XEED.GetElement(szData, Constants.GROUP_ID, false));
+            g.szName = XEED.GetElement(szData, Constants.GROUP_NAME, true);
+            g.szDescription = XEED.GetElement(szData, Constants.GROUP_DESCRIPTION, true);
+
+            for (int x = 0; x < szMembers.length; x++) {
+                g.AddMember(Long.parseLong(szMembers[x]));
+            }
+
+            return g;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public void AddRelation(long ID, int Type, String szDescription) {
 
@@ -75,25 +114,6 @@ public class Group implements Comparable<Group> {
         UpdateCharactersGroupList(ID);
     }
 
-    public static void UpdateCharactersGroupList(long ID) {
-
-        Character c = XEED.GetCharacterByID(ID);
-        if (c == null) {
-            return;
-        }
-
-        String comp = "";
-        for (int x = 0; x < XEED.groupDB.size(); x++) {
-            if (XEED.groupDB.get(x).IsMember(c.characterID)) {
-                comp += XEED.groupDB.get(x).szName + ", ";
-            }
-        }
-        if (!comp.isEmpty()) {
-            comp = comp.substring(0, comp.length() - ", ".length());
-        }
-        c.szData.put(Constants.CHARACTER_GROUPS, comp);
-    }
-
     public long[] GetMemebers() {
         long[] l = new long[Members.size()];
         for (int x = 0; x < Members.size(); x++) {
@@ -114,27 +134,6 @@ public class Group implements Comparable<Group> {
     @Override
     public int compareTo(Group o) {
         return szName.compareToIgnoreCase(o.szName);
-    }
-
-    public static Group ParseGroup(String szData) {
-
-        try {
-            String[] szMembers = XEED.GetElements(szData, Constants.GROUP_MEMBERS, false);
-
-            Group g = new Group();
-            g.lngID = Long.parseLong(XEED.GetElement(szData, Constants.GROUP_ID, false));
-            g.szName = XEED.GetElement(szData, Constants.GROUP_NAME, true);
-            g.szDescription = XEED.GetElement(szData, Constants.GROUP_DESCRIPTION, true);
-
-            for (int x = 0; x < szMembers.length; x++) {
-                g.AddMember(Long.parseLong(szMembers[x]));
-            }
-
-            return g;
-
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public String CompileGroup() {

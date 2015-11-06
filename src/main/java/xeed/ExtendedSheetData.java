@@ -7,7 +7,6 @@ package xeed;
 import templates.ExtendedForm;
 
 /**
- *
  * @author Erik
  */
 public class ExtendedSheetData {
@@ -15,7 +14,7 @@ public class ExtendedSheetData {
     public String[] Properties = new String[0];
     public String[] Values = new String[0];
     public ExtendedForm form = null;
-    
+
     @Override
     public String toString() {
         String comp = "";

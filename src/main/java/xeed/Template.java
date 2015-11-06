@@ -5,17 +5,16 @@
 package xeed;
 
 import templates.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- *
  * @author Erik
  */
 public class Template {
@@ -30,15 +29,15 @@ public class Template {
     private int Version;
     private String szTemplateID;
     private long XEEDBuild; //The version of xeed that created the template.
-    private String szPath;  //Kanske inte behövs.
+    private String szPath; //Kanske inte behövs.
     private int IDSeed = 0; //Appends to name to make unique id for items.
     private boolean locked = false;
     //Metadata of the template
     private ArrayList<key> keys = new ArrayList(0);
     //Constants defining the type id of an item
-    private CharacterPanel topPanel;  //private handle to the target pnlCharacter panel
+    private CharacterPanel topPanel; //private handle to the target pnlCharacter panel
 
-    //Reading and Displaying a of template    
+    //Reading and Displaying a of template
     public void PreviewTemplate(String Name) {
 
         JFrame frame = new JFrame("[Preview] '" + Name + "'");
@@ -62,7 +61,7 @@ public class Template {
 
     public void SetColumnVisible(String key, boolean visible) {
 
-        if (key.equals(Constants.CHARACTER_NAME)) {        //cannot be changed.
+        if (key.equals(Constants.CHARACTER_NAME)) { //cannot be changed.
             return;
         }
 
@@ -86,7 +85,7 @@ public class Template {
         return "";
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Property getters">    
+    // <editor-fold defaultstate="collapsed" desc="Property getters">
     public String GetName() {
         return szName;
     }
@@ -284,7 +283,8 @@ public class Template {
         locked = WriteTemplateToFile(szPath);
 
         if (!locked) {
-            JOptionPane.showMessageDialog(null, "Error while writing template to file.", "An error occured", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error while writing template to file.", "An error occured",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return locked;
 
@@ -332,7 +332,9 @@ public class Template {
         }
 
         if (XEEDBuild > XEED.lngBuild) {
-            JOptionPane.showMessageDialog(null, "The template '" + szName + "' was made with a newer version of XEED\nPlease use the appropriate version i.e. build " + XEEDBuild + ".", "Incorrect version of XEED", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The template '" + szName
+                    + "' was made with a newer version of XEED\nPlease use the appropriate version i.e. build " + XEEDBuild
+                    + ".", "Incorrect version of XEED", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -400,7 +402,6 @@ public class Template {
 
     private boolean WriteTemplateToFile(String szPath) {
 
-
         try {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(szPath), "UTF-8");
             out.write(CompileTemplate());
@@ -444,7 +445,7 @@ public class Template {
 
         topPanel.add(tabbedPane);
         CharacterPanel tmpPanel = topPanel;
-        topPanel = null;                        //prevents leaks.
+        topPanel = null; //prevents leaks.
         return tmpPanel;
 
     }
@@ -469,7 +470,8 @@ public class Template {
         for (int x = 0; x < szColumns.length; x++) {
 
             String key = XEED.GetElement(szColumns[x], Constants.TEMPLATE_COLUMN_KEY, false);
-            boolean visible = Boolean.parseBoolean(XEED.GetElement(szColumns[x], Constants.TEMPLATE_COLUMN_VISIBLE, false));
+            boolean visible = Boolean
+                    .parseBoolean(XEED.GetElement(szColumns[x], Constants.TEMPLATE_COLUMN_VISIBLE, false));
             SetColumnVisible(key, visible);
 
         }
@@ -502,7 +504,7 @@ public class Template {
         s.szName = szName;
         s.init();
         sections.add(s);
-        return sections.size() - 1;  //indexet i arrayn.
+        return sections.size() - 1; //indexet i arrayn.
 
     }
 
@@ -632,6 +634,11 @@ public class Template {
 
     }
 
+    // </editor-fold>
+    @Override
+    public String toString() {
+        return szName;
+    }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Classes">
@@ -649,8 +656,8 @@ public class Template {
 
             SectionPanel sectionpanel = new SectionPanel();
 
-            JPanel leftPanel = new JPanel();                        //Left side, main for generic compontents.
-            JPanel rightPanel = new JPanel();                       //Right side, for complex components, such as images, offspring.
+            JPanel leftPanel = new JPanel(); //Left side, main for generic compontents.
+            JPanel rightPanel = new JPanel(); //Right side, for complex components, such as images, offspring.
             leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
             rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
 
@@ -674,8 +681,14 @@ public class Template {
 
             layout.setAutoCreateContainerGaps(false);
             layout.setAutoCreateGaps(false);
-            layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(leftPanel).addComponent(rightPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
-            layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(leftPanel).addComponent(rightPanel)));
+            layout.setHorizontalGroup(layout
+                    .createSequentialGroup()
+                    .addComponent(leftPanel)
+                    .addComponent(rightPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                            GroupLayout.PREFERRED_SIZE));
+            layout.setVerticalGroup(layout.createSequentialGroup().addGroup(
+                    layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(leftPanel)
+                            .addComponent(rightPanel)));
 
             sectionpanel.pnlActionArea.add(leftPanel);
             if (rightPanel.getComponentCount() > 0) {
@@ -724,7 +737,6 @@ public class Template {
         }
 
         public boolean ParseItem(String data) {
-
 
             int intType;
             try {
@@ -867,7 +879,7 @@ public class Template {
         String szIdentifier;
         boolean left = true;
 
-        public boolean init() {     //only called when creating a template, not loading from file!
+        public boolean init() { //only called when creating a template, not loading from file!
             return false;
         }
 
@@ -1071,7 +1083,7 @@ public class Template {
         @Override
         public boolean init() {
 
-            szIdentifier = "NAME";      //special
+            szIdentifier = "NAME"; //special
             key c = new key();
             c.szName = szName;
             c.key = szIdentifier;
@@ -1383,12 +1395,6 @@ public class Template {
 
             return data;
         }
-    }
-
-    // </editor-fold>
-    @Override
-    public String toString() {
-        return szName;
     }
 
     /*

@@ -46,10 +46,14 @@ public class Notifier implements Runnable {
                     }
                 }
 
-                if (ticket.UpdateCharacterItems || ticket.UpdateCharacterGroupWindow || ticket.UpdateCharacterRelationsWindowCharacterList || ticket.UpdateCharacterRelationsWindowRelation) {
+                if (ticket.UpdateCharacterItems || ticket.UpdateCharacterGroupWindow
+                        || ticket.UpdateCharacterRelationsWindowCharacterList
+                        || ticket.UpdateCharacterRelationsWindowRelation) {
                     for (int x = 0; x < ticket.AffectedCharacters.length; x++) {
                         if (ticket.AffectedCharacters[x].hwndForm != null) {
-                            ticket.AffectedCharacters[x].hwndForm.ReloadItems(ticket.UpdateCharacterRelationsWindowCharacterList, ticket.UpdateCharacterGroupWindow, ticket.UpdateCharacterItems, ticket.UpdateCharacterRelationsWindowRelation);
+                            ticket.AffectedCharacters[x].hwndForm.ReloadItems(
+                                    ticket.UpdateCharacterRelationsWindowCharacterList, ticket.UpdateCharacterGroupWindow,
+                                    ticket.UpdateCharacterItems, ticket.UpdateCharacterRelationsWindowRelation);
                         }
                     }
                 }
@@ -57,7 +61,7 @@ public class Notifier implements Runnable {
                 if (ticket.UpdateGroupMemberList) {
                     if (XEED.hwndGroup != null) {
                         XEED.hwndGroup.RefreshData();
-                        if (XEED.hwndGroup.relationsHandle != null) {      //Updates the character lists of all components.
+                        if (XEED.hwndGroup.relationsHandle != null) { //Updates the character lists of all components.
                             XEED.hwndGroup.relationsHandle.LoadData();
                         }
                     }
@@ -94,7 +98,11 @@ public class Notifier implements Runnable {
         notifyAll();
     }
 
-    public synchronized void FireUpdate(Character[] AffectedCharacters, boolean UpdateCharacterGroupWindow, boolean UpdateCharacterItems, boolean UpdateCharacterRelationsWindowCharacterList, boolean UpdateGroupMemberList, boolean UpdateGroupWindowRelations, boolean UpdateMainWindowCharacterList, boolean UpdateRelationshipWindowLists, boolean UpdateCharacterRelationsWindowRelation, boolean UpdateRelationsWindowRelation) {
+    public synchronized void FireUpdate(Character[] AffectedCharacters, boolean UpdateCharacterGroupWindow,
+                                        boolean UpdateCharacterItems, boolean UpdateCharacterRelationsWindowCharacterList,
+                                        boolean UpdateGroupMemberList, boolean UpdateGroupWindowRelations, boolean UpdateMainWindowCharacterList,
+                                        boolean UpdateRelationshipWindowLists, boolean UpdateCharacterRelationsWindowRelation,
+                                        boolean UpdateRelationsWindowRelation) {
 
         UpdateTicket t = new UpdateTicket();
 

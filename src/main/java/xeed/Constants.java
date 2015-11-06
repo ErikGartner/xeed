@@ -5,7 +5,6 @@
 package xeed;
 
 /**
- *
  * @author Erik
  */
 public class Constants {

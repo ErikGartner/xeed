@@ -1,9 +1,13 @@
 package xeed;
 
+import javax.swing.*;
 import java.awt.event.KeyEvent;
-import javax.swing.JOptionPane;
 
 public class SearchPanel extends javax.swing.JPanel {
+
+    private javax.swing.JCheckBox chkAll;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField txtSearch;
 
     public SearchPanel(boolean all) {
         initComponents();
@@ -13,6 +17,7 @@ public class SearchPanel extends javax.swing.JPanel {
     public void GetFocus() {
         txtSearch.requestFocusInWindow();
     }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -26,6 +31,7 @@ public class SearchPanel extends javax.swing.JPanel {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtSearchKeyPressed(evt);
             }
+
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchKeyReleased(evt);
             }
@@ -38,24 +44,20 @@ public class SearchPanel extends javax.swing.JPanel {
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkAll, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel1)
-                .addComponent(chkAll))
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkAll, javax.swing.GroupLayout.PREFERRED_SIZE, 37,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap()));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1).addComponent(chkAll)));
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyPressed
@@ -72,7 +74,9 @@ public class SearchPanel extends javax.swing.JPanel {
             }
 
             if (cs.length > 1) {
-                int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to open the selected " + cs.length + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to open the selected " + cs.length
+                                + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (intRet != 0) {
                     return;
                 }
@@ -85,7 +89,7 @@ public class SearchPanel extends javax.swing.JPanel {
                     cs[x].DisplayCharacter();
                 }
             }
-            
+
             XEED.hwndMain.RemoveSearchField();
             return;
 
@@ -107,9 +111,5 @@ public class SearchPanel extends javax.swing.JPanel {
         XEED.hwndMain.SelectCharactersByStringSearch(txtSearchString, chkAll.isSelected());
 
     }//GEN-LAST:event_txtSearchKeyReleased
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox chkAll;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }
