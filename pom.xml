@@ -67,7 +67,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addClasspath>true</addClasspath>
-                            <mainClass>xeed.clsEngine</mainClass>
+                            <mainClass>xeed.XEED</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

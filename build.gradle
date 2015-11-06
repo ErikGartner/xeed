@@ -3,7 +3,7 @@ apply plugin: 'application'
 
 version = '2.1-SNAPSHOT'
 
-mainClassName = 'xeed.clsEngine'
+mainClassName = 'xeed.XEED'
 sourceCompatibility = 1.6
 targetCompatibility = 1.7
 
