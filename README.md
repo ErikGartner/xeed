@@ -1,5 +1,17 @@
 # XEED
-XEED is a tool that organizes role-playing settings. It focuses on story driven games and does not have map support.
+*XEED is a tool that organizes role-playing settings. It focuses on story driven games and does not have map support.*
+
+The goal of XEED is to help the game master to store and organize the vast amount of data in a roleplaying setting. The main focus is the characters and their most important traits such as background, personality, relations and factions/groups rather than individual stats. XEED is written in Java and aims at being platform independent.
+
+## Key Features
+- A modular template system that allows XEED to adapt to a variety of games.
+- User can create their own character templates.
+- A customizable main window; display only the data need.
+- Organize your notes, groups, characters and relationships in one compact file format.
+- Visualize your data with graphs.
+- An autosave function ensures your data is safe in case of crashes.
+- Optional autoupdate feature that updates to the latest version.
+- Export your setting information to HTML, PDF or TXT.
 
 ## Usage
 
