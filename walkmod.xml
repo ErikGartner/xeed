@@ -11,11 +11,5 @@
     </conf-providers>
     <chain name="main-chain">
         <transformation type="walkmod:commons:import-cleaner" />
-        <transformation type="walkmod:commons:method-refactor">
-            <param name="refactoringConfigFile">src/main/walkmod/refactor/refactoring-methods.json</param>
-        </transformation>
-        <transformation type="walkmod:commons:class-refactor">
-            <param name="refactoringConfigFile">src/main/walkmod/refactor/refactoring-classes.json</param>
-        </transformation>
     </chain>
 </walkmod>
