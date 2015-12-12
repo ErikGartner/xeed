@@ -22,6 +22,19 @@ None at the moment but they should be stored in ```src/test/java/```.
 ## Contributions
 Pull requests are welcome. Main developer is @erik_gartner.
 
+### Problems
+This project is very old and suffers from incorrect code conventions, bad patterns and a tangled structure. Fixing these problem should be considered high priority before developing new features.
+
+For example:
+- Variables have the type as prefix.
+- Methods start with a capital letter.
+- The coupling is very high.
+- Potential threading problem.
+- Propagating changes between forms is mess.
+- Main class is way to big and contains and breaks many OOP principles.
+
+Despite these problem the program is generally stable and extended usage over several years have only revealed minor bugs.
+
 ## License
 Copyright 2015 Erik Gärtner
 
