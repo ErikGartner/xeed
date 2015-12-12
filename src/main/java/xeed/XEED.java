@@ -15,19 +15,6 @@ import java.util.zip.CRC32;
 /**
  * @author SmoiZ
  */
-
-/*
- *
- *
- * Todo:
- * Drag'n'droping
- * Bug reportning
- * Förbättra graphs
- * Error loggin to HDD.
- * Clean-up/refine XDF-class
- * Clean-up/refine template related code. Less duplicate code etc...
- *
- */
 public class XEED {
 
     /*
@@ -59,7 +46,7 @@ public class XEED {
      */
     public static boolean boolUpdate = false;
     public static boolean boolBackup = true;
-    public static String szDefaultDirectory = GetCurrentDirectory(); //The default directory for opening settings
+    public static String szDefaultDirectory = GetCurrentDirectory();
     public static boolean Associated = false;
     public static boolean ReAssociate = false;
     public static boolean boolCustomRepository = false;
@@ -70,17 +57,17 @@ public class XEED {
     /*
      * Setting Data
      */
-    public static String szPath = ""; // Den öppna settingfilen.
-    public static Note rootNode = null; //Root noden till setting filerna
-    public static String szSettingName = ""; //Namnet på settingen
+    public static String szPath = "";
+    public static Note rootNode = null;
+    public static String szSettingName = "";
     public static String szThemes = "";
     public static String szOutline = "";
     public static String szLastSaved = "";
-    public static long lngNoteID = 0; //Används vi export av nodes för att skapa unika idn
-    public static long lngSettingRevision = 0; //Setting Revision
+    public static long lngNoteID = 0;
+    public static long lngSettingRevision = 0;
 
     /*
-     * Handles till objekt
+     * Handles for windows
      */
     public static AboutForm hwndAbout = null; //About Handle
     public static NotesForm hwndNotes = null; //Setting Handle
@@ -141,7 +128,7 @@ public class XEED {
 
         }
 
-        hwndMain = new MainForm(); //Måste få handle till frmMain INNAN man kallar initProgram.
+        hwndMain = new MainForm();
         hwndMain.initMain();
 
     }
