@@ -26,10 +26,10 @@ public class XEED {
     public static final String szDevUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/beta/info";
     public static final String szTemplateListURL = "http://xeed.smoiz.com/static/xeed/templates/info";
     public static final String szTemplateUploadURL = "http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 46;
+    public static final long lngBuild = 47;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2015-01-10";
-    public static final String szHomePage = "http://smoiz.com";
+    public static final String szCompiledOn = "2016-07-21";
+    public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {"All registered trademarks belong to their respective owners.",
             "Most icons come from famfamfam.com.", "Uses the JUNG library.",
             "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
