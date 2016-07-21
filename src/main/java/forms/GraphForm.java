@@ -170,7 +170,7 @@ public final class GraphForm extends javax.swing.JFrame {
 
       for (int x = 0; x < XEED.groupDB.size(); x++) {
          Vector o = new Vector(0);
-         o.add(selectedgroups.contains(XEED.charDB.get(x)));
+         o.add(selectedgroups.contains(XEED.groupDB.get(x)));
          o.add(XEED.groupDB.get(x));
          jTableModelRelGroup.add(o);
       }
