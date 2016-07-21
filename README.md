@@ -14,6 +14,7 @@ The goal of XEED is to help the game master to store and organize the vast amoun
 - Export your setting information to HTML, PDF or TXT.
 
 ## Usage
+The latests release can be found under ["releases"](https://github.com/ErikGartner/xeed-legacy/releases).
 
 ### Installation
 XEED uses maven for building executable jars with bundled dependencies.
