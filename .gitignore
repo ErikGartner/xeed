@@ -1,5 +1,10 @@
+.project
+.classpath
+.settings
+.wtpmodules
+target
+.idea
+.DS_Store
+.gradle
 build
-nbproject
-dist.all.last.bin
-dist.female.first.bin
-dist.male.first.bin
+*.iml
