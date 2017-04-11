@@ -24,7 +24,7 @@ public class XEED {
     public static boolean boolUpdateToBeta = DeveloperMode;
     public static final String szUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/info";
     public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
-    public static final String szTemplateListURL = "https://github.com/xeed-org/template-database/blob/master/xeed2/info";
+    public static final String szTemplateListURL = "https://raw.githubusercontent.com/xeed-org/template-database/master/xeed2/info";
     public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
     public static final long lngBuild = 48;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
