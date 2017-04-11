@@ -20,15 +20,15 @@ public class XEED {
     /*
      * Constants
      */
-    public static final boolean DeveloperMode = true;
+    public static final boolean DeveloperMode = false;
     public static boolean boolUpdateToBeta = DeveloperMode;
-    public static final String szUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/info";
-    public static final String szDevUpdateURL = "http://xeed.smoiz.com/static/xeed/updates/beta/info";
-    public static final String szTemplateListURL = "http://xeed.smoiz.com/static/xeed/templates/info";
-    public static final String szTemplateUploadURL = "http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 47;
+    public static final String szUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/info";
+    public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
+    public static final String szTemplateListURL = "https://github.com/xeed-org/template-database/blob/master/xeed2/info";
+    public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
+    public static final long lngBuild = 48;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2016-07-21";
+    public static final String szCompiledOn = "2017-04-11";
     public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {"All registered trademarks belong to their respective owners.",
             "Most icons come from famfamfam.com.", "Uses the JUNG library.",
