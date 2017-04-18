@@ -62,6 +62,8 @@
                 <archive>
                   <manifest>
                     <mainClass>xeed.XEED</mainClass>
+                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                   </manifest>
                 </archive>
                 <descriptorRefs>
