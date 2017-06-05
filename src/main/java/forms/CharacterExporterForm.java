@@ -1,39 +1,25 @@
 package forms;
 
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
-import java.awt.Graphics2D;
+import com.itextpdf.text.pdf.*;
+import org.apache.commons.lang3.StringEscapeUtils;
+import xeed.Character;
+import xeed.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Vector;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import org.apache.commons.lang3.StringEscapeUtils;
-import xeed.*;
-import xeed.Character;
+import java.util.*;
+import java.util.List;
 
 public class CharacterExporterForm extends javax.swing.JFrame {
 
@@ -368,6 +354,14 @@ public class CharacterExporterForm extends javax.swing.JFrame {
             pw.print(HTMLTemplate.HTML_TEMPLATE_FOOTER_ROW);
             if (!consolidate || (consolidate && x == chars.length - 1)) {
 
+                if(chkIncludeGraph.isSelected()) {
+                    //Add family tree
+                    String dTree = charactersToDtree();
+                    if (!dTree.isEmpty()) {
+                        pw.println(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE.replace(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE_DATA, dTree));
+                    }
+                }
+
                Calendar currentDate = Calendar.getInstance();
                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss d MMM yyyy");
 
@@ -388,6 +382,98 @@ public class CharacterExporterForm extends javax.swing.JFrame {
       return true;
 
    }
+
+    /**
+     * A very simple and hack-ish implementation of generating a dTree graph from characters.
+     * @return
+     */
+   private String charactersToDtree() {
+
+       Map<Character, DTreeNode> nodeLookup = new HashMap<Character, DTreeNode>();
+       DTreeNode root = new DTreeNode(null);
+       Set<Character> targetCharacters = new HashSet<Character>();
+       targetCharacters.addAll(Arrays.asList(chars));
+
+       // Validate data
+       for(Character c: chars){
+           // Check that we don't have multiple parents, that makes this more complicated.
+           if(c.chrData.size() > 1) {
+               JOptionPane.showMessageDialog(null,
+                       "Exporting to a family tree is currently limited max one parent field per character.",
+                       "Attention", JOptionPane.WARNING_MESSAGE);
+               return "";
+           }
+       }
+
+       for(Character c: chars){
+           addCharacterToTree(c, targetCharacters, nodeLookup, root);
+       }
+
+       return root.toJSON();
+   }
+
+    class DTreeNode {
+
+        public List<DTreeNode> children;
+        public Character character;
+
+        public DTreeNode(Character character) {
+            this.character = character;
+            children = new ArrayList<DTreeNode>();
+        }
+
+        public String toJSON() {
+            StringBuilder sb = new StringBuilder();
+            if(character == null) {
+                sb.append("[");
+            }else {
+                sb.append("{\n\"name\": \"" + character.GetCharacterName() + "\", \nchildren: [");
+            }
+            for(DTreeNode n : children) {
+                sb.append(n.toJSON());
+                sb.append(", ");
+            }
+            sb.append("]");
+            if(character != null){
+                sb.append('}');
+            }
+            return sb.toString();
+        }
+    }
+
+   private void addCharacterToTree(Character c, Set<Character> targetCharacters, Map<Character, DTreeNode> nodeMap,
+                                   DTreeNode root) {
+
+       if(nodeMap.containsKey(c)) {
+           // Tree already contains the character
+           return;
+       }
+
+       if(c.chrData.size() == 0) {
+           // No parents. Add under root
+           DTreeNode n = new DTreeNode(c);
+           root.children.add(n);
+           nodeMap.put(c, n);
+           return;
+       }
+
+       Character parent = (Character) c.chrData.values().iterator().next();
+       if(targetCharacters.contains(parent)) {
+           // parent should be part of the graph
+           addCharacterToTree(parent, targetCharacters, nodeMap, root);
+           DTreeNode parentNode = nodeMap.get(parent);
+           DTreeNode n = new DTreeNode(c);
+           parentNode.children.add(n);
+           nodeMap.put(c, n);
+       } else {
+           // Don't show parent. Add under root
+           DTreeNode n = new DTreeNode(c);
+           root.children.add(n);
+           nodeMap.put(c, n);
+       }
+
+   }
+
 
    private String ExpandedSheetToHTMLTable(ExtendedSheetData esd) {
 
@@ -616,191 +702,188 @@ public class CharacterExporterForm extends javax.swing.JFrame {
    }
 
    @SuppressWarnings("unchecked")
-   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-   private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-      btnExport = new javax.swing.JButton();
-      jScrollPane2 = new javax.swing.JScrollPane();
-      tblData = new javax.swing.JTable();
-      btnMoveRowUp = new javax.swing.JButton();
-      jButton5 = new javax.swing.JButton();
-      chkConsolidate = new javax.swing.JCheckBox();
-      jLabel1 = new javax.swing.JLabel();
-      comboSort = new javax.swing.JComboBox();
-      chkReverse = new javax.swing.JCheckBox();
-      jLabel2 = new javax.swing.JLabel();
-      comboFormat = new javax.swing.JComboBox();
+        btnExport = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblData = new javax.swing.JTable();
+        btnMoveRowUp = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        chkConsolidate = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        comboSort = new javax.swing.JComboBox();
+        chkReverse = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
+        comboFormat = new javax.swing.JComboBox();
+        chkIncludeGraph = new javax.swing.JCheckBox();
 
-      setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-      setTitle("Character Exporter");
-      setLocationByPlatform(true);
-      addWindowListener(new java.awt.event.WindowAdapter() {
-         public void windowClosing(java.awt.event.WindowEvent evt) {
-            formWindowClosing(evt);
-         }
-      });
-
-      btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user_go.png"))); // NOI18N
-      btnExport.setToolTipText("Export characters");
-      btnExport.setName("btnExport"); // NOI18N
-      btnExport.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btnExportActionPerformed(evt);
-         }
-      });
-
-      jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-      jTableHeader.add("");
-      jTableHeader.add("Field");
-      tblData.setModel(new javax.swing.table.DefaultTableModel(jTableModel, jTableHeader) {
-         Class[] types = new Class[] { java.lang.Boolean.class, Object.class, String.class };
-
-         public Class getColumnClass(int columnIndex) {
-            return types[columnIndex];
-         }
-
-         public boolean isCellEditable(int rowIndex, int mColIndex) {
-            if (mColIndex != 0) {
-               return false;
-            } else {
-               return true;
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Character Exporter");
+        setLocationByPlatform(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
-         }
+        });
 
-      });
-      tblData.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblData.setName("tblData"); // NOI18N
-      tblData.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-      tblData.setShowHorizontalLines(false);
-      tblData.setShowVerticalLines(false);
-      tblData.getTableHeader().setReorderingAllowed(false);
-      tblData.addKeyListener(new java.awt.event.KeyAdapter() {
-         public void keyPressed(java.awt.event.KeyEvent evt) {
-            tblDataKeyPressed(evt);
-         }
-      });
-      jScrollPane2.setViewportView(tblData);
+        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user_go.png"))); // NOI18N
+        btnExport.setToolTipText("Export characters");
+        btnExport.setName("btnExport"); // NOI18N
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportActionPerformed(evt);
+            }
+        });
 
-      btnMoveRowUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/arrow_up.png"))); // NOI18N
-      btnMoveRowUp.setToolTipText("Move rows up");
-      btnMoveRowUp.setName("btnMoveRowUp"); // NOI18N
-      btnMoveRowUp.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btnMoveRowUpActionPerformed(evt);
-         }
-      });
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-      jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/arrow_down.png"))); // NOI18N
-      jButton5.setToolTipText("Move rows down");
-      jButton5.setName("jButton5"); // NOI18N
-      jButton5.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jButton5ActionPerformed(evt);
-         }
-      });
+        jTableHeader.add("");
+        jTableHeader.add("Field");
+        tblData.setModel(new javax.swing.table.DefaultTableModel(
+            jTableModel,
+            jTableHeader
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, Object.class, String.class
+            };
 
-      chkConsolidate.setText("Consolidate");
-      chkConsolidate
-            .setToolTipText("Rather than one text file for each character, one text file is created for all characters.");
-      chkConsolidate.setName("chkConsolidate"); // NOI18N
-      chkConsolidate.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            chkConsolidateActionPerformed(evt);
-         }
-      });
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-      jLabel1.setText("Sort by:");
-      jLabel1.setName("jLabel1"); // NOI18N
+            public boolean isCellEditable(int rowIndex, int mColIndex) {
+                if(mColIndex!=0){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
 
-      comboSort.setToolTipText("Select primary sorting factor, second is always name.");
-      comboSort.setName("comboSort"); // NOI18N
+        });
+        tblData.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblData.setName("tblData"); // NOI18N
+        tblData.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tblData.setShowHorizontalLines(false);
+        tblData.setShowVerticalLines(false);
+        tblData.getTableHeader().setReorderingAllowed(false);
+        tblData.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblDataKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblData);
 
-      chkReverse.setText("Reversed");
-      chkReverse.setName("chkReverse"); // NOI18N
+        btnMoveRowUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/arrow_up.png"))); // NOI18N
+        btnMoveRowUp.setToolTipText("Move rows up");
+        btnMoveRowUp.setName("btnMoveRowUp"); // NOI18N
+        btnMoveRowUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoveRowUpActionPerformed(evt);
+            }
+        });
 
-      jLabel2.setText("Format");
-      jLabel2.setName("jLabel2"); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/arrow_down.png"))); // NOI18N
+        jButton5.setToolTipText("Move rows down");
+        jButton5.setName("jButton5"); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
-      comboFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "HTML", "PDF", "Text" }));
-      comboFormat.setName("comboFormat"); // NOI18N
+        chkConsolidate.setText("Consolidate");
+        chkConsolidate.setToolTipText("Rather than one text file for each character, one text file is created for all characters.");
+        chkConsolidate.setName("chkConsolidate"); // NOI18N
+        chkConsolidate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkConsolidateActionPerformed(evt);
+            }
+        });
 
-      javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-      getContentPane().setLayout(layout);
-      layout.setHorizontalGroup(layout
-            .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(
-                  layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(
-                              layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0,
-                                          Short.MAX_VALUE)
-                                    .addGroup(
-                                          javax.swing.GroupLayout.Alignment.TRAILING,
-                                          layout.createSequentialGroup()
-                                                .addComponent(btnMoveRowUp)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                      30, Short.MAX_VALUE).addComponent(chkConsolidate)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnExport))
-                                    .addGroup(
-                                          javax.swing.GroupLayout.Alignment.TRAILING,
-                                          layout.createSequentialGroup()
-                                                .addGroup(
-                                                      layout.createParallelGroup(
-                                                            javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addGroup(
-                                                                  layout.createSequentialGroup()
-                                                                        .addComponent(jLabel2)
-                                                                        .addPreferredGap(
-                                                                              javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                        .addComponent(comboFormat, 0,
-                                                                              javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                              Short.MAX_VALUE))
-                                                            .addGroup(
-                                                                  javax.swing.GroupLayout.Alignment.LEADING,
-                                                                  layout.createSequentialGroup()
-                                                                        .addComponent(jLabel1)
-                                                                        .addPreferredGap(
-                                                                              javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(comboSort, 0,
-                                                                              javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                              Short.MAX_VALUE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(chkReverse))).addContainerGap()));
-      layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-            javax.swing.GroupLayout.Alignment.TRAILING,
-            layout.createSequentialGroup()
-                  .addContainerGap()
-                  .addComponent(jScrollPane2)
-                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                  .addGroup(
-                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                              .addComponent(comboFormat, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                    javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                              .addComponent(jLabel2))
-                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                  .addGroup(
-                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                              .addComponent(jLabel1)
-                              .addComponent(comboSort, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                    javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                              .addComponent(chkReverse))
-                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                  .addGroup(
-                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                              .addComponent(btnExport)
-                              .addGroup(
-                                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                          .addComponent(btnMoveRowUp).addComponent(jButton5))
-                              .addComponent(chkConsolidate, javax.swing.GroupLayout.Alignment.TRAILING))
-                  .addContainerGap()));
+        jLabel1.setText("Sort by:");
+        jLabel1.setName("jLabel1"); // NOI18N
 
-      pack();
-   }// </editor-fold>//GEN-END:initComponents
+        comboSort.setToolTipText("Select primary sorting factor, second is always name.");
+        comboSort.setName("comboSort"); // NOI18N
+
+        chkReverse.setText("Reversed");
+        chkReverse.setName("chkReverse"); // NOI18N
+
+        jLabel2.setText("Format");
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        comboFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "HTML", "PDF", "Text" }));
+        comboFormat.setName("comboFormat"); // NOI18N
+
+        chkIncludeGraph.setText("Include Graph");
+        chkIncludeGraph.setToolTipText("If checked XEED will include the character Genealogy as a dTree graph if exported to HTML.");
+        chkIncludeGraph.setName("chkIncludeGraph"); // NOI18N
+        chkIncludeGraph.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkIncludeGraphActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnMoveRowUp)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(chkConsolidate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExport))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboFormat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(comboSort, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkReverse)
+                            .addComponent(chkIncludeGraph))))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(chkIncludeGraph))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(comboSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkReverse))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnExport)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnMoveRowUp)
+                        .addComponent(jButton5))
+                    .addComponent(chkConsolidate, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
 
@@ -898,21 +981,25 @@ public class CharacterExporterForm extends javax.swing.JFrame {
    private void chkConsolidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConsolidateActionPerformed
       consolidate = chkConsolidate.isSelected();
    }//GEN-LAST:event_chkConsolidateActionPerformed
+
+    private void chkIncludeGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkIncludeGraphActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkIncludeGraphActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-
-   private javax.swing.JButton btnExport;
-   private javax.swing.JButton btnMoveRowUp;
-   private javax.swing.JCheckBox chkConsolidate;
-   private javax.swing.JCheckBox chkReverse;
-   private javax.swing.JComboBox comboFormat;
-   private javax.swing.JComboBox comboSort;
-   private javax.swing.JButton jButton5;
-   private javax.swing.JLabel jLabel1;
-   private javax.swing.JLabel jLabel2;
-   private javax.swing.JScrollPane jScrollPane2;
-   private javax.swing.JTable tblData;
-
-   // End of variables declaration//GEN-END:variables
+    private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnMoveRowUp;
+    private javax.swing.JCheckBox chkConsolidate;
+    private javax.swing.JCheckBox chkIncludeGraph;
+    private javax.swing.JCheckBox chkReverse;
+    private javax.swing.JComboBox comboFormat;
+    private javax.swing.JComboBox comboSort;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tblData;
+    // End of variables declaration//GEN-END:variables
 
    private class table_item {
 

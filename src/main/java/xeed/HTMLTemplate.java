@@ -60,4 +60,42 @@ public class HTMLTemplate {
             + "</html>\n";
     public static final String HTML_TEMPLATE_FOOTER_TEXT = "%XEED_FOOTER_TEXT%";
 
+    public static final String HTML_TEMPLATE_FAMILY_TREE = "<div>\n" +
+            "  <script src=\"https://d3js.org/d3.v4.min.js\"></script>\n" +
+            "  <script src=\"https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js\"></script>\n" +
+            "  <script src=\"https://cdn.rawgit.com/ErikGartner/dTree/2.0.2/dist/dTree.min.js\"></script>\n" +
+            "  <div id=\"graph\"></div>\n" +
+            "\n" +
+            "  <style>\n" +
+            "    .linage {\n" +
+            "        fill: none;\n" +
+            "        stroke: black;\n" +
+            "    }\n" +
+            "    .marriage {\n" +
+            "        fill: none;\n" +
+            "        stroke: black;\n" +
+            "    }\n" +
+            "    .node {\n" +
+            "        background-color: white;\n" +
+            "        border-style: solid;\n" +
+            "        border-width: 1px;\n" +
+            "    }\n" +
+            "    .nodeText{\n" +
+            "        font: 10px sans-serif;\n" +
+            "    }\n" +
+            "    svg {\n" +
+            "      border: 1px solid black;\n" +
+            "    }\n" +
+            "  </style>\n" +
+            "  <script>\n" +
+            "    treeData = %TREE_DATA%\n" +
+            "  </script>\n" +
+            "\n" +
+            "  <script>\n" +
+            "    dTree.init(treeData, {width: window.innerWidth * 55 / 100,\n" +
+            "                          height: window.innerHeight * 3 / 4});\n" +
+            "  </script>\n" +
+            "</div>";
+
+    public static final String HTML_TEMPLATE_FAMILY_TREE_DATA = "%TREE_DATA%";
 }
