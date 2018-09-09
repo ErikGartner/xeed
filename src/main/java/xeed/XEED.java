@@ -26,9 +26,9 @@ public class XEED {
     public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
     public static final String szTemplateListURL = "https://raw.githubusercontent.com/xeed-org/template-database/master/xeed2/info";
     public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 50;
+    public static final long lngBuild = 51;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2018-10-09";
+    public static final String szCompiledOn = "2018-09-09";
     public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {
             "All registered trademarks belong to their respective owners.",
