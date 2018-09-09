@@ -259,7 +259,6 @@ public class CharacterExporterForm extends javax.swing.JFrame {
       }
    }
 
-
    private boolean ExportExtendedSheetToFile(ExtendedSheetData esd, String szPath) {
 
       try {
@@ -280,7 +279,6 @@ public class CharacterExporterForm extends javax.swing.JFrame {
       SortCharacters();
 
       try {
-         Base64 base64 = new Base64();
 
          String szCharPath;
          szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
@@ -299,10 +297,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
                   pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
                         .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG,
-                              StringEscapeUtils.escapeHtml4(XEED.szSettingName))
-                        .replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ID_LIST, GenerateIDList("tbl", chars.length))
-                        .replace(HTMLTemplate.HTML_TEMPLATE_LINK_ID_LIST, GenerateIDList("lnk", chars.length)));
-
+                              StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
                }
             } else {
                szCharPath = szPath + File.separator + XEED.szSettingName + File.separator + chars[x].GetCharacterName()
@@ -312,19 +307,37 @@ public class CharacterExporterForm extends javax.swing.JFrame {
                      szCharPath + chars[x].GetCharacterName() + ".htm", false)));
 
                pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
-                     .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG, StringEscapeUtils.escapeHtml4(XEED.szSettingName))
-                     .replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ID_LIST, GenerateIDList("tbl", chars.length))
-                     .replace(HTMLTemplate.HTML_TEMPLATE_LINK_ID_LIST, GenerateIDList("lnk", chars.length)));
+                     .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG, StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
 
+            }
+
+            // Images need to bed added first
+            StringBuilder images = new StringBuilder();
+            for (int y = 0; y < tblData.getRowCount(); y++) {
+
+               boolean selected = (Boolean) tblData.getValueAt(y, 0);
+               table_item item = (table_item) tblData.getValueAt(y, 1);
+
+               if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
+                  if (chars[x].imgData.containsKey(item.key)) {
+                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                     String b64Image = ImageToBase64(img);
+                     if (b64Image == null) {
+                        return false;
+                     }
+
+                     images.append(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "data:image/png;base64," + b64Image));
+
+                  }
+               }
             }
 
             //Add table header with name item.
             pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_HEADER_ROW
-                  .replace(HTMLTemplate.HTML_TEMPLATE_CHARACTER_NAME_TAG,
-                        StringEscapeUtils.escapeHtml4(chars[x].GetCharacterName()))
-                  .replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ID, "tbl" + x)
-                  .replace(HTMLTemplate.HTML_TEMPLATE_EXPAND_LINK_ID, "lnk" + x));
+                    .replace(HTMLTemplate.HTML_TEMPLATE_CHARACTER_NAME_TAG,
+                            StringEscapeUtils.escapeHtml4(chars[x].GetCharacterName())).replace(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD_TAG, images.toString()));
 
+            // The rest of the fields
             for (int y = 0; y < tblData.getRowCount(); y++) {
 
                boolean selected = (Boolean) tblData.getValueAt(y, 0);
@@ -353,18 +366,6 @@ public class CharacterExporterForm extends javax.swing.JFrame {
                            StringEscapeUtils.escapeHtml4(item.name)).replace(
                            HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
                            ExpandedSheetToHTMLTable((ExtendedSheetData) chars[x].extData.get(item.key))));
-
-                  } else if (chars[x].imgData.containsKey(item.key)) {
-                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     String b64Image = ImageToBase64(img);
-                     if(b64Image == null) {
-                        return false;
-                     }
-
-                     pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
-                           StringEscapeUtils.escapeHtml4(item.name)).replace(
-                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "<img src=\"data:image/png;base64," + b64Image + "\"/>"));
-
                   }
                }
 
