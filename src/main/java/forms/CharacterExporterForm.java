@@ -5,6 +5,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;
 import xeed.Character;
 import xeed.*;
@@ -241,6 +242,24 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
    }
 
+   private String ImageToBase64(ImageIcon img) {
+
+      try {
+         Base64 base64 = new Base64();
+         BufferedImage bi = new BufferedImage(img.getIconWidth(), img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+         Graphics2D g2 = bi.createGraphics();
+         g2.drawImage(img.getImage(), 0, 0, null);
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         ImageIO.write(bi, "png", baos);
+         baos.toByteArray();
+         return new String(base64.encode(baos.toByteArray()));
+
+      } catch (Exception e) {
+         return null;
+      }
+   }
+
+
    private boolean ExportExtendedSheetToFile(ExtendedSheetData esd, String szPath) {
 
       try {
@@ -261,6 +280,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
       SortCharacters();
 
       try {
+         Base64 base64 = new Base64();
 
          String szCharPath;
          szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
@@ -336,14 +356,14 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
                   } else if (chars[x].imgData.containsKey(item.key)) {
                      ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     String szImgPath = szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png";
-                     if (!ExportImageToFile(img, szImgPath)) {
+                     String b64Image = ImageToBase64(img);
+                     if(b64Image == null) {
                         return false;
                      }
 
                      pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
                            StringEscapeUtils.escapeHtml4(item.name)).replace(
-                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "<img src='" + szImgPath + "'/>"));
+                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "<img src=\"data:image/png;base64," + b64Image + "\"/>"));
 
                   }
                }

@@ -26,15 +26,17 @@ public class XEED {
     public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
     public static final String szTemplateListURL = "https://raw.githubusercontent.com/xeed-org/template-database/master/xeed2/info";
     public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 49;
+    public static final long lngBuild = 50;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2017-06-05";
+    public static final String szCompiledOn = "2018-10-09";
     public static final String szHomePage = "https://gartner.io";
-    public static final String[] szCredits = {"All registered trademarks belong to their respective owners.",
+    public static final String[] szCredits = {
+            "All registered trademarks belong to their respective owners.",
             "Most icons come from famfamfam.com.", "Uses the JUNG library.",
             "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
-            "Kuslix"};
-    public static String szArguments[] = null; //Inte en konstant per se, men den ska inte ändras efter den har deklarerats
+            "Kuslix"
+    };
+    public static String szArguments[] = null;
     /*
      * Databaser
      */
