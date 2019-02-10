@@ -17,7 +17,6 @@ public class SearchPanel extends javax.swing.JPanel {
     public void GetFocus() {
         txtSearch.requestFocusInWindow();
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -111,5 +110,6 @@ public class SearchPanel extends javax.swing.JPanel {
         XEED.hwndMain.SelectCharactersByStringSearch(txtSearchString, chkAll.isSelected());
 
     }//GEN-LAST:event_txtSearchKeyReleased
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
