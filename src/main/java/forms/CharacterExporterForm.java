@@ -5,6 +5,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import org.json.simple.JSONObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;
 import xeed.Character;
@@ -21,6 +22,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import org.json.simple.JSONArray;
 
 public class CharacterExporterForm extends javax.swing.JFrame {
 
@@ -379,7 +381,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
                 if(chkIncludeGraph.isSelected()) {
                     //Add family tree
-                    String dTree = charactersToDtree();
+                    String dTree = charactersToDtree(false);
                     if (!dTree.isEmpty()) {
                         pw.println(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE.replace(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE_DATA, dTree));
                     }
@@ -405,12 +407,40 @@ public class CharacterExporterForm extends javax.swing.JFrame {
       return true;
 
    }
+   
+   /**
+    * Exports the characters to dTree data JSON file.
+    * Format is for dTree v2.0.2.
+    * Always consolidates.
+    */
+   private boolean ExportCharactersToDTreeJson(String szPath) {
+
+      SortCharacters();
+      try {
+
+        String szCharPath;
+        szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
+        new File(szCharPath).mkdirs();
+        String path = szCharPath + template.GetName() + "_characters.json";
+        new File(path).delete();
+
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path, true)));
+        String data = charactersToDtree(true);
+        pw.write(data);
+        pw.close();         
+
+      } catch (Exception e) {
+         return false;
+      }
+      return true;
+
+   }
 
     /**
      * A very simple and hack-ish implementation of generating a dTree graph from characters.
      * @return
      */
-   private String charactersToDtree() {
+   private String charactersToDtree(boolean extraData) {
 
        Map<Character, DTreeNode> nodeLookup = new HashMap<Character, DTreeNode>();
        DTreeNode root = new DTreeNode(null);
@@ -431,8 +461,12 @@ public class CharacterExporterForm extends javax.swing.JFrame {
        for(Character c: chars){
            addCharacterToTree(c, targetCharacters, nodeLookup, root);
        }
-
-       return root.toJSON();
+       
+       JSONArray characterList = new JSONArray();
+       for (DTreeNode n : root.children) {
+           characterList.add(n.toJSON(extraData));
+       }
+       return characterList.toJSONString();
    }
 
     class DTreeNode {
@@ -445,22 +479,48 @@ public class CharacterExporterForm extends javax.swing.JFrame {
             children = new ArrayList<DTreeNode>();
         }
 
-        public String toJSON() {
-            StringBuilder sb = new StringBuilder();
-            if(character == null) {
-                sb.append("[");
-            }else {
-                sb.append("{\n\"name\": \"" + character.GetCharacterName() + "\", \nchildren: [");
+        public JSONObject toJSON(boolean extraData) {
+            
+            JSONObject json = new JSONObject();
+            json.put("name", character.GetCharacterName());
+            
+            if (children.size() > 0) {
+                JSONArray children = new JSONArray();
+                for(DTreeNode n : this.children) {
+                    children.add(n.toJSON(extraData));
+                }
+                json.put("children", children);
             }
-            for(DTreeNode n : children) {
-                sb.append(n.toJSON());
-                sb.append(", ");
+            
+            if (extraData) {
+                
+                JSONObject extra = new JSONObject();
+                for (int y = 0; y < tblData.getRowCount(); y++) {
+
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
+
+                    if (selected) {
+
+                       if (character.chrData.containsKey(item.key)) {
+                           extra.put(item.name, character.chrData.get(item.key).toString());
+                       } else if (character.szData.containsKey(item.key)) {
+                         extra.put(item.name, character.szData.get(item.key));
+                       } else if (character.extData.containsKey(item.key)) {
+                         extra.put(item.name, character.extData.get(item.key));
+                       } else if (character.imgData.containsKey(item.key)) {
+                         ImageIcon img = (ImageIcon) character.imgData.get(item.key);
+                         String b64Image = ImageToBase64(img);
+                         extra.put(item.name, b64Image);
+                       }
+                     }
+                    }
+                
+                json.put("extra", extra);
+                
             }
-            sb.append("]");
-            if(character != null){
-                sb.append('}');
-            }
-            return sb.toString();
+                         
+            return json;
         }
     }
 
@@ -836,7 +896,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
         jLabel2.setText("Format");
         jLabel2.setName("jLabel2"); // NOI18N
 
-        comboFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "HTML", "PDF", "Text" }));
+        comboFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "HTML", "PDF", "Text", "dTree JSON" }));
         comboFormat.setName("comboFormat"); // NOI18N
 
         chkIncludeGraph.setText("Include Graph");
@@ -938,6 +998,8 @@ public class CharacterExporterForm extends javax.swing.JFrame {
          ret = ExportCharactersToPDF(fc.getSelectedFile().getAbsolutePath());
       } else if (comboFormat.getSelectedIndex() == 2) {
          ret = ExportCharactersToTextFile(fc.getSelectedFile().getAbsolutePath());
+      } else if (comboFormat.getSelectedIndex() == 3) {
+         ret = ExportCharactersToDTreeJson(fc.getSelectedFile().getAbsolutePath());
       }
 
       if (ret) {
