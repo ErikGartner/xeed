@@ -244,11 +244,13 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
    private String ImageToBase64(ImageIcon img) {
 
+      BufferedImage i = XEED.ImageToBuffered(XEED.RescaleImage(img.getImage(), 800, 800, true));
+       
       try {
          Base64 base64 = new Base64();
-         BufferedImage bi = new BufferedImage(img.getIconWidth(), img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+         BufferedImage bi = new BufferedImage(i.getWidth(), i.getHeight(), BufferedImage.TYPE_INT_ARGB);
          Graphics2D g2 = bi.createGraphics();
-         g2.drawImage(img.getImage(), 0, 0, null);
+         g2.drawImage(i, 0, 0, null);
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          ImageIO.write(bi, "png", baos);
          baos.toByteArray();

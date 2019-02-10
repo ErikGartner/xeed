@@ -4,6 +4,10 @@
  */
 package templates;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -57,7 +61,7 @@ public class ImagePanel extends javax.swing.JPanel {
 
       if (o.getClass().equals(ImageIcon.class)) {
          lblImage.setText("");
-         ImageIcon i = XEED.RescaleImageIcon((ImageIcon) o, ImageMaxWidth, ImageMaxHeight);
+         ImageIcon i = new ImageIcon(XEED.RescaleImage(((ImageIcon)o).getImage(), ImageMaxWidth, ImageMaxHeight, false));
          lblImage.setIcon(i);
          if (XEED.boolResize) {
             character.imgData.put(itemIdentifier, i);
@@ -127,9 +131,17 @@ public class ImagePanel extends javax.swing.JPanel {
                return;
             }
 
-            ImageIcon i = new ImageIcon(fc.getSelectedFile().getAbsolutePath());
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(fc.getSelectedFile().getAbsolutePath()));
+            } catch (IOException e) {
+            }
+
+            ImageIcon i = null;
             if (XEED.boolResize) {
-               i = XEED.RescaleImageIcon(i, ImageMaxWidth, ImageMaxHeight);
+                i = new ImageIcon(XEED.RescaleImage(img, ImageMaxWidth, ImageMaxHeight, false));
+            } else {
+                i = new ImageIcon(img);
             }
 
             lblImage.setText("");

@@ -4,6 +4,7 @@ import forms.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -26,9 +27,9 @@ public class XEED {
     public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
     public static final String szTemplateListURL = "https://raw.githubusercontent.com/xeed-org/template-database/master/xeed2/info";
     public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 51;
+    public static final long lngBuild = 52;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2018-09-09";
+    public static final String szCompiledOn = "2019-02-10";
     public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {
             "All registered trademarks belong to their respective owners.",
@@ -710,21 +711,50 @@ public class XEED {
         return true;
     }
 
-    public static ImageIcon RescaleImageIcon(ImageIcon i, int ImageMaxWidth, int ImageMaxHeight) {
+    public static Image RescaleImage(Image i, int ImageMaxWidth, int ImageMaxHeight, boolean ForceSquare) {
 
         if (i == null) {
             return null;
         }
-
-        if (i.getIconWidth() > ImageMaxWidth || i.getIconHeight() > ImageMaxHeight) {
-            if (i.getIconWidth() > i.getIconHeight()) {
-                return new ImageIcon(i.getImage().getScaledInstance(ImageMaxWidth, -1, Image.SCALE_SMOOTH));
+        BufferedImage img = ImageToBuffered(i);
+        
+        if (ForceSquare) {
+            int w = img.getWidth();
+            int h = img.getHeight();
+            int m = Math.max(h, w);
+            BufferedImage square = new BufferedImage(m, m, BufferedImage.TYPE_INT_ARGB);
+            square.getGraphics().drawImage(img, (m - w) / 2, (m - h) / 2, null);            
+            img = square;
+        }
+                         
+        if (img.getWidth()> ImageMaxWidth || img.getHeight() > ImageMaxHeight) {
+            if (img.getWidth()> img.getHeight()) {
+                return img.getScaledInstance(ImageMaxWidth, -1, Image.SCALE_SMOOTH);
             } else {
-                return new ImageIcon(i.getImage().getScaledInstance(-1, ImageMaxHeight, Image.SCALE_SMOOTH));
+                return img.getScaledInstance(-1, ImageMaxHeight, Image.SCALE_SMOOTH);
             }
         }
 
-        return i;
+        return img;
+    }
+    
+    public static BufferedImage ImageToBuffered(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
     public static Character AddCharacter(Template t) {

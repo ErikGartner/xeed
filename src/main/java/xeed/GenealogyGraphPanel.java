@@ -77,8 +77,8 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
                     characters[x].color = colors[y];
                     characters[x].extra_key = extra_keys[y];
 
-                    ImageIcon img = XEED.RescaleImageIcon((ImageIcon) cs[x].imgData.get(picture_keys[y]), ImageMaxSize,
-                            ImageMaxSize);
+                    ImageIcon img = new ImageIcon(XEED.RescaleImage(((ImageIcon) cs[x].imgData.get(picture_keys[y])).getImage(), ImageMaxSize,
+                            ImageMaxSize, false));
 
                     if (img != null) {
                         iconMap.put(characters[x], new LayeredIcon(img.getImage()));
