@@ -462,11 +462,13 @@ public class CharacterExporterForm extends javax.swing.JFrame {
            addCharacterToTree(c, targetCharacters, nodeLookup, root);
        }
        
-       JSONArray characterList = new JSONArray();
+       // Hacky solution to make the json multiline. 
+       // The simple json library doesn't support pretty printing.
+       List<String> chars = new LinkedList<String>();
        for (DTreeNode n : root.children) {
-           characterList.add(n.toJSON(extraData));
+           chars.add(n.toJSON(extraData).toJSONString());
        }
-       return characterList.toJSONString();
+       return "[" + String.join(", \n", chars) + "]";
    }
 
     class DTreeNode {
@@ -483,7 +485,8 @@ public class CharacterExporterForm extends javax.swing.JFrame {
             
             JSONObject json = new JSONObject();
             json.put("name", character.GetCharacterName());
-            
+            json.put("class", "node");
+
             if (children.size() > 0) {
                 JSONArray children = new JSONArray();
                 for(DTreeNode n : this.children) {
