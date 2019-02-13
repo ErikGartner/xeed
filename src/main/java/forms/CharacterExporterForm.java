@@ -438,7 +438,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
                         // Export images to file. Storing as b64 encoded doesn't work well.
                         if (chars[x].imgData.containsKey(item.key)) {
                             ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                            String imgName = szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png";
+                            String imgName = szCharPath + XEED.slugify(chars[x].GetCharacterName() + "_" + item.name) + ".png";
                             ExportImageToFile(img, imgName);
 
                         }
@@ -531,7 +531,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
                         } else if (character.extData.containsKey(item.key)) {
                             extra.put(item.name, character.extData.get(item.key));
                         } else if (character.imgData.containsKey(item.key)) {
-                            String imgName = character.GetCharacterName() + "_" + item.name + ".png";
+                            String imgName = XEED.slugify(character.GetCharacterName() + "_" + item.name) + ".png";
                             extra.put(item.name, imgName);
                         }
                     }
@@ -1004,6 +1004,7 @@ public class CharacterExporterForm extends javax.swing.JFrame {
        JFileChooser fc = new JFileChooser();
        fc.setDialogTitle("Select output folder");
        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+       fc.setAcceptAllFileFilterUsed(false);
 
        int intRet = fc.showSaveDialog(null);
        if (intRet != JFileChooser.APPROVE_OPTION) {

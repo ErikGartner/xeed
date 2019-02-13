@@ -10,7 +10,11 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
 /**
@@ -27,14 +31,15 @@ public class XEED {
     public static final String szDevUpdateURL = "https://raw.githubusercontent.com/xeed-org/update-database/master/xeed2/beta/info";
     public static final String szTemplateListURL = "https://raw.githubusercontent.com/xeed-org/template-database/master/xeed2/info";
     public static final String szTemplateUploadURL = ""; //http://xeed.smoiz.com/upload/templates/uploader.php";
-    public static final long lngBuild = 53;
+    public static final long lngBuild = 54;
     public static final String szVersion = XEED.class.getPackage().getImplementationVersion();
-    public static final String szCompiledOn = "2019-02-10";
+    public static final String szCompiledOn = "2019-02-13";
     public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {
         "All registered trademarks belong to their respective owners.",
         "Most icons come from famfamfam.com.", "Uses the JUNG library.",
-        "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
+        "Uses several libraries from Apache Commons.", "Uses the iText library.", 
+        "Uses the graph library dTree", "Beta testers:", "Sagemaster",
         "Kuslix"
     };
     public static String szArguments[] = null;
@@ -997,6 +1002,16 @@ public class XEED {
         }
         return true;
 
+    }
+    
+    public static String slugify(String input) {
+        Pattern NONLATIN = Pattern.compile("[^\\w-]");
+        Pattern WHITESPACE = Pattern.compile("[\\s]");
+        
+        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
+        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
+        String slug = NONLATIN.matcher(normalized).replaceAll("");
+        return slug.toLowerCase(Locale.ENGLISH);
     }
 }
 
