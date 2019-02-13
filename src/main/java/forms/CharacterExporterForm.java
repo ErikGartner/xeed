@@ -427,7 +427,25 @@ public class CharacterExporterForm extends javax.swing.JFrame {
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path, true)));
         String data = charactersToDtree(true);
         pw.write(data);
-        pw.close();         
+        pw.close();
+        
+        for (int x = 0; x < chars.length; x++) {
+            for (int y = 0; y < tblData.getRowCount(); y++) {
+
+                boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                table_item item = (table_item) tblData.getValueAt(y, 1);
+
+                if (selected) {
+                    // Export images to file. Storing as b64 encoded doesn't work well.
+                   if (chars[x].imgData.containsKey(item.key)) {
+                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                     String imgName = szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png";
+                     ExportImageToFile(img, imgName);
+
+                   }
+                 }
+                }
+        }
 
       } catch (Exception e) {
          return false;
@@ -506,15 +524,14 @@ public class CharacterExporterForm extends javax.swing.JFrame {
                     if (selected) {
 
                        if (character.chrData.containsKey(item.key)) {
-                           extra.put(item.name, character.chrData.get(item.key).toString());
+                         extra.put(item.name, character.chrData.get(item.key).toString());
                        } else if (character.szData.containsKey(item.key)) {
                          extra.put(item.name, character.szData.get(item.key));
                        } else if (character.extData.containsKey(item.key)) {
                          extra.put(item.name, character.extData.get(item.key));
                        } else if (character.imgData.containsKey(item.key)) {
-                         ImageIcon img = (ImageIcon) character.imgData.get(item.key);
-                         String b64Image = ImageToBase64(img);
-                         extra.put(item.name, b64Image);
+                         String imgName = character.GetCharacterName() + "_" + item.name + ".png";
+                         extra.put(item.name, imgName);
                        }
                      }
                     }
