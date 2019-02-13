@@ -15,67 +15,67 @@ import xeed.XEED;
  */
 public class IntegerRowBCPanel extends javax.swing.JPanel {
 
-   public Character character;
-   public String itemIdentifier;
+    public Character character;
+    public String itemIdentifier;
 
-   public IntegerRowBCPanel(Character c, String id, String name) {
-      itemIdentifier = id;
-      character = c;
-      initComponents();
-      lblName.setText(name);
-      LoadData();
-   }
+    public IntegerRowBCPanel(Character c, String id, String name) {
+        itemIdentifier = id;
+        character = c;
+        initComponents();
+        lblName.setText(name);
+        LoadData();
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      if (!txtInteger.getText().isEmpty()) {
-         if (comboADBC.getSelectedIndex() == 0) {
-            character.szData.put(itemIdentifier, txtInteger.getText() + " AD");
-         } else {
-            character.szData.put(itemIdentifier, txtInteger.getText() + " BC");
-         }
-      } else {
-         character.szData.remove(itemIdentifier);
-      }
+        if (!txtInteger.getText().isEmpty()) {
+            if (comboADBC.getSelectedIndex() == 0) {
+                character.szData.put(itemIdentifier, txtInteger.getText() + " AD");
+            } else {
+                character.szData.put(itemIdentifier, txtInteger.getText() + " BC");
+            }
+        } else {
+            character.szData.remove(itemIdentifier);
+        }
 
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = character;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
-   }
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = character;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.szData.get(itemIdentifier);
-      if (o == null) {
-         return;
-      }
+        Object o = character.szData.get(itemIdentifier);
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(String.class)) {
+        if (o.getClass().equals(String.class)) {
 
-         String data[] = ((String) o).split(" ");
+            String data[] = ((String) o).split(" ");
 
-         txtInteger.setText(data[0]);
-         if (data[1].equalsIgnoreCase("AD")) {
-            comboADBC.setSelectedIndex(0);
-         } else {
-            comboADBC.setSelectedIndex(1);
-         }
+            txtInteger.setText(data[0]);
+            if (data[1].equalsIgnoreCase("AD")) {
+                comboADBC.setSelectedIndex(0);
+            } else {
+                comboADBC.setSelectedIndex(1);
+            }
 
-      } else {
-         System.out.println(lblName.getText() + " loaded invalid data");
-      }
+        } else {
+            System.out.println(lblName.getText() + " loaded invalid data");
+        }
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -121,29 +121,29 @@ public class IntegerRowBCPanel extends javax.swing.JPanel {
                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
    }// </editor-fold>//GEN-END:initComponents
 
-   private void validateInteger(JTextField txtField) {
-      if (txtField.getText().isEmpty()) {
-         return;
-      }
+    private void validateInteger(JTextField txtField) {
+        if (txtField.getText().isEmpty()) {
+            return;
+        }
 
-      try {
-         int y = Integer.parseInt(txtField.getText());
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "The textfield '" + lblName.getText() + "' must contain an integer.",
-               "Invalid data", JOptionPane.WARNING_MESSAGE);
-         txtField.setText("");
-      }
+        try {
+            int y = Integer.parseInt(txtField.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "The textfield '" + lblName.getText() + "' must contain an integer.",
+                    "Invalid data", JOptionPane.WARNING_MESSAGE);
+            txtField.setText("");
+        }
 
-   }
+    }
 
    private void txtIntegerKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIntegerKeyReleased
-      validateInteger(txtInteger);
-      SaveData();
+       validateInteger(txtInteger);
+       SaveData();
 
    }//GEN-LAST:event_txtIntegerKeyReleased
 
    private void comboADBCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboADBCActionPerformed
-      SaveData();
+       SaveData();
    }//GEN-LAST:event_comboADBCActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

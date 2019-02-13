@@ -47,10 +47,9 @@ public class XDF {
      */
     private int intBuild = -1;
 
-   /*
+    /*
     * Notes
-    */
-
+     */
     public XDF(String szFilePath) {
         szXDFPath = szFilePath;
     }
@@ -316,14 +315,14 @@ public class XDF {
                     .showMessageDialog(
                             null,
                             "This setting file was created by an obsolete version of xeed and this version of xeed lacks backward compatability with that version.\nPlease use the appropriate version (i.e. build "
-                                    + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
+                            + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (intBuild > XEED.lngBuild) {
             JOptionPane.showMessageDialog(null,
                     "This setting file was created by a newer version of xeed.\nPlease use the appropriate version (i.e. build "
-                            + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
+                    + intBuild + ").", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

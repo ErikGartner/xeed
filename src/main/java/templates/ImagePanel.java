@@ -20,58 +20,58 @@ import xeed.XEED;
  */
 public class ImagePanel extends javax.swing.JPanel {
 
-   public Character character;
-   public String itemIdentifier;
-   private String szName;
-   private final int ImageMaxHeight = 194;
-   private final int ImageMaxWidth = 167;
+    public Character character;
+    public String itemIdentifier;
+    private String szName;
+    private final int ImageMaxHeight = 194;
+    private final int ImageMaxWidth = 167;
 
-   public ImagePanel(Character c, String id, String name) {
-      itemIdentifier = id;
-      character = c;
-      initComponents();
-      szName = name;
-      lblImage.setText("Ctrl + click to set " + name);
-      lblImage.setToolTipText(name + ". Alt + click to clear.");
-      LoadData();
-   }
+    public ImagePanel(Character c, String id, String name) {
+        itemIdentifier = id;
+        character = c;
+        initComponents();
+        szName = name;
+        lblImage.setText("Ctrl + click to set " + name);
+        lblImage.setToolTipText(name + ". Alt + click to clear.");
+        LoadData();
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
-      character.imgData.put(itemIdentifier, lblImage.getIcon());
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = character;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
-   }
+        if (character == null) {
+            return;
+        }
+        character.imgData.put(itemIdentifier, lblImage.getIcon());
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = character;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.imgData.get(itemIdentifier);
+        Object o = character.imgData.get(itemIdentifier);
 
-      if (o == null) {
-         return;
-      }
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(ImageIcon.class)) {
-         lblImage.setText("");
-         ImageIcon i = new ImageIcon(XEED.RescaleImage(((ImageIcon)o).getImage(), ImageMaxWidth, ImageMaxHeight, false));
-         lblImage.setIcon(i);
-         if (XEED.boolResize) {
-            character.imgData.put(itemIdentifier, i);
-         }
-      } else {
-         System.out.println(szName + " loaded invalid data");
-      }
-   }
+        if (o.getClass().equals(ImageIcon.class)) {
+            lblImage.setText("");
+            ImageIcon i = new ImageIcon(XEED.RescaleImage(((ImageIcon) o).getImage(), ImageMaxWidth, ImageMaxHeight, false));
+            lblImage.setIcon(i);
+            if (XEED.boolResize) {
+                character.imgData.put(itemIdentifier, i);
+            }
+        } else {
+            System.out.println(szName + " loaded invalid data");
+        }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -116,50 +116,50 @@ public class ImagePanel extends javax.swing.JPanel {
 
    private void lblImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImageMouseClicked
 
-      if (evt.getClickCount() == 1) {
+       if (evt.getClickCount() == 1) {
 
-         if (evt.isControlDown()) {
+           if (evt.isControlDown()) {
 
-            JFileChooser fc = new JFileChooser();
-            fc.removeChoosableFileFilter(fc.getAcceptAllFileFilter());
-            fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "jpeg", "gif"));
-            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            fc.setMultiSelectionEnabled(false);
+               JFileChooser fc = new JFileChooser();
+               fc.removeChoosableFileFilter(fc.getAcceptAllFileFilter());
+               fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "jpeg", "gif"));
+               fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+               fc.setMultiSelectionEnabled(false);
 
-            int intRet = fc.showOpenDialog(null);
-            if (intRet != JFileChooser.APPROVE_OPTION) {
+               int intRet = fc.showOpenDialog(null);
+               if (intRet != JFileChooser.APPROVE_OPTION) {
+                   return;
+               }
+
+               BufferedImage img = null;
+               try {
+                   img = ImageIO.read(new File(fc.getSelectedFile().getAbsolutePath()));
+               } catch (IOException e) {
+               }
+
+               ImageIcon i = null;
+               if (XEED.boolResize) {
+                   i = new ImageIcon(XEED.RescaleImage(img, ImageMaxWidth, ImageMaxHeight, false));
+               } else {
+                   i = new ImageIcon(img);
+               }
+
+               lblImage.setText("");
+               lblImage.setIcon(i);
+               SaveData();
+               if (!XEED.boolResize) {
+                   LoadData();
+               }
                return;
-            }
+           }
 
-            BufferedImage img = null;
-            try {
-                img = ImageIO.read(new File(fc.getSelectedFile().getAbsolutePath()));
-            } catch (IOException e) {
-            }
-
-            ImageIcon i = null;
-            if (XEED.boolResize) {
-                i = new ImageIcon(XEED.RescaleImage(img, ImageMaxWidth, ImageMaxHeight, false));
-            } else {
-                i = new ImageIcon(img);
-            }
-
-            lblImage.setText("");
-            lblImage.setIcon(i);
-            SaveData();
-            if (!XEED.boolResize) {
-               LoadData();
-            }
-            return;
-         }
-
-         if (evt.isAltDown()) {
-            lblImage.setText("Ctrl + click to set " + szName);
-            lblImage.setIcon(null);
-            SaveData();
-            return;
-         }
-      }
+           if (evt.isAltDown()) {
+               lblImage.setText("Ctrl + click to set " + szName);
+               lblImage.setIcon(null);
+               SaveData();
+               return;
+           }
+       }
 
    }//GEN-LAST:event_lblImageMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables

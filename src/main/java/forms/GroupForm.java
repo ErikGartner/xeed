@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmRelations.java
  *
  * Created on 2011-feb-10, 19:03:07
@@ -32,137 +32,137 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GroupForm extends javax.swing.JFrame implements TableModelListener {
 
-   private Vector jTableModel = new Vector(0, 2); // Model för tabellen
-   private Vector jTableHeader = new Vector(0);
-   private boolean boolReloading = false; //Förhindrara uppdate loopar
-   public RelationsPanel relationsHandle = null;
+    private Vector jTableModel = new Vector(0, 2); // Model för tabellen
+    private Vector jTableHeader = new Vector(0);
+    private boolean boolReloading = false; //Förhindrara uppdate loopar
+    public RelationsPanel relationsHandle = null;
 
-   /**
-    * Creates new form frmRelations
-    */
-   public GroupForm() {
-      initComponents();
+    /**
+     * Creates new form frmRelations
+     */
+    public GroupForm() {
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/group.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/group.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      tblMembers.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-      tblMembers.getColumnModel().getColumn(0).setResizable(false);
-      tblMembers.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblMembers.getColumnModel().getColumn(1).setPreferredWidth(tblMembers.getWidth() - 20);
+        tblMembers.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblMembers.getColumnModel().getColumn(0).setResizable(false);
+        tblMembers.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblMembers.getColumnModel().getColumn(1).setPreferredWidth(tblMembers.getWidth() - 20);
 
-      tblMembers.getModel().addTableModelListener(this);
-      this.setVisible(true);
-      RefreshData();
+        tblMembers.getModel().addTableModelListener(this);
+        this.setVisible(true);
+        RefreshData();
 
-   }
+    }
 
-   public void LoadRelationship() {
-      jTabbedPane1.remove(relationsHandle);
+    public void LoadRelationship() {
+        jTabbedPane1.remove(relationsHandle);
 
-      Group g = (Group) comboGroup.getSelectedItem();
-      if (g == null) {
-         return;
-      }
+        Group g = (Group) comboGroup.getSelectedItem();
+        if (g == null) {
+            return;
+        }
 
-      relationsHandle = new RelationsPanel(g);
-      jTabbedPane1.addTab("Relations", relationsHandle);
-      relationsHandle.setPreferredSize(new Dimension(jTabbedPane1.getWidth(), jTabbedPane1.getHeight()));
-   }
+        relationsHandle = new RelationsPanel(g);
+        jTabbedPane1.addTab("Relations", relationsHandle);
+        relationsHandle.setPreferredSize(new Dimension(jTabbedPane1.getWidth(), jTabbedPane1.getHeight()));
+    }
 
-   public final void RefreshData() {
+    public final void RefreshData() {
 
-      Object prev_selection = comboGroup.getSelectedItem();
+        Object prev_selection = comboGroup.getSelectedItem();
 
-      comboGroup.removeAllItems();
-      for (int x = 0; x < XEED.groupDB.size(); x++) {
-         comboGroup.addItem(XEED.groupDB.get(x));
-      }
+        comboGroup.removeAllItems();
+        for (int x = 0; x < XEED.groupDB.size(); x++) {
+            comboGroup.addItem(XEED.groupDB.get(x));
+        }
 
-      comboGroup.setSelectedItem(prev_selection);
+        comboGroup.setSelectedItem(prev_selection);
 
-      //     LoadMembers();, called later in (combogroup action)
-      if (comboGroup.getSelectedItem() == null) {
-         txtDescription.setEnabled(false);
-      } else {
-         txtDescription.setEnabled(true);
-      }
+        //     LoadMembers();, called later in (combogroup action)
+        if (comboGroup.getSelectedItem() == null) {
+            txtDescription.setEnabled(false);
+        } else {
+            txtDescription.setEnabled(true);
+        }
 
-   }
+    }
 
-   private void LoadMembers() {
+    private void LoadMembers() {
 
-      boolReloading = true;
-      jTableModel.clear();
-      if (comboGroup.getSelectedItem() != null) {
-         for (int x = 0; x < XEED.charDB.size(); x++) {
-            Vector o = new Vector(0);
-            Group g = (Group) comboGroup.getSelectedItem();
-            if (g.IsMember(XEED.charDB.get(x).characterID)) {
-               o.add(true);
-            } else {
-               o.add(false);
+        boolReloading = true;
+        jTableModel.clear();
+        if (comboGroup.getSelectedItem() != null) {
+            for (int x = 0; x < XEED.charDB.size(); x++) {
+                Vector o = new Vector(0);
+                Group g = (Group) comboGroup.getSelectedItem();
+                if (g.IsMember(XEED.charDB.get(x).characterID)) {
+                    o.add(true);
+                } else {
+                    o.add(false);
+                }
+                o.add(XEED.charDB.get(x));
+                jTableModel.add(o);
             }
-            o.add(XEED.charDB.get(x));
-            jTableModel.add(o);
-         }
-      }
+        }
 
-      DefaultTableModel df = (DefaultTableModel) tblMembers.getModel();
-      df.fireTableDataChanged();
-      boolReloading = false;
-   }
+        DefaultTableModel df = (DefaultTableModel) tblMembers.getModel();
+        df.fireTableDataChanged();
+        boolReloading = false;
+    }
 
-   public void tableChanged(TableModelEvent e) {
-      if (e.getType() != TableModelEvent.UPDATE) {
-         return;
-      }
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType() != TableModelEvent.UPDATE) {
+            return;
+        }
 
-      if (comboGroup.getSelectedItem() == null) {
-         return;
-      }
+        if (comboGroup.getSelectedItem() == null) {
+            return;
+        }
 
-      if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
-         return;
-      }
+        if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
+            return;
+        }
 
-      if (jTableModel.isEmpty()) {
-         return;
-      }
+        if (jTableModel.isEmpty()) {
+            return;
+        }
 
-      if (boolReloading) {
-         return;
-      }
+        if (boolReloading) {
+            return;
+        }
 
-      Group g = (Group) comboGroup.getSelectedItem();
-      for (int x = 0; x < jTableModel.size(); x++) {
-         Vector o = (Vector) jTableModel.get(x);
-         xeed.Character c = (Character) o.get(1);
+        Group g = (Group) comboGroup.getSelectedItem();
+        for (int x = 0; x < jTableModel.size(); x++) {
+            Vector o = (Vector) jTableModel.get(x);
+            xeed.Character c = (Character) o.get(1);
 
-         boolean b = (Boolean) o.get(0);
-         if (b) {
-            g.AddMember(c.characterID);
-         } else {
-            g.DeleteMember(c.characterID);
-         }
-      }
+            boolean b = (Boolean) o.get(0);
+            if (b) {
+                g.AddMember(c.characterID);
+            } else {
+                g.DeleteMember(c.characterID);
+            }
+        }
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, false, false, false, true, false, false, false);
-   }
+        Character[] affectedcharacters = new Character[XEED.charDB.size()];
+        XEED.charDB.toArray(affectedcharacters);
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, false, false, false, true, false, false, false);
+    }
 
-   /**
-    * This method is called from within the constructor to initialize the form.
-    * WARNING: Do NOT modify this code. The content of this method is always
-    * regenerated by the Form Editor.
-    */
-   @SuppressWarnings("unchecked")
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -344,96 +344,96 @@ public class GroupForm extends javax.swing.JFrame implements TableModelListener 
 
    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
 
-      String szName = JOptionPane
-            .showInputDialog(null, "Enter group name:", "Add new group", JOptionPane.PLAIN_MESSAGE);
-      if (szName == null) {
-         return;
-      }
+       String szName = JOptionPane
+               .showInputDialog(null, "Enter group name:", "Add new group", JOptionPane.PLAIN_MESSAGE);
+       if (szName == null) {
+           return;
+       }
 
-      Group g = new Group();
-      g.szName = szName;
-      g.lngID = XEED.CreateUniqueGroupID();
-      XEED.groupDB.add(g);
-      RefreshData();
-      comboGroup.setSelectedItem(g);
+       Group g = new Group();
+       g.szName = szName;
+       g.lngID = XEED.CreateUniqueGroupID();
+       XEED.groupDB.add(g);
+       RefreshData();
+       comboGroup.setSelectedItem(g);
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, false, true, false, false);
+       Character[] affectedcharacters = new Character[XEED.charDB.size()];
+       XEED.charDB.toArray(affectedcharacters);
+       XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, false, true, false, false);
 
    }//GEN-LAST:event_btnAddActionPerformed
 
    private void btnRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenameActionPerformed
-      if (comboGroup.getSelectedItem() == null) {
-         return;
-      }
+       if (comboGroup.getSelectedItem() == null) {
+           return;
+       }
 
-      Group g = (Group) comboGroup.getSelectedItem();
+       Group g = (Group) comboGroup.getSelectedItem();
 
-      String szName = JOptionPane.showInputDialog(null, "Enter new group name:", "Rename " + g.szName,
-            JOptionPane.PLAIN_MESSAGE);
-      if (szName == null) {
-         return;
-      }
+       String szName = JOptionPane.showInputDialog(null, "Enter new group name:", "Rename " + g.szName,
+               JOptionPane.PLAIN_MESSAGE);
+       if (szName == null) {
+           return;
+       }
 
-      g.szName = szName;
-      comboGroup.repaint();
+       g.szName = szName;
+       comboGroup.repaint();
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, true, true, false, false);
+       Character[] affectedcharacters = new Character[XEED.charDB.size()];
+       XEED.charDB.toArray(affectedcharacters);
+       XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, true, true, false, false);
 
    }//GEN-LAST:event_btnRenameActionPerformed
 
    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-      if (comboGroup.getSelectedItem() == null) {
-         return;
-      }
+       if (comboGroup.getSelectedItem() == null) {
+           return;
+       }
 
-      Group g = (Group) comboGroup.getSelectedItem();
+       Group g = (Group) comboGroup.getSelectedItem();
 
-      for (int x = 0; x < XEED.charDB.size(); x++) {
-         XEED.charDB.get(x).DeleteRelation(g.lngID, 1);
-      }
+       for (int x = 0; x < XEED.charDB.size(); x++) {
+           XEED.charDB.get(x).DeleteRelation(g.lngID, 1);
+       }
 
-      XEED.groupDB.remove(g);
-      RefreshData();
-      LoadRelationship();
+       XEED.groupDB.remove(g);
+       RefreshData();
+       LoadRelationship();
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, true, true, false, false);
+       Character[] affectedcharacters = new Character[XEED.charDB.size()];
+       XEED.charDB.toArray(affectedcharacters);
+       XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, true, false, false, true, true, false, false);
    }//GEN-LAST:event_btnDeleteActionPerformed
 
    private void comboGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboGroupActionPerformed
-      txtDescription.setText("");
-      if (comboGroup.getSelectedItem() == null) {
-         return;
-      }
-      Group g = (Group) comboGroup.getSelectedItem();
-      txtDescription.setText(g.szDescription);
-      txtDescription.setCaretPosition(0);
+       txtDescription.setText("");
+       if (comboGroup.getSelectedItem() == null) {
+           return;
+       }
+       Group g = (Group) comboGroup.getSelectedItem();
+       txtDescription.setText(g.szDescription);
+       txtDescription.setCaretPosition(0);
 
-      LoadMembers();
-      LoadRelationship();
+       LoadMembers();
+       LoadRelationship();
    }//GEN-LAST:event_comboGroupActionPerformed
 
    private void txtDescriptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyReleased
-      if (comboGroup.getSelectedItem() == null) {
-         return;
-      }
-      Group g = (Group) comboGroup.getSelectedItem();
-      g.szDescription = txtDescription.getText();
+       if (comboGroup.getSelectedItem() == null) {
+           return;
+       }
+       Group g = (Group) comboGroup.getSelectedItem();
+       g.szDescription = txtDescription.getText();
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, false, false, false, false, false, false, false);
+       Character[] affectedcharacters = new Character[XEED.charDB.size()];
+       XEED.charDB.toArray(affectedcharacters);
+       XEED.hwndNotifier.FireUpdate(affectedcharacters, true, false, false, false, false, false, false, false, false);
 
    }//GEN-LAST:event_txtDescriptionKeyReleased
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndGroup = null;
-      super.dispose();
+       XEED.hwndGroup = null;
+       super.dispose();
    }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

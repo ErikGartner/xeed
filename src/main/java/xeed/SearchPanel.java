@@ -74,7 +74,7 @@ public class SearchPanel extends javax.swing.JPanel {
 
             if (cs.length > 1) {
                 int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to open the selected " + cs.length
-                                + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION,
+                        + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (intRet != 0) {
                     return;

@@ -24,116 +24,116 @@ import javax.swing.table.DefaultTableModel;
 
 public class RestorerForm extends javax.swing.JFrame {
 
-   private Vector jTableModel = new Vector(0);
-   private Vector jTableHeader = new Vector(0);
-   private String szOrgPath = "";
-   private String szPaths[];
+    private Vector jTableModel = new Vector(0);
+    private Vector jTableHeader = new Vector(0);
+    private String szOrgPath = "";
+    private String szPaths[];
 
-   public RestorerForm(String szP[], String szOPath) {
-      initComponents();
+    public RestorerForm(String szP[], String szOPath) {
+        initComponents();
 
-      setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getWidth()) / 2, (int) (Toolkit
-            .getDefaultToolkit().getScreenSize().getHeight() - this.getHeight()) / 2);
+        setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getWidth()) / 2, (int) (Toolkit
+                .getDefaultToolkit().getScreenSize().getHeight() - this.getHeight()) / 2);
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/application_error.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/application_error.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      tblSaves.setDefaultRenderer(Image.class, new IconCellRenderer());
-      JustifyColumns();
-      szPaths = szP;
+        tblSaves.setDefaultRenderer(Image.class, new IconCellRenderer());
+        JustifyColumns();
+        szPaths = szP;
 
-      szOrgPath = szOPath;
-      LoadList();
+        szOrgPath = szOPath;
+        LoadList();
 
-      tblSaves
-            .setToolTipText("Green - The save works; Yellow - The save contains several errors; Red - The save is unreadable");
-      jScrollPane1
-            .setToolTipText("Green - The save works; Yellow - The save contains several errors; Red - The save is unreadable");
+        tblSaves
+                .setToolTipText("Green - The save works; Yellow - The save contains several errors; Red - The save is unreadable");
+        jScrollPane1
+                .setToolTipText("Green - The save works; Yellow - The save contains several errors; Red - The save is unreadable");
 
-      setVisible(true);
+        setVisible(true);
 
-   }
+    }
 
-   private void JustifyColumns() {
+    private void JustifyColumns() {
 
-      tblSaves.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblSaves.getColumnModel().getColumn(0).setResizable(false);
-      tblSaves.getColumnModel().getColumn(0).setPreferredWidth(20);
-   }
+        tblSaves.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblSaves.getColumnModel().getColumn(0).setResizable(false);
+        tblSaves.getColumnModel().getColumn(0).setPreferredWidth(20);
+    }
 
-   private void LoadList() {
+    private void LoadList() {
 
-      jTableModel.clear();
-      for (int x = 0; x < szPaths.length; x++) {
-         File f = new File(szPaths[x]);
+        jTableModel.clear();
+        for (int x = 0; x < szPaths.length; x++) {
+            File f = new File(szPaths[x]);
 
-         if (f.exists()) {
-            Vector o = new Vector(0);
+            if (f.exists()) {
+                Vector o = new Vector(0);
 
-            o.add(GetStatus(szPaths[x]));
+                o.add(GetStatus(szPaths[x]));
 
-            Date d = new Date(f.lastModified());
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM");
+                Date d = new Date(f.lastModified());
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM");
 
-            o.add(dateFormat.format(d));
-            o.add(String.valueOf(f.length()) + " Bytes");
-            o.add(szPaths[x]);
+                o.add(dateFormat.format(d));
+                o.add(String.valueOf(f.length()) + " Bytes");
+                o.add(szPaths[x]);
 
-            jTableModel.add(o);
-         }
-      }
+                jTableModel.add(o);
+            }
+        }
 
-      ((DefaultTableModel) tblSaves.getModel()).fireTableDataChanged();
+        ((DefaultTableModel) tblSaves.getModel()).fireTableDataChanged();
 
-   }
+    }
 
-   private ImageIcon GetStatus(String szPath) {
+    private ImageIcon GetStatus(String szPath) {
 
-      XDF x = new XDF(szPath);
-      switch (x.ValidateSetting()) {
+        XDF x = new XDF(szPath);
+        switch (x.ValidateSetting()) {
 
-      case 0:
-         return new javax.swing.ImageIcon(getClass().getResource("/accept.png"));
+            case 0:
+                return new javax.swing.ImageIcon(getClass().getResource("/accept.png"));
 
-      case -1:
-         return new javax.swing.ImageIcon(getClass().getResource("/delete.png"));
+            case -1:
+                return new javax.swing.ImageIcon(getClass().getResource("/delete.png"));
 
-      default:
-         return new javax.swing.ImageIcon(getClass().getResource("/error.png"));
+            default:
+                return new javax.swing.ImageIcon(getClass().getResource("/error.png"));
 
-      }
+        }
 
-   }
+    }
 
-   private void DeleteAutoSaves() {
+    private void DeleteAutoSaves() {
 
-      for (int x = 0; x < szPaths.length; x++) {
-         new File(szPaths[x]).delete();
-      }
+        for (int x = 0; x < szPaths.length; x++) {
+            new File(szPaths[x]).delete();
+        }
 
-   }
+    }
 
-   class IconCellRenderer extends DefaultTableCellRenderer {
+    class IconCellRenderer extends DefaultTableCellRenderer {
 
-      @Override
-      protected void setValue(Object value) {
-         if (value instanceof ImageIcon) {
+        @Override
+        protected void setValue(Object value) {
+            if (value instanceof ImageIcon) {
 
-            setIcon((ImageIcon) value);
-            super.setValue(null);
-         } else {
-            setIcon(null);
-            super.setValue(value);
-         }
-      }
-   }
+                setIcon((ImageIcon) value);
+                super.setValue(null);
+            } else {
+                setIcon(null);
+                super.setValue(value);
+            }
+        }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -256,121 +256,121 @@ public class RestorerForm extends javax.swing.JFrame {
 
    private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
 
-      if (chkDelete.isSelected()) {
-         DeleteAutoSaves();
-      }
+       if (chkDelete.isSelected()) {
+           DeleteAutoSaves();
+       }
 
-      XEED.szPath = szOrgPath;
-      XEED.LoadSetting(false, false);
-      XEED.hwndMain.setEnabled(true);
-      XEED.hwndMain.setVisible(true);
-      dispose();
+       XEED.szPath = szOrgPath;
+       XEED.LoadSetting(false, false);
+       XEED.hwndMain.setEnabled(true);
+       XEED.hwndMain.setVisible(true);
+       dispose();
 
    }//GEN-LAST:event_btnContinueActionPerformed
 
    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
 
-      if (tblSaves.getSelectedRowCount() == 0) {
-         return;
-      }
+       if (tblSaves.getSelectedRowCount() == 0) {
+           return;
+       }
 
-      JFileChooser fc = new JFileChooser();
-      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      fc.setDialogTitle("Select were to resave your setting to");
+       JFileChooser fc = new JFileChooser();
+       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+       fc.setDialogTitle("Select were to resave your setting to");
 
-      int intRet = fc.showSaveDialog(null);
-      if (intRet != JFileChooser.APPROVE_OPTION) {
-         JOptionPane.showMessageDialog(null, "The setting wasn't resaved!", "Action cancelled",
-               JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       int intRet = fc.showSaveDialog(null);
+       if (intRet != JFileChooser.APPROVE_OPTION) {
+           JOptionPane.showMessageDialog(null, "The setting wasn't resaved!", "Action cancelled",
+                   JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      File fdest = fc.getSelectedFile();
+       File fdest = fc.getSelectedFile();
 
-      if (!new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).renameTo(fdest)) {
-         JOptionPane.showMessageDialog(null, "An error occured while resaving the file!", "Action cancelled",
-               JOptionPane.ERROR_MESSAGE);
-         return;
-      }
+       if (!new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).renameTo(fdest)) {
+           JOptionPane.showMessageDialog(null, "An error occured while resaving the file!", "Action cancelled",
+                   JOptionPane.ERROR_MESSAGE);
+           return;
+       }
 
-      XEED.szPath = fdest.getAbsolutePath();
-      XEED.LoadSetting(false, false);
-      XEED.hwndMain.setEnabled(true);
-      XEED.hwndMain.setVisible(true);
+       XEED.szPath = fdest.getAbsolutePath();
+       XEED.LoadSetting(false, false);
+       XEED.hwndMain.setEnabled(true);
+       XEED.hwndMain.setVisible(true);
 
-      if (chkDelete.isSelected()) {
-         DeleteAutoSaves();
-      }
+       if (chkDelete.isSelected()) {
+           DeleteAutoSaves();
+       }
 
-      dispose();
+       dispose();
 
    }//GEN-LAST:event_btnLoadActionPerformed
 
    private void btnResaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResaveActionPerformed
 
-      if (tblSaves.getSelectedRowCount() == 0) {
-         return;
-      }
+       if (tblSaves.getSelectedRowCount() == 0) {
+           return;
+       }
 
-      JFileChooser fc = new JFileChooser();
-      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      fc.setDialogTitle("Select were to resave your setting to");
+       JFileChooser fc = new JFileChooser();
+       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+       fc.setDialogTitle("Select were to resave your setting to");
 
-      int intRet = fc.showSaveDialog(null);
-      if (intRet != JFileChooser.APPROVE_OPTION) {
-         JOptionPane.showMessageDialog(null, "The setting wasn't resaved!", "Action cancelled",
-               JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       int intRet = fc.showSaveDialog(null);
+       if (intRet != JFileChooser.APPROVE_OPTION) {
+           JOptionPane.showMessageDialog(null, "The setting wasn't resaved!", "Action cancelled",
+                   JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      File fdest = fc.getSelectedFile();
+       File fdest = fc.getSelectedFile();
 
-      if (!new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).renameTo(fdest)) {
-         JOptionPane.showMessageDialog(null, "An error occured while resaving the file!", "Action cancelled",
-               JOptionPane.ERROR_MESSAGE);
-         return;
-      }
+       if (!new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).renameTo(fdest)) {
+           JOptionPane.showMessageDialog(null, "An error occured while resaving the file!", "Action cancelled",
+                   JOptionPane.ERROR_MESSAGE);
+           return;
+       }
 
-      tblSaves.setValueAt(fdest.getAbsolutePath(), tblSaves.getSelectedRow(), 3);
+       tblSaves.setValueAt(fdest.getAbsolutePath(), tblSaves.getSelectedRow(), 3);
 
    }//GEN-LAST:event_btnResaveActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
-      if (chkDelete.isSelected()) {
-         DeleteAutoSaves();
-      }
+       if (chkDelete.isSelected()) {
+           DeleteAutoSaves();
+       }
 
-      XEED.NewSetting(false);
-      XEED.hwndMain.setEnabled(true);
-      XEED.hwndMain.setVisible(true);
-      dispose();
+       XEED.NewSetting(false);
+       XEED.hwndMain.setEnabled(true);
+       XEED.hwndMain.setVisible(true);
+       dispose();
 
    }//GEN-LAST:event_formWindowClosing
 
    private void tblSavesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSavesMouseClicked
 
-      if (evt.getClickCount() != 2) {
-         return;
-      }
+       if (evt.getClickCount() != 2) {
+           return;
+       }
 
-      if (evt.getButton() != MouseEvent.BUTTON1) {
-         return;
-      }
+       if (evt.getButton() != MouseEvent.BUTTON1) {
+           return;
+       }
 
-      if (tblSaves.getSelectedRow() == -1) {
-         return;
-      }
+       if (tblSaves.getSelectedRow() == -1) {
+           return;
+       }
 
-      File save = new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).getParentFile();
-      try {
-         Desktop.getDesktop().open(save);
-      } catch (IOException ex) {
-      }
+       File save = new File((String) tblSaves.getValueAt(tblSaves.getSelectedRow(), 3)).getParentFile();
+       try {
+           Desktop.getDesktop().open(save);
+       } catch (IOException ex) {
+       }
 
    }//GEN-LAST:event_tblSavesMouseClicked
 
-   /*Derp*/
+    /*Derp*/
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JButton btnContinue;
    private javax.swing.JButton btnLoad;

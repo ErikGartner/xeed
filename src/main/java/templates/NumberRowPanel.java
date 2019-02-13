@@ -15,50 +15,50 @@ import xeed.XEED;
  */
 public class NumberRowPanel extends javax.swing.JPanel {
 
-   public Character character;
-   public String itemIdentifier;
+    public Character character;
+    public String itemIdentifier;
 
-   public NumberRowPanel(Character c, String id, String name) {
-      itemIdentifier = id;
-      character = c;
-      initComponents();
-      lblName.setText(name);
-      LoadData();
-   }
+    public NumberRowPanel(Character c, String id, String name) {
+        itemIdentifier = id;
+        character = c;
+        initComponents();
+        lblName.setText(name);
+        LoadData();
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
-      character.szData.put(itemIdentifier, txtNumber.getText());
+        if (character == null) {
+            return;
+        }
+        character.szData.put(itemIdentifier, txtNumber.getText());
 
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = character;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
-   }
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = character;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.szData.get(itemIdentifier);
+        Object o = character.szData.get(itemIdentifier);
 
-      if (o == null) {
-         return;
-      }
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(String.class)) {
-         txtNumber.setText((String) o);
-      } else {
-         System.out.println(lblName.getText() + " loaded invalid data");
-      }
+        if (o.getClass().equals(String.class)) {
+            txtNumber.setText((String) o);
+        } else {
+            System.out.println(lblName.getText() + " loaded invalid data");
+        }
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -91,24 +91,24 @@ public class NumberRowPanel extends javax.swing.JPanel {
    }// </editor-fold>//GEN-END:initComponents
 
    private void txtNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumberKeyReleased
-      ValidateNumber(txtNumber);
-      SaveData();
+       ValidateNumber(txtNumber);
+       SaveData();
    }//GEN-LAST:event_txtNumberKeyReleased
 
-   private void ValidateNumber(JTextField txtField) {
-      if (txtField.getText().isEmpty()) {
-         return;
-      }
+    private void ValidateNumber(JTextField txtField) {
+        if (txtField.getText().isEmpty()) {
+            return;
+        }
 
-      try {
-         float y = Float.parseFloat(txtField.getText());
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "The textfield '" + lblName.getText() + "' must contain a number.",
-               "Invalid data", JOptionPane.WARNING_MESSAGE);
-         txtField.setText("");
-      }
+        try {
+            float y = Float.parseFloat(txtField.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "The textfield '" + lblName.getText() + "' must contain a number.",
+                    "Invalid data", JOptionPane.WARNING_MESSAGE);
+            txtField.setText("");
+        }
 
-   }
+    }
 
    // Variables declaration - do not modify//GEN-BEGIN:variables
    public javax.swing.JLabel lblName;

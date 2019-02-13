@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmAbout.java
  *
  * Created on 2010-dec-19, 22:19:44
@@ -28,35 +28,35 @@ import javax.swing.JFrame;
  */
 public class AboutForm extends JFrame {
 
-   Timer timer = null;
-   CreditsRoller c = new CreditsRoller(this);
+    Timer timer = null;
+    CreditsRoller c = new CreditsRoller(this);
 
-   public AboutForm() {
+    public AboutForm() {
 
-      initComponents();
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/information.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/information.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      Toolkit tk = Toolkit.getDefaultToolkit();
-      Dimension screensize = tk.getScreenSize();
-      this.setLocation(screensize.width / 2 - this.getWidth() / 2, screensize.height / 2 - this.getHeight() / 2); //Bra start pos
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension screensize = tk.getScreenSize();
+        this.setLocation(screensize.width / 2 - this.getWidth() / 2, screensize.height / 2 - this.getHeight() / 2); //Bra start pos
 
-      jLabel3.setText(XEED.szHomePage);
-      jLabel5.setText(XEED.szVersion);
-      jLabel7.setText(Long.toString(XEED.lngBuild) + "." + XEED.GetXEEDCRC32());
-      jLabel9.setText(XEED.szCompiledOn);
+        jLabel3.setText(XEED.szHomePage);
+        jLabel5.setText(XEED.szVersion);
+        jLabel7.setText(Long.toString(XEED.lngBuild) + "." + XEED.GetXEEDCRC32());
+        jLabel9.setText(XEED.szCompiledOn);
 
-      timer = new Timer();
-      timer.scheduleAtFixedRate(c, 0, 2500);
-   }
+        timer = new Timer();
+        timer.scheduleAtFixedRate(c, 0, 2500);
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -247,14 +247,14 @@ public class AboutForm extends JFrame {
    }// </editor-fold>//GEN-END:initComponents
 
    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
-      XEED.hwndAbout = null;
-      timer.cancel();
-      timer.purge();
-      dispose();
+       XEED.hwndAbout = null;
+       timer.cancel();
+       timer.purge();
+       dispose();
    }//GEN-LAST:event_formWindowLostFocus
 
    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-      XEED.ExecuteLink(XEED.szHomePage);
+       XEED.ExecuteLink(XEED.szHomePage);
    }//GEN-LAST:event_jLabel3MouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
 
@@ -273,25 +273,24 @@ public class AboutForm extends JFrame {
    private javax.swing.JPanel jPanel1;
 
    // End of variables declaration//GEN-END:variables
+    class CreditsRoller extends TimerTask {
 
-   class CreditsRoller extends TimerTask {
+        private AboutForm A = null;
+        private int x = 0;
 
-      private AboutForm A = null;
-      private int x = 0;
+        public CreditsRoller(AboutForm a) {
+            A = a;
+        }
 
-      public CreditsRoller(AboutForm a) {
-         A = a;
-      }
+        public void run() {
 
-      public void run() {
+            if (x >= XEED.szCredits.length) {
+                x = 0;
+            }
 
-         if (x >= XEED.szCredits.length) {
-            x = 0;
-         }
-
-         A.jLabel12.setText(XEED.szCredits[x]);
-         A.jLabel12.repaint();
-         x++;
-      }
-   }
+            A.jLabel12.setText(XEED.szCredits[x]);
+            A.jLabel12.repaint();
+            x++;
+        }
+    }
 }

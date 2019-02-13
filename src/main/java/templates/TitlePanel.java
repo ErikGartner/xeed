@@ -10,12 +10,12 @@ package templates;
  */
 public class TitlePanel extends javax.swing.JPanel {
 
-   public TitlePanel(String name) {
-      initComponents();
-      lblName.setText(name);
-   }
+    public TitlePanel(String name) {
+        initComponents();
+        lblName.setText(name);
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 

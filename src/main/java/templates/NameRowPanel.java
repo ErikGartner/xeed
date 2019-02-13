@@ -13,54 +13,54 @@ import xeed.XEED;
  */
 public class NameRowPanel extends javax.swing.JPanel {
 
-   public Character character;
-   public String itemIdentifier;
+    public Character character;
+    public String itemIdentifier;
 
-   public NameRowPanel(Character c, String id, String name) {
-      itemIdentifier = id;
-      character = c;
-      initComponents();
-      lblName.setText(name);
-      LoadData();
-   }
+    public NameRowPanel(Character c, String id, String name) {
+        itemIdentifier = id;
+        character = c;
+        initComponents();
+        lblName.setText(name);
+        LoadData();
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
-      character.szData.put(itemIdentifier, txtName.getText());
-      character.hwndForm.setTitle(txtName.getText());
+        if (character == null) {
+            return;
+        }
+        character.szData.put(itemIdentifier, txtName.getText());
+        character.hwndForm.setTitle(txtName.getText());
 
-      Character[] affectedcharacters = new Character[XEED.charDB.size()];
-      XEED.charDB.toArray(affectedcharacters);
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, true, true, true, true, true, true, false, false);
+        Character[] affectedcharacters = new Character[XEED.charDB.size()];
+        XEED.charDB.toArray(affectedcharacters);
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, true, true, true, true, true, true, false, false);
 
-   }
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.szData.get(itemIdentifier);
+        Object o = character.szData.get(itemIdentifier);
 
-      if (o == null) {
-         return;
-      }
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(String.class)) {
+        if (o.getClass().equals(String.class)) {
 
-         txtName.setText((String) o);
+            txtName.setText((String) o);
 
-      } else {
-         System.out.println(lblName.getText() + " loaded invalid data");
-      }
+        } else {
+            System.out.println(lblName.getText() + " loaded invalid data");
+        }
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -96,11 +96,11 @@ public class NameRowPanel extends javax.swing.JPanel {
    }// </editor-fold>//GEN-END:initComponents
 
    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
-      SaveData();
+       SaveData();
    }//GEN-LAST:event_txtNameKeyReleased
 
    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
-      // TODO add your handling code here:
+       // TODO add your handling code here:
    }//GEN-LAST:event_txtNameActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

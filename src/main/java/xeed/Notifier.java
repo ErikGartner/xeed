@@ -99,10 +99,10 @@ public class Notifier implements Runnable {
     }
 
     public synchronized void FireUpdate(Character[] AffectedCharacters, boolean UpdateCharacterGroupWindow,
-                                        boolean UpdateCharacterItems, boolean UpdateCharacterRelationsWindowCharacterList,
-                                        boolean UpdateGroupMemberList, boolean UpdateGroupWindowRelations, boolean UpdateMainWindowCharacterList,
-                                        boolean UpdateRelationshipWindowLists, boolean UpdateCharacterRelationsWindowRelation,
-                                        boolean UpdateRelationsWindowRelation) {
+            boolean UpdateCharacterItems, boolean UpdateCharacterRelationsWindowCharacterList,
+            boolean UpdateGroupMemberList, boolean UpdateGroupWindowRelations, boolean UpdateMainWindowCharacterList,
+            boolean UpdateRelationshipWindowLists, boolean UpdateCharacterRelationsWindowRelation,
+            boolean UpdateRelationsWindowRelation) {
 
         UpdateTicket t = new UpdateTicket();
 

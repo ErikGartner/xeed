@@ -17,388 +17,388 @@ import javax.swing.table.TableCellRenderer;
 
 public class MainForm extends javax.swing.JFrame implements ActionListener, ItemListener {
 
-   /*
+    /*
     * Måste ha det så här, få inte läcka i constructor här...
-    */
-   public Template currentTemplate = null; //det template vars karaktärer visas nu.
-   public Vector jTableModel = new Vector(0); // Model för tabellen
-   public Vector jTableHeader = new Vector(0); // Headern för tabellen
-   public DefaultTableModel df = null; // Länkar de ovanstående
-   private ArrayList<mnuTemplateItem> mnuTemplates = new ArrayList(0);
-   private ButtonGroup btngroupFilters = new ButtonGroup();
-   private SearchPanel hwndSearchField = null;
+     */
+    public Template currentTemplate = null; //det template vars karaktärer visas nu.
+    public Vector jTableModel = new Vector(0); // Model för tabellen
+    public Vector jTableHeader = new Vector(0); // Headern för tabellen
+    public DefaultTableModel df = null; // Länkar de ovanstående
+    private ArrayList<mnuTemplateItem> mnuTemplates = new ArrayList(0);
+    private ButtonGroup btngroupFilters = new ButtonGroup();
+    private SearchPanel hwndSearchField = null;
 
-   public MainForm() {
-   }
+    public MainForm() {
+    }
 
-   public void initMain() {
+    public void initMain() {
 
-      initComponents();
-      df = (DefaultTableModel) tblCharacters.getModel();
-      tblCharacters.setDefaultRenderer(Object.class, new ImageCellRenderer());
+        initComponents();
+        df = (DefaultTableModel) tblCharacters.getModel();
+        tblCharacters.setDefaultRenderer(Object.class, new ImageCellRenderer());
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/icon_16.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/icon_16.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      XEED.NewSetting(false);
+        XEED.NewSetting(false);
 
-      /*
+        /*
        * Behandlar argument
-       */
-      if (XEED.szArguments.length > 0) {
-         for (int x = 0; x < XEED.szArguments.length; x++) {
-            if (XEED.szArguments[x].startsWith("/l:")) {
-               XEED.szPath = XEED.szArguments[x].substring("/l:".length());
-               File p = new File(XEED.szPath);
-               XEED.szDefaultDirectory = p.getParent();
-               XEED.LoadSetting(false, false);
-            } else if (XEED.szArguments[x].startsWith("/del_ud:")) {
-               new File(XEED.szArguments[x].substring("/del_ud:".length())).delete();
+         */
+        if (XEED.szArguments.length > 0) {
+            for (int x = 0; x < XEED.szArguments.length; x++) {
+                if (XEED.szArguments[x].startsWith("/l:")) {
+                    XEED.szPath = XEED.szArguments[x].substring("/l:".length());
+                    File p = new File(XEED.szPath);
+                    XEED.szDefaultDirectory = p.getParent();
+                    XEED.LoadSetting(false, false);
+                } else if (XEED.szArguments[x].startsWith("/del_ud:")) {
+                    new File(XEED.szArguments[x].substring("/del_ud:".length())).delete();
+                }
             }
-         }
-      }
+        }
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   public int GetCharacterRow() {
+    public int GetCharacterRow() {
 
-      if (tblCharacters.getRowCount() < 1) {
-         return -1;
-      }
+        if (tblCharacters.getRowCount() < 1) {
+            return -1;
+        }
 
-      for (int x = 0; x < tblCharacters.getColumnCount(); x++) {
-         if (tblCharacters.getValueAt(0, x).getClass() == xeed.Character.class) {
-            return x;
-         }
-      }
-
-      return -1;
-
-   }
-
-   public Character GetSelectedCharacter() {
-
-      if (tblCharacters.getSelectedRowCount() == 0) {
-         return null;
-      }
-
-      int CharacterRow = GetCharacterRow();
-      if (CharacterRow == -1) {
-         return null;
-      }
-
-      int intArray[] = tblCharacters.getSelectedRows();
-      return (Character) tblCharacters.getValueAt(intArray[0], CharacterRow);
-
-   }
-
-   public Character[] GetSelectedCharacters() {
-
-      if (tblCharacters.getSelectedRowCount() == 0) {
-         return null;
-      }
-
-      int CharacterRow = GetCharacterRow();
-      if (CharacterRow == -1) {
-         return null;
-      }
-
-      int intArray[] = tblCharacters.getSelectedRows();
-      Character[] cs = new Character[intArray.length];
-
-      for (int y = 0; y < intArray.length; y++) {
-         cs[y] = (Character) tblCharacters.getValueAt(intArray[y], CharacterRow);
-      }
-
-      return cs;
-
-   }
-
-   public void UpdateListItem(Character chr) {
-
-      for (int x = 0; x < jTableModel.size(); x++) {
-         Vector o = (Vector) jTableModel.get(x);
-         Character c = null;
-         for (int y = 0; y < o.size(); y++) {
-            if (o.get(y).getClass() == Character.class) {
-               c = (Character) o.get(y);
-               break;
+        for (int x = 0; x < tblCharacters.getColumnCount(); x++) {
+            if (tblCharacters.getValueAt(0, x).getClass() == xeed.Character.class) {
+                return x;
             }
-         }
-         if (c == null) {
+        }
+
+        return -1;
+
+    }
+
+    public Character GetSelectedCharacter() {
+
+        if (tblCharacters.getSelectedRowCount() == 0) {
+            return null;
+        }
+
+        int CharacterRow = GetCharacterRow();
+        if (CharacterRow == -1) {
+            return null;
+        }
+
+        int intArray[] = tblCharacters.getSelectedRows();
+        return (Character) tblCharacters.getValueAt(intArray[0], CharacterRow);
+
+    }
+
+    public Character[] GetSelectedCharacters() {
+
+        if (tblCharacters.getSelectedRowCount() == 0) {
+            return null;
+        }
+
+        int CharacterRow = GetCharacterRow();
+        if (CharacterRow == -1) {
+            return null;
+        }
+
+        int intArray[] = tblCharacters.getSelectedRows();
+        Character[] cs = new Character[intArray.length];
+
+        for (int y = 0; y < intArray.length; y++) {
+            cs[y] = (Character) tblCharacters.getValueAt(intArray[y], CharacterRow);
+        }
+
+        return cs;
+
+    }
+
+    public void UpdateListItem(Character chr) {
+
+        for (int x = 0; x < jTableModel.size(); x++) {
+            Vector o = (Vector) jTableModel.get(x);
+            Character c = null;
+            for (int y = 0; y < o.size(); y++) {
+                if (o.get(y).getClass() == Character.class) {
+                    c = (Character) o.get(y);
+                    break;
+                }
+            }
+            if (c == null) {
+                return;
+            }
+
+            if (c.characterID == chr.characterID) {
+                if (AllowedByFilters(chr) && XEED.charDB.contains(chr)) {
+                    Vector newo = CreateTableVector(chr);
+                    jTableModel.setElementAt(newo, x);
+                    df.fireTableDataChanged();
+                    return;
+                } else {
+                    jTableModel.remove(x);
+                    df.fireTableDataChanged();
+                    return;
+                }
+            }
+        }
+
+        if (AllowedByFilters(chr) && XEED.charDB.contains(chr)) {
+            AddListItem(chr);
+        }
+    }
+
+    public void AddListItem(Character chr) {
+
+        if (!AllowedByFilters(chr)) {
             return;
-         }
+        }
 
-         if (c.characterID == chr.characterID) {
-            if (AllowedByFilters(chr) && XEED.charDB.contains(chr)) {
-               Vector newo = CreateTableVector(chr);
-               jTableModel.setElementAt(newo, x);
-               df.fireTableDataChanged();
-               return;
+        Vector o = CreateTableVector(chr);
+
+        jTableModel.add(o);
+        df.fireTableDataChanged();
+    }
+
+    public Vector CreateTableVector(Character chr) {
+
+        Vector o = new Vector(0);
+        Template t = chr.template;
+        String keys[] = t.GetAllTemplateKeys();
+        for (int x = 0; x < keys.length; x++) {
+            if (t.IsToShowColumn(keys[x])) {
+
+                if (keys[x].equalsIgnoreCase(Constants.CHARACTER_NAME)) {
+                    o.add(chr);
+                } else {
+                    if (chr.chrData.containsKey(keys[x])) {
+                        o.add(((Character) chr.chrData.get(keys[x])).GetCharacterName());
+                    } else if (chr.szData.containsKey(keys[x])) {
+                        o.add(chr.szData.get(keys[x]));
+                    } else if (chr.extData.containsKey(keys[x])) {
+                        o.add(chr.extData.get(keys[x]));
+                    } else if (chr.imgData.containsKey(keys[x])) {
+                        o.add(chr.imgData.get(keys[x]));
+                    } else {
+                        o.add("");
+                    }
+                }
+
+            }
+        }
+
+        return o;
+    }
+
+    public boolean AllowedByFilters(Character chr) {
+
+        if (currentTemplate == null) {
+            return false;
+        }
+
+        if (!chr.templateIdentifier.equalsIgnoreCase(currentTemplate.GetTemplateID())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void PurgeThenPrintCharacters() {
+
+        jTableHeader = new Vector(0);
+
+        if (currentTemplate != null) {
+            String keys[] = currentTemplate.GetAllTemplateKeys();
+            String names[] = currentTemplate.GetAllTemplateNames();
+
+            for (int x = 0; x < keys.length; x++) {
+                if (currentTemplate.IsToShowColumn(keys[x])) {
+                    jTableHeader.add(names[x]);
+                }
+            }
+        }
+
+        jTableModel = new Vector(0, jTableHeader.size());
+        df.setDataVector(jTableModel, jTableHeader);
+        df.fireTableStructureChanged();
+
+        for (int i = 0; i < XEED.charDB.size(); i++) {
+            AddListItem(XEED.charDB.get(i));
+        }
+    }
+
+    public void DeleteSelectedCharacters() {
+
+        Character[] cs = GetSelectedCharacters();
+
+        for (int x = 0; x < cs.length; x++) {
+            XEED.DeleteCharacter(cs[x]);
+        }
+
+        df.fireTableDataChanged();
+        tblCharacters.clearSelection();
+    }
+
+    public void HandlePopUpRequest(MouseEvent evt) {
+
+        if (!evt.isPopupTrigger()) {
+            return;
+        }
+
+        if (tblCharacters.getSelectedRow() == -1) {
+            popMnuRemoveCharacter.setEnabled(false);
+        } else {
+            popMnuRemoveCharacter.setEnabled(true);
+        }
+
+        popMnuMain.show(evt.getComponent(), evt.getX(), evt.getY());
+    }
+
+    public void AddCharacterMenuItem(Template t, boolean selected) {
+
+        mnuTemplateItem mi = new mnuTemplateItem();
+        JMenuItem menuItem = new JMenuItem(t.GetName(), new ImageIcon(getClass().getResource("/user_add.png")));
+        JMenuItem menuItemPop = new JMenuItem(t.GetName(), new ImageIcon(getClass().getResource("/user_add.png")));
+        JRadioButtonMenuItem menuFilter = new JRadioButtonMenuItem(t.GetName(), selected);
+
+        menuItem.addActionListener(this);
+        menuItem.setName(t.GetTemplateID());
+        menuItemPop.addActionListener(this);
+        menuItemPop.setName(t.GetTemplateID());
+        menuFilter.addActionListener(this);
+        menuFilter.setName(t.GetTemplateID());
+        btngroupFilters.add(menuFilter);
+
+        mi.t = t;
+        mi.mnuAdd = menuItem;
+        mi.mnuFilter = menuFilter;
+        mi.mnuAddPop = menuItemPop;
+
+        mnuTemplates.add(mi);
+        mnuCharacters.add(menuItem);
+        popMnuMain.add(menuItemPop);
+        mnuFilter.add(mi.mnuFilter);
+
+    }
+
+    //remember to call AFTER the new currentTemplate is set!
+    public void RemoveCharacterMenuItem(Template t) {
+
+        mnuTemplateItem mi = null;
+        for (int x = 0; x < mnuTemplates.size(); x++) {
+            if (mnuTemplates.get(x).t.GetTemplateID().equalsIgnoreCase(t.GetTemplateID())) {
+                mi = mnuTemplates.get(x);
+                break;
+            }
+        }
+
+        if (mi == null) {
+            return;
+        }
+
+        popMnuMain.remove(mi.mnuAddPop);
+        mnuCharacters.remove(mi.mnuAdd);
+        btngroupFilters.remove(mi.mnuFilter);
+        mnuFilter.remove(mi.mnuFilter);
+        mnuTemplates.remove(mi);
+
+        if (currentTemplate != null) {
+            for (int x = 0; x < mnuTemplates.size(); x++) {
+                if (mnuTemplates.get(x).t.GetTemplateID().equalsIgnoreCase(currentTemplate.GetTemplateID())) {
+                    mnuTemplates.get(x).mnuFilter.setSelected(true);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public void RemoveSearchField() {
+        if (hwndSearchField != null) {
+            getContentPane().remove(hwndSearchField);
+            hwndSearchField = null;
+            getContentPane().validate();
+        }
+    }
+
+    public void SetSelectedCharacters(ArrayList<Character> cs) {
+
+        int CharacterRow = GetCharacterRow();
+        if (CharacterRow == -1) {
+            return;
+        }
+
+        tblCharacters.getSelectionModel().clearSelection();
+
+        if (cs == null) { //check after clear, since null means to clear selection.
+            return;
+        }
+
+        for (int x = 0; x < tblCharacters.getRowCount(); x++) {
+            Character c = (Character) tblCharacters.getValueAt(x, CharacterRow);
+
+            if (cs.contains(c)) {
+                tblCharacters.getSelectionModel().addSelectionInterval(x, x);
+            }
+        }
+
+    }
+
+    public void SelectCharactersByStringSearch(String s, boolean all) {
+
+        s = s.toLowerCase();
+
+        ArrayList<Character> cs = new ArrayList(0);
+        for (int x = 0; x < jTableModel.size(); x++) {
+
+            Vector v = (Vector) jTableModel.get(x);
+            Character c = (Character) v.get(0);
+            if (c.GetCharacterName().toLowerCase().indexOf(s) > -1) {
+                cs.add(c);
             } else {
-               jTableModel.remove(x);
-               df.fireTableDataChanged();
-               return;
+                if (all) {
+                    for (int y = 1; y < v.size(); y++) {
+                        String s2 = (String) v.get(y);
+                        if (s2.toLowerCase().indexOf(s) > -1) {
+                            cs.add(c);
+                            break;
+                        }
+                    }
+                }
             }
-         }
-      }
+        }
 
-      if (AllowedByFilters(chr) && XEED.charDB.contains(chr)) {
-         AddListItem(chr);
-      }
-   }
+        SetSelectedCharacters(cs);
 
-   public void AddListItem(Character chr) {
+    }
 
-      if (!AllowedByFilters(chr)) {
-         return;
-      }
+    //Listeners for character items.
+    @Override
+    public void actionPerformed(ActionEvent ae) {
 
-      Vector o = CreateTableVector(chr);
+        for (int x = 0; x < mnuTemplates.size(); x++) {
 
-      jTableModel.add(o);
-      df.fireTableDataChanged();
-   }
+            if (ae.getSource() == mnuTemplates.get(x).mnuAdd || ae.getSource() == mnuTemplates.get(x).mnuAddPop) {
 
-   public Vector CreateTableVector(Character chr) {
+                XEED.AddCharacter(mnuTemplates.get(x).t).DisplayCharacter();
 
-      Vector o = new Vector(0);
-      Template t = chr.template;
-      String keys[] = t.GetAllTemplateKeys();
-      for (int x = 0; x < keys.length; x++) {
-         if (t.IsToShowColumn(keys[x])) {
+            } else if (ae.getSource() == mnuTemplates.get(x).mnuFilter) {
 
-            if (keys[x].equalsIgnoreCase(Constants.CHARACTER_NAME)) {
-               o.add(chr);
-            } else {
-               if (chr.chrData.containsKey(keys[x])) {
-                  o.add(((Character) chr.chrData.get(keys[x])).GetCharacterName());
-               } else if (chr.szData.containsKey(keys[x])) {
-                  o.add(chr.szData.get(keys[x]));
-               } else if (chr.extData.containsKey(keys[x])) {
-                  o.add(chr.extData.get(keys[x]));
-               } else if (chr.imgData.containsKey(keys[x])) {
-                  o.add(chr.imgData.get(keys[x]));
-               } else {
-                  o.add("");
-               }
+                currentTemplate = mnuTemplates.get(x).t;
+                PurgeThenPrintCharacters();
+
             }
 
-         }
-      }
+        }
+    }
 
-      return o;
-   }
-
-   public boolean AllowedByFilters(Character chr) {
-
-      if (currentTemplate == null) {
-         return false;
-      }
-
-      if (!chr.templateIdentifier.equalsIgnoreCase(currentTemplate.GetTemplateID())) {
-         return false;
-      }
-
-      return true;
-   }
-
-   public void PurgeThenPrintCharacters() {
-
-      jTableHeader = new Vector(0);
-
-      if (currentTemplate != null) {
-         String keys[] = currentTemplate.GetAllTemplateKeys();
-         String names[] = currentTemplate.GetAllTemplateNames();
-
-         for (int x = 0; x < keys.length; x++) {
-            if (currentTemplate.IsToShowColumn(keys[x])) {
-               jTableHeader.add(names[x]);
-            }
-         }
-      }
-
-      jTableModel = new Vector(0, jTableHeader.size());
-      df.setDataVector(jTableModel, jTableHeader);
-      df.fireTableStructureChanged();
-
-      for (int i = 0; i < XEED.charDB.size(); i++) {
-         AddListItem(XEED.charDB.get(i));
-      }
-   }
-
-   public void DeleteSelectedCharacters() {
-
-      Character[] cs = GetSelectedCharacters();
-
-      for (int x = 0; x < cs.length; x++) {
-         XEED.DeleteCharacter(cs[x]);
-      }
-
-      df.fireTableDataChanged();
-      tblCharacters.clearSelection();
-   }
-
-   public void HandlePopUpRequest(MouseEvent evt) {
-
-      if (!evt.isPopupTrigger()) {
-         return;
-      }
-
-      if (tblCharacters.getSelectedRow() == -1) {
-         popMnuRemoveCharacter.setEnabled(false);
-      } else {
-         popMnuRemoveCharacter.setEnabled(true);
-      }
-
-      popMnuMain.show(evt.getComponent(), evt.getX(), evt.getY());
-   }
-
-   public void AddCharacterMenuItem(Template t, boolean selected) {
-
-      mnuTemplateItem mi = new mnuTemplateItem();
-      JMenuItem menuItem = new JMenuItem(t.GetName(), new ImageIcon(getClass().getResource("/user_add.png")));
-      JMenuItem menuItemPop = new JMenuItem(t.GetName(), new ImageIcon(getClass().getResource("/user_add.png")));
-      JRadioButtonMenuItem menuFilter = new JRadioButtonMenuItem(t.GetName(), selected);
-
-      menuItem.addActionListener(this);
-      menuItem.setName(t.GetTemplateID());
-      menuItemPop.addActionListener(this);
-      menuItemPop.setName(t.GetTemplateID());
-      menuFilter.addActionListener(this);
-      menuFilter.setName(t.GetTemplateID());
-      btngroupFilters.add(menuFilter);
-
-      mi.t = t;
-      mi.mnuAdd = menuItem;
-      mi.mnuFilter = menuFilter;
-      mi.mnuAddPop = menuItemPop;
-
-      mnuTemplates.add(mi);
-      mnuCharacters.add(menuItem);
-      popMnuMain.add(menuItemPop);
-      mnuFilter.add(mi.mnuFilter);
-
-   }
-
-   //remember to call AFTER the new currentTemplate is set!
-   public void RemoveCharacterMenuItem(Template t) {
-
-      mnuTemplateItem mi = null;
-      for (int x = 0; x < mnuTemplates.size(); x++) {
-         if (mnuTemplates.get(x).t.GetTemplateID().equalsIgnoreCase(t.GetTemplateID())) {
-            mi = mnuTemplates.get(x);
-            break;
-         }
-      }
-
-      if (mi == null) {
-         return;
-      }
-
-      popMnuMain.remove(mi.mnuAddPop);
-      mnuCharacters.remove(mi.mnuAdd);
-      btngroupFilters.remove(mi.mnuFilter);
-      mnuFilter.remove(mi.mnuFilter);
-      mnuTemplates.remove(mi);
-
-      if (currentTemplate != null) {
-         for (int x = 0; x < mnuTemplates.size(); x++) {
-            if (mnuTemplates.get(x).t.GetTemplateID().equalsIgnoreCase(currentTemplate.GetTemplateID())) {
-               mnuTemplates.get(x).mnuFilter.setSelected(true);
-               break;
-            }
-         }
-      }
-
-   }
-
-   public void RemoveSearchField() {
-      if (hwndSearchField != null) {
-         getContentPane().remove(hwndSearchField);
-         hwndSearchField = null;
-         getContentPane().validate();
-      }
-   }
-
-   public void SetSelectedCharacters(ArrayList<Character> cs) {
-
-      int CharacterRow = GetCharacterRow();
-      if (CharacterRow == -1) {
-         return;
-      }
-
-      tblCharacters.getSelectionModel().clearSelection();
-
-      if (cs == null) { //check after clear, since null means to clear selection.
-         return;
-      }
-
-      for (int x = 0; x < tblCharacters.getRowCount(); x++) {
-         Character c = (Character) tblCharacters.getValueAt(x, CharacterRow);
-
-         if (cs.contains(c)) {
-            tblCharacters.getSelectionModel().addSelectionInterval(x, x);
-         }
-      }
-
-   }
-
-   public void SelectCharactersByStringSearch(String s, boolean all) {
-
-      s = s.toLowerCase();
-
-      ArrayList<Character> cs = new ArrayList(0);
-      for (int x = 0; x < jTableModel.size(); x++) {
-
-         Vector v = (Vector) jTableModel.get(x);
-         Character c = (Character) v.get(0);
-         if (c.GetCharacterName().toLowerCase().indexOf(s) > -1) {
-            cs.add(c);
-         } else {
-            if (all) {
-               for (int y = 1; y < v.size(); y++) {
-                  String s2 = (String) v.get(y);
-                  if (s2.toLowerCase().indexOf(s) > -1) {
-                     cs.add(c);
-                     break;
-                  }
-               }
-            }
-         }
-      }
-
-      SetSelectedCharacters(cs);
-
-   }
-
-   //Listeners for character items.
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-
-      for (int x = 0; x < mnuTemplates.size(); x++) {
-
-         if (ae.getSource() == mnuTemplates.get(x).mnuAdd || ae.getSource() == mnuTemplates.get(x).mnuAddPop) {
-
-            XEED.AddCharacter(mnuTemplates.get(x).t).DisplayCharacter();
-
-         } else if (ae.getSource() == mnuTemplates.get(x).mnuFilter) {
-
-            currentTemplate = mnuTemplates.get(x).t;
-            PurgeThenPrintCharacters();
-
-         }
-
-      }
-   }
-
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -716,336 +716,336 @@ public class MainForm extends javax.swing.JFrame implements ActionListener, Item
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
-      if (!XEED.IsSettingEmpty()) {
-         int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
-               JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-         if (intRet == 0) {
-            if (!XEED.SaveSetting(false, true)) {
+       if (!XEED.IsSettingEmpty()) {
+           int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
+                   JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+           if (intRet == 0) {
+               if (!XEED.SaveSetting(false, true)) {
+                   return;
+               }
+           } else if (intRet == -1) {
                return;
-            }
-         } else if (intRet == -1) {
-            return;
-         }
-      }
+           }
+       }
 
-      XEED.ReadWriteOptions(true);
+       XEED.ReadWriteOptions(true);
 
-      if (XEED.hwndFileLock != null) {
-         XEED.hwndFileLock.ReleaseLock();
-      }
+       if (XEED.hwndFileLock != null) {
+           XEED.hwndFileLock.ReleaseLock();
+       }
 
-      System.exit(0);
+       System.exit(0);
 
    }//GEN-LAST:event_formWindowClosing
 
    private void tblCharactersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCharactersMouseClicked
 
-      if (evt.getButton() != 1) {
-         return;
-      }
+       if (evt.getButton() != 1) {
+           return;
+       }
 
-      if (evt.getClickCount() != 2) {
-         return;
-      }
+       if (evt.getClickCount() != 2) {
+           return;
+       }
 
-      if (tblCharacters.getSelectedRow() == -1) {
-         return;
-      }
+       if (tblCharacters.getSelectedRow() == -1) {
+           return;
+       }
 
-      if (tblCharacters.getSelectedRowCount() > 1) {
-         int intRet = JOptionPane.showOptionDialog(null,
-               "Are you sure you want to open " + tblCharacters.getSelectedRowCount() + " characters?",
-               "Open multiple characters?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-         if (intRet != 0) {
-            return;
-         }
-      }
+       if (tblCharacters.getSelectedRowCount() > 1) {
+           int intRet = JOptionPane.showOptionDialog(null,
+                   "Are you sure you want to open " + tblCharacters.getSelectedRowCount() + " characters?",
+                   "Open multiple characters?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+           if (intRet != 0) {
+               return;
+           }
+       }
 
-      Character[] cs = GetSelectedCharacters();
-      for (int x = 0; x < cs.length; x++) {
-         if (cs[x] != null) {
-            cs[x].DisplayCharacter();
-         }
-      }
+       Character[] cs = GetSelectedCharacters();
+       for (int x = 0; x < cs.length; x++) {
+           if (cs[x] != null) {
+               cs[x].DisplayCharacter();
+           }
+       }
    }//GEN-LAST:event_tblCharactersMouseClicked
 
    private void tblCharactersKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblCharactersKeyPressed
-      if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
-         Character[] cs = GetSelectedCharacters();
-         if (cs == null) {
-            return;
-         }
-
-         if (cs.length > 1) {
-            int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to open the selected " + cs.length
-                  + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION,
-                  JOptionPane.QUESTION_MESSAGE, null, null, null);
-            if (intRet != 0) {
+           Character[] cs = GetSelectedCharacters();
+           if (cs == null) {
                return;
-            }
-         } else if (cs.length == 0) {
-            return;
-         }
+           }
 
-         for (int x = 0; x < cs.length; x++) {
-            if (cs[x] != null) {
-               cs[x].DisplayCharacter();
-            }
-         }
+           if (cs.length > 1) {
+               int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to open the selected " + cs.length
+                       + " characters?", "Open multiple characters?", JOptionPane.YES_NO_OPTION,
+                       JOptionPane.QUESTION_MESSAGE, null, null, null);
+               if (intRet != 0) {
+                   return;
+               }
+           } else if (cs.length == 0) {
+               return;
+           }
 
-      } else if (evt.getKeyCode() == KeyEvent.VK_F && evt.isControlDown()) {
+           for (int x = 0; x < cs.length; x++) {
+               if (cs[x] != null) {
+                   cs[x].DisplayCharacter();
+               }
+           }
 
-         if (hwndSearchField == null) {
-            hwndSearchField = new SearchPanel(evt.isShiftDown());
-            getContentPane().add(hwndSearchField, 0);
-         }
-         getContentPane().validate();
-         hwndSearchField.GetFocus();
+       } else if (evt.getKeyCode() == KeyEvent.VK_F && evt.isControlDown()) {
 
-      } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+           if (hwndSearchField == null) {
+               hwndSearchField = new SearchPanel(evt.isShiftDown());
+               getContentPane().add(hwndSearchField, 0);
+           }
+           getContentPane().validate();
+           hwndSearchField.GetFocus();
 
-         RemoveSearchField();
+       } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
 
-      }
+           RemoveSearchField();
+
+       }
 
    }//GEN-LAST:event_tblCharactersKeyPressed
 
    private void mnuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAboutActionPerformed
-      if (XEED.hwndAbout == null) {
-         XEED.hwndAbout = new AboutForm();
-      }
-      XEED.hwndAbout.setVisible(true);
+       if (XEED.hwndAbout == null) {
+           XEED.hwndAbout = new AboutForm();
+       }
+       XEED.hwndAbout.setVisible(true);
    }//GEN-LAST:event_mnuAboutActionPerformed
 
    private void mnuOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOptionsActionPerformed
 
-      if (XEED.hwndOption == null) {
-         XEED.hwndOption = new OptionsForm();
-      }
-      XEED.hwndOption.setVisible(true);
+       if (XEED.hwndOption == null) {
+           XEED.hwndOption = new OptionsForm();
+       }
+       XEED.hwndOption.setVisible(true);
    }//GEN-LAST:event_mnuOptionsActionPerformed
 
    private void mnuLineageChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuLineageChartActionPerformed
-      if (XEED.hwndGraph == null) {
-         XEED.hwndGraph = new GraphForm();
-      }
-      XEED.hwndGraph.setVisible(true);
+       if (XEED.hwndGraph == null) {
+           XEED.hwndGraph = new GraphForm();
+       }
+       XEED.hwndGraph.setVisible(true);
    }//GEN-LAST:event_mnuLineageChartActionPerformed
 
    private void mnuNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuNotesActionPerformed
-      if (XEED.hwndNotes == null) {
-         XEED.hwndNotes = new NotesForm();
-      }
-      XEED.hwndNotes.setVisible(true);
+       if (XEED.hwndNotes == null) {
+           XEED.hwndNotes = new NotesForm();
+       }
+       XEED.hwndNotes.setVisible(true);
    }//GEN-LAST:event_mnuNotesActionPerformed
 
    private void mnuExportCharsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExportCharsActionPerformed
 
-      Character[] cs = GetSelectedCharacters();
-      if (cs == null) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
-      if (cs.length == 0) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       Character[] cs = GetSelectedCharacters();
+       if (cs == null) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+       if (cs.length == 0) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (currentTemplate == null) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (currentTemplate == null) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the exporter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (XEED.hwndCharacterExporter == null) {
-         XEED.hwndCharacterExporter = new CharacterExporterForm(cs, currentTemplate);
-      }
-      XEED.hwndCharacterExporter.setVisible(true);
+       if (XEED.hwndCharacterExporter == null) {
+           XEED.hwndCharacterExporter = new CharacterExporterForm(cs, currentTemplate);
+       }
+       XEED.hwndCharacterExporter.setVisible(true);
 
    }//GEN-LAST:event_mnuExportCharsActionPerformed
 
    private void mnuSaveSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveSettingActionPerformed
-      setEnabled(false);
-      XEED.SaveSetting(false, false);
-      setEnabled(true);
-      requestFocus();
+       setEnabled(false);
+       XEED.SaveSetting(false, false);
+       setEnabled(true);
+       requestFocus();
    }//GEN-LAST:event_mnuSaveSettingActionPerformed
 
    private void mnuLoadSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuLoadSettingActionPerformed
-      setEnabled(false);
-      XEED.LoadSetting(true, true);
-      setEnabled(true);
-      requestFocus();
+       setEnabled(false);
+       XEED.LoadSetting(true, true);
+       setEnabled(true);
+       requestFocus();
    }//GEN-LAST:event_mnuLoadSettingActionPerformed
 
    private void mnuNewSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuNewSettingActionPerformed
-      XEED.NewSetting(true);
+       XEED.NewSetting(true);
    }//GEN-LAST:event_mnuNewSettingActionPerformed
 
    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-      if (XEED.hwndColumns == null) {
-         XEED.hwndColumns = new ColumnForm();
-      }
-      XEED.hwndColumns.setVisible(true);
+       if (XEED.hwndColumns == null) {
+           XEED.hwndColumns = new ColumnForm();
+       }
+       XEED.hwndColumns.setVisible(true);
    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
    private void mnuExportSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExportSettingActionPerformed
-      try {
+       try {
 
-         JFileChooser fc = new JFileChooser();
-         fc.setDialogTitle("Select a were you want your setting notes folder.");
-         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+           JFileChooser fc = new JFileChooser();
+           fc.setDialogTitle("Select a were you want your setting notes folder.");
+           fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-         int intRet = fc.showSaveDialog(null);
+           int intRet = fc.showSaveDialog(null);
 
-         if (intRet != JFileChooser.APPROVE_OPTION) {
-            JOptionPane.showMessageDialog(null, "Notes wasn't exported.", "Operation cancelled",
-                  JOptionPane.WARNING_MESSAGE);
-            return;
-         }
+           if (intRet != JFileChooser.APPROVE_OPTION) {
+               JOptionPane.showMessageDialog(null, "Notes wasn't exported.", "Operation cancelled",
+                       JOptionPane.WARNING_MESSAGE);
+               return;
+           }
 
-         File d = null;
-         if (!XEED.szSettingName.isEmpty()) {
-            d = new File(fc.getSelectedFile().getAbsolutePath() + File.separator + XEED.szSettingName + " notes");
-         } else {
-            d = new File(fc.getSelectedFile().getAbsolutePath() + File.separator + "Setting Notes");
-         }
-         d.mkdirs();
-         XEED.ExportNodesToFiles(XEED.rootNode.GetChildren(), 0, d.getAbsolutePath());
+           File d = null;
+           if (!XEED.szSettingName.isEmpty()) {
+               d = new File(fc.getSelectedFile().getAbsolutePath() + File.separator + XEED.szSettingName + " notes");
+           } else {
+               d = new File(fc.getSelectedFile().getAbsolutePath() + File.separator + "Setting Notes");
+           }
+           d.mkdirs();
+           XEED.ExportNodesToFiles(XEED.rootNode.GetChildren(), 0, d.getAbsolutePath());
 
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null,
-               "Error when exporting the setting notes!\nPlease make sure all note/folder names are valid for export\n"
-                     + e, "Error!", JOptionPane.ERROR_MESSAGE);
-      }
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null,
+                   "Error when exporting the setting notes!\nPlease make sure all note/folder names are valid for export\n"
+                   + e, "Error!", JOptionPane.ERROR_MESSAGE);
+       }
    }//GEN-LAST:event_mnuExportSettingActionPerformed
 
    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-      if (XEED.hwndGroup == null) {
-         XEED.hwndGroup = new GroupForm();
-      }
-      XEED.hwndGroup.setVisible(true);
+       if (XEED.hwndGroup == null) {
+           XEED.hwndGroup = new GroupForm();
+       }
+       XEED.hwndGroup.setVisible(true);
    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-      if (XEED.hwndRelations == null) {
-         XEED.hwndRelations = new RelationsForm();
-      }
-      XEED.hwndRelations.setVisible(true);
+       if (XEED.hwndRelations == null) {
+           XEED.hwndRelations = new RelationsForm();
+       }
+       XEED.hwndRelations.setVisible(true);
    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
    private void mnuSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveAsActionPerformed
-      setEnabled(false);
-      XEED.SaveSetting(false, true);
-      setEnabled(true);
-      requestFocus();
+       setEnabled(false);
+       XEED.SaveSetting(false, true);
+       setEnabled(true);
+       requestFocus();
    }//GEN-LAST:event_mnuSaveAsActionPerformed
 
    private void popMnuRemoveCharacterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popMnuRemoveCharacterActionPerformed
-      mnuDeleteCharacterActionPerformed(evt);
+       mnuDeleteCharacterActionPerformed(evt);
    }//GEN-LAST:event_popMnuRemoveCharacterActionPerformed
 
    private void jScrollPane2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MousePressed
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_jScrollPane2MousePressed
 
    private void tblCharactersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCharactersMouseReleased
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_tblCharactersMouseReleased
 
    private void tblCharactersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCharactersMousePressed
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_tblCharactersMousePressed
 
    private void jScrollPane2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseReleased
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_jScrollPane2MouseReleased
 
    private void mnuTemplateCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTemplateCreatorActionPerformed
-      if (XEED.hwndTemplateCreator == null) {
-         XEED.hwndTemplateCreator = new TemplateCreatorForm();
-      }
-      XEED.hwndTemplateCreator.setVisible(true);
+       if (XEED.hwndTemplateCreator == null) {
+           XEED.hwndTemplateCreator = new TemplateCreatorForm();
+       }
+       XEED.hwndTemplateCreator.setVisible(true);
    }//GEN-LAST:event_mnuTemplateCreatorActionPerformed
 
    private void mnuTemplateManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTemplateManagerActionPerformed
-      if (XEED.hwndTemplateManager == null) {
-         XEED.hwndTemplateManager = new TemplateManagerForm();
-      }
-      XEED.hwndTemplateManager.setVisible(true);
+       if (XEED.hwndTemplateManager == null) {
+           XEED.hwndTemplateManager = new TemplateManagerForm();
+       }
+       XEED.hwndTemplateManager.setVisible(true);
    }//GEN-LAST:event_mnuTemplateManagerActionPerformed
 
    private void mnuDeleteCharacterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteCharacterActionPerformed
 
-      if (tblCharacters.getSelectedRowCount() == 0) {
-         return;
-      }
+       if (tblCharacters.getSelectedRowCount() == 0) {
+           return;
+       }
 
-      if (tblCharacters.getSelectedRowCount() > 1) {
-         int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to delete the selected "
-               + tblCharacters.getSelectedRowCount() + " characters?", "Delete selected characters?",
-               JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-         if (intRet != 0) {
-            return;
-         }
-      } else {
-         int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to delete "
-               + GetSelectedCharacter().GetCharacterName(), "Delete selected character?", JOptionPane.YES_NO_OPTION,
-               JOptionPane.QUESTION_MESSAGE, null, null, null);
-         if (intRet != 0) {
-            return;
-         }
-      }
+       if (tblCharacters.getSelectedRowCount() > 1) {
+           int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to delete the selected "
+                   + tblCharacters.getSelectedRowCount() + " characters?", "Delete selected characters?",
+                   JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+           if (intRet != 0) {
+               return;
+           }
+       } else {
+           int intRet = JOptionPane.showOptionDialog(null, "Are you sure you want to delete "
+                   + GetSelectedCharacter().GetCharacterName(), "Delete selected character?", JOptionPane.YES_NO_OPTION,
+                   JOptionPane.QUESTION_MESSAGE, null, null, null);
+           if (intRet != 0) {
+               return;
+           }
+       }
 
-      DeleteSelectedCharacters();
+       DeleteSelectedCharacters();
 
    }//GEN-LAST:event_mnuDeleteCharacterActionPerformed
 
    private void mnuConverterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConverterActionPerformed
 
-      Character[] cs = GetSelectedCharacters();
-      if (cs == null) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
-      if (cs.length == 0) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       Character[] cs = GetSelectedCharacters();
+       if (cs == null) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+       if (cs.length == 0) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (currentTemplate == null) {
-         JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
-               "No characters selected", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (currentTemplate == null) {
+           JOptionPane.showMessageDialog(null, "Please select one or more characters before launching the converter",
+                   "No characters selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (XEED.templateDB.size() < 2) {
-         JOptionPane.showMessageDialog(null, "You need more than 1 template to use the character converter.",
-               "Insufficient number of templates", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (XEED.templateDB.size() < 2) {
+           JOptionPane.showMessageDialog(null, "You need more than 1 template to use the character converter.",
+                   "Insufficient number of templates", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (XEED.hwndCharacterConverter == null) {
-         XEED.hwndCharacterConverter = new CharacterConverterForm(cs);
-      }
-      XEED.hwndCharacterConverter.setVisible(true);
+       if (XEED.hwndCharacterConverter == null) {
+           XEED.hwndCharacterConverter = new CharacterConverterForm(cs);
+       }
+       XEED.hwndCharacterConverter.setVisible(true);
    }//GEN-LAST:event_mnuConverterActionPerformed
 
    private void mnuOverviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOverviewActionPerformed
-      if (XEED.hwndSettingInfo == null) {
-         XEED.hwndSettingInfo = new SettingInfoForm();
-      }
-      XEED.hwndSettingInfo.setVisible(true);
+       if (XEED.hwndSettingInfo == null) {
+           XEED.hwndSettingInfo = new SettingInfoForm();
+       }
+       XEED.hwndSettingInfo.setVisible(true);
    }//GEN-LAST:event_mnuOverviewActionPerformed
 
-   /*
+    /*
     *
-    */
+     */
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JMenu jMenu2;
    private javax.swing.JMenuBar jMenuBar1;
@@ -1084,64 +1084,63 @@ public class MainForm extends javax.swing.JFrame implements ActionListener, Item
    public javax.swing.JTable tblCharacters;
 
    // End of variables declaration//GEN-END:variables
+    @Override
+    public void itemStateChanged(ItemEvent ie) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-   @Override
-   public void itemStateChanged(ItemEvent ie) {
-      throw new UnsupportedOperationException("Not supported yet.");
-   }
+    class mnuTemplateItem {
 
-   class mnuTemplateItem {
+        Template t;
+        JMenuItem mnuAdd;
+        JMenuItem mnuAddPop;
+        JRadioButtonMenuItem mnuFilter;
+    }
 
-      Template t;
-      JMenuItem mnuAdd;
-      JMenuItem mnuAddPop;
-      JRadioButtonMenuItem mnuFilter;
-   }
+    class ImageCellRenderer extends JLabel implements TableCellRenderer {
+        //TODO Fixa multiline textbox.
 
-   class ImageCellRenderer extends JLabel implements TableCellRenderer {
-      //TODO Fixa multiline textbox.
+        public ImageCellRenderer() {
+            super();
+            setOpaque(true);
+            setVerticalAlignment(JLabel.TOP);
+        }
 
-      public ImageCellRenderer() {
-         super();
-         setOpaque(true);
-         setVerticalAlignment(JLabel.TOP);
-      }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
 
-      @Override
-      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-            int row, int column) {
-
-         if (isSelected) {
-            setBackground(table.getSelectionBackground());
-            setForeground(table.getSelectionForeground());
-         } else {
-            setBackground(table.getBackground());
-            setForeground(table.getForeground());
-         }
-
-         if (hasFocus) {
-            setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
-         } else {
-            setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-         }
-
-         if (value == null) {
-            setText("");
-            setIcon(null);
-         } else {
-            if (value.getClass() != ImageIcon.class) {
-               setText(value.toString().replace('\n', ' '));
-               setIcon(null);
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
             } else {
-               setText(null);
-               setIcon((ImageIcon) value);
-               if (getPreferredSize().height > table.getRowHeight(row)) {
-                  table.setRowHeight(row, getPreferredSize().height);
-               }
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
             }
-         }
 
-         return this;
-      }
-   }
+            if (hasFocus) {
+                setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
+            } else {
+                setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            }
+
+            if (value == null) {
+                setText("");
+                setIcon(null);
+            } else {
+                if (value.getClass() != ImageIcon.class) {
+                    setText(value.toString().replace('\n', ' '));
+                    setIcon(null);
+                } else {
+                    setText(null);
+                    setIcon((ImageIcon) value);
+                    if (getPreferredSize().height > table.getRowHeight(row)) {
+                        table.setRowHeight(row, getPreferredSize().height);
+                    }
+                }
+            }
+
+            return this;
+        }
+    }
 }

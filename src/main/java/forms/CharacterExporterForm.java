@@ -26,468 +26,469 @@ import org.json.simple.JSONArray;
 
 public class CharacterExporterForm extends javax.swing.JFrame {
 
-   private Vector jTableModel = new Vector(0);
-   private Vector jTableHeader = new Vector(0);
-   private DefaultTableModel df;
-   private xeed.Character[] chars;
-   private Template template;
-   private boolean consolidate = false;
+    private Vector jTableModel = new Vector(0);
+    private Vector jTableHeader = new Vector(0);
+    private DefaultTableModel df;
+    private xeed.Character[] chars;
+    private Template template;
+    private boolean consolidate = false;
 
-   /**
-    * Creates new form frmCharacterExporter
-    */
-   public CharacterExporterForm(Character[] cs, Template t) {
+    /**
+     * Creates new form frmCharacterExporter
+     */
+    public CharacterExporterForm(Character[] cs, Template t) {
 
-      initComponents();
-      chars = cs;
-      template = t;
+        initComponents();
+        chars = cs;
+        template = t;
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/user_go.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
-      df = (DefaultTableModel) tblData.getModel();
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/user_go.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
+        df = (DefaultTableModel) tblData.getModel();
 
-      String szTitle = "Exporting(" + cs.length + "): ";
-      for (int x = 0; x < cs.length; x++) {
-         szTitle += cs[x].GetCharacterName();
-         if (x != cs.length - 1) {
-            szTitle += ", ";
-         }
-      }
-      setTitle(szTitle);
-
-      LoadSorterOptions();
-
-      JustifyColumns();
-      LoadFields(false);
-
-   }
-
-   public final void JustifyColumns() {
-
-      tblData.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblData.getColumnModel().getColumn(0).setResizable(false);
-      tblData.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblData.getColumnModel().getColumn(1).setPreferredWidth(tblData.getWidth() - 20);
-
-   }
-
-   private void LoadSorterOptions() {
-
-      comboSort.removeAllItems();
-      String[] keys = template.GetAllTemplateKeys();
-      String[] names = template.GetAllTemplateNames();
-
-      for (int x = 0; x < keys.length; x++) {
-
-         combo_item prop = new combo_item();
-         prop.key = keys[x];
-         prop.name = names[x];
-         boolean type[] = template.GetDataTypeArray(keys[x]);
-
-         prop.isChrData = type[0];
-         prop.isExtData = type[1];
-         prop.isImgData = type[2];
-         prop.isSzData = type[3];
-
-         if ((prop.isChrData || prop.isSzData) && (!prop.isImgData && !prop.isExtData)) {
-            comboSort.addItem(prop);
-         }
-      }
-
-   }
-
-   public final void LoadFields(boolean selected) {
-
-      jTableModel.clear();
-
-      String[] names = template.GetAllTemplateNames();
-      String[] keys = template.GetAllTemplateKeys();
-
-      for (int x = 0; x < keys.length; x++) {
-         Vector o = new Vector(0);
-         o.add(selected);
-
-         table_item t = new table_item();
-         t.name = names[x];
-         t.key = keys[x];
-
-         o.add(t);
-         jTableModel.add(o);
-      }
-      df.fireTableDataChanged();
-   }
-
-   private void SortCharacters() {
-
-      combo_item selected_sort_type = (combo_item) comboSort.getSelectedItem();
-
-      sort_item[] sorts = new sort_item[chars.length];
-      for (int x = 0; x < chars.length; x++) {
-
-         sort_item s = new sort_item();
-         s.c = chars[x];
-
-         if (selected_sort_type.isSzData) {
-            String o = (String) chars[x].szData.get(selected_sort_type.key);
-            if (o == null) {
-               s.sortString = "";
-            } else {
-               s.sortString = o;
+        String szTitle = "Exporting(" + cs.length + "): ";
+        for (int x = 0; x < cs.length; x++) {
+            szTitle += cs[x].GetCharacterName();
+            if (x != cs.length - 1) {
+                szTitle += ", ";
             }
-         } else if (selected_sort_type.isChrData) {
-            Character c = (Character) chars[x].chrData.get(selected_sort_type.key);
-            if (c == null) {
-               s.sortString = "";
-            } else {
-               s.sortString = c.GetCharacterName();
+        }
+        setTitle(szTitle);
+
+        LoadSorterOptions();
+
+        JustifyColumns();
+        LoadFields(false);
+
+    }
+
+    public final void JustifyColumns() {
+
+        tblData.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblData.getColumnModel().getColumn(0).setResizable(false);
+        tblData.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblData.getColumnModel().getColumn(1).setPreferredWidth(tblData.getWidth() - 20);
+
+    }
+
+    private void LoadSorterOptions() {
+
+        comboSort.removeAllItems();
+        String[] keys = template.GetAllTemplateKeys();
+        String[] names = template.GetAllTemplateNames();
+
+        for (int x = 0; x < keys.length; x++) {
+
+            combo_item prop = new combo_item();
+            prop.key = keys[x];
+            prop.name = names[x];
+            boolean type[] = template.GetDataTypeArray(keys[x]);
+
+            prop.isChrData = type[0];
+            prop.isExtData = type[1];
+            prop.isImgData = type[2];
+            prop.isSzData = type[3];
+
+            if ((prop.isChrData || prop.isSzData) && (!prop.isImgData && !prop.isExtData)) {
+                comboSort.addItem(prop);
             }
-         }
+        }
 
-         sorts[x] = s;
-      }
+    }
 
-      Arrays.sort(sorts);
+    public final void LoadFields(boolean selected) {
 
-      for (int x = 0; x < chars.length; x++) {
-         if (!chkReverse.isSelected()) {
-            chars[x] = sorts[x].c;
-         } else {
-            chars[x] = sorts[sorts.length - x - 1].c;
-         }
-      }
+        jTableModel.clear();
 
-   }
+        String[] names = template.GetAllTemplateNames();
+        String[] keys = template.GetAllTemplateKeys();
 
-   private boolean ExportCharactersToTextFile(String szPath) {
+        for (int x = 0; x < keys.length; x++) {
+            Vector o = new Vector(0);
+            o.add(selected);
 
-      SortCharacters();
+            table_item t = new table_item();
+            t.name = names[x];
+            t.key = keys[x];
 
-      try {
+            o.add(t);
+            jTableModel.add(o);
+        }
+        df.fireTableDataChanged();
+    }
 
-         String szCharPath;
-         szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
-         new File(szCharPath).mkdirs();
-         if (consolidate) {
-            new File(szCharPath + template.GetName() + "_characters.txt").delete();
-         }
+    private void SortCharacters() {
 
-         for (int x = 0; x < chars.length; x++) {
+        combo_item selected_sort_type = (combo_item) comboSort.getSelectedItem();
 
-            PrintWriter pw = null;
+        sort_item[] sorts = new sort_item[chars.length];
+        for (int x = 0; x < chars.length; x++) {
+
+            sort_item s = new sort_item();
+            s.c = chars[x];
+
+            if (selected_sort_type.isSzData) {
+                String o = (String) chars[x].szData.get(selected_sort_type.key);
+                if (o == null) {
+                    s.sortString = "";
+                } else {
+                    s.sortString = o;
+                }
+            } else if (selected_sort_type.isChrData) {
+                Character c = (Character) chars[x].chrData.get(selected_sort_type.key);
+                if (c == null) {
+                    s.sortString = "";
+                } else {
+                    s.sortString = c.GetCharacterName();
+                }
+            }
+
+            sorts[x] = s;
+        }
+
+        Arrays.sort(sorts);
+
+        for (int x = 0; x < chars.length; x++) {
+            if (!chkReverse.isSelected()) {
+                chars[x] = sorts[x].c;
+            } else {
+                chars[x] = sorts[sorts.length - x - 1].c;
+            }
+        }
+
+    }
+
+    private boolean ExportCharactersToTextFile(String szPath) {
+
+        SortCharacters();
+
+        try {
+
+            String szCharPath;
+            szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
+            new File(szCharPath).mkdirs();
             if (consolidate) {
-               pw = new PrintWriter(new BufferedWriter(new FileWriter(szCharPath + template.GetName()
-                     + "_characters.txt", true)));
-            } else {
-               szCharPath = szPath + File.separator + XEED.szSettingName + File.separator + chars[x].GetCharacterName()
-                     + File.separator;
-               new File(szCharPath).mkdirs();
-               pw = new PrintWriter(new BufferedWriter(new FileWriter(
-                     szCharPath + chars[x].GetCharacterName() + ".txt", false)));
+                new File(szCharPath + template.GetName() + "_characters.txt").delete();
             }
 
-            for (int y = 0; y < tblData.getRowCount(); y++) {
+            for (int x = 0; x < chars.length; x++) {
 
-               boolean selected = (Boolean) tblData.getValueAt(y, 0);
-               table_item item = (table_item) tblData.getValueAt(y, 1);
+                PrintWriter pw = null;
+                if (consolidate) {
+                    pw = new PrintWriter(new BufferedWriter(new FileWriter(szCharPath + template.GetName()
+                            + "_characters.txt", true)));
+                } else {
+                    szCharPath = szPath + File.separator + XEED.szSettingName + File.separator + chars[x].GetCharacterName()
+                            + File.separator;
+                    new File(szCharPath).mkdirs();
+                    pw = new PrintWriter(new BufferedWriter(new FileWriter(
+                            szCharPath + chars[x].GetCharacterName() + ".txt", false)));
+                }
 
-               if (selected) {
+                for (int y = 0; y < tblData.getRowCount(); y++) {
 
-                  if (chars[x].chrData.containsKey(item.key)) {
-                     pw.println(item.name + ": " + chars[x].chrData.get(item.key));
-                  } else if (chars[x].szData.containsKey(item.key)) {
-                     String s = (String) chars[x].szData.get(item.key);
-                     s = s.replace("\n", System.getProperty("line.separator"));
-                     pw.println(item.name + ": " + s);
-                  } else if (chars[x].extData.containsKey(item.key)) {
-                     if (!ExportExtendedSheetToFile((ExtendedSheetData) chars[x].extData.get(item.key), szCharPath
-                           + chars[x].GetCharacterName() + "_" + item.name + ".txt")) {
-                        return false;
-                     }
-                  } else if (chars[x].imgData.containsKey(item.key)) {
-                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     if (!ExportImageToFile(img, szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png")) {
-                        return false;
-                     }
-                  }
-               }
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
+
+                    if (selected) {
+
+                        if (chars[x].chrData.containsKey(item.key)) {
+                            pw.println(item.name + ": " + chars[x].chrData.get(item.key));
+                        } else if (chars[x].szData.containsKey(item.key)) {
+                            String s = (String) chars[x].szData.get(item.key);
+                            s = s.replace("\n", System.getProperty("line.separator"));
+                            pw.println(item.name + ": " + s);
+                        } else if (chars[x].extData.containsKey(item.key)) {
+                            if (!ExportExtendedSheetToFile((ExtendedSheetData) chars[x].extData.get(item.key), szCharPath
+                                    + chars[x].GetCharacterName() + "_" + item.name + ".txt")) {
+                                return false;
+                            }
+                        } else if (chars[x].imgData.containsKey(item.key)) {
+                            ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                            if (!ExportImageToFile(img, szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png")) {
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+                pw.println();
+                pw.println();
+                pw.close();
 
             }
-            pw.println();
-            pw.println();
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private boolean ExportImageToFile(ImageIcon img, String szPath) {
+
+        try {
+            BufferedImage bi = new BufferedImage(img.getIconWidth(), img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = bi.createGraphics();
+            g2.drawImage(img.getImage(), 0, 0, null);
+            ImageIO.write(bi, "png", new File(szPath));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+
+    }
+
+    private String ImageToBase64(ImageIcon img) {
+
+        BufferedImage i = XEED.ImageToBuffered(XEED.RescaleImage(img.getImage(), 800, 800, true));
+
+        try {
+            Base64 base64 = new Base64();
+            BufferedImage bi = new BufferedImage(i.getWidth(), i.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = bi.createGraphics();
+            g2.drawImage(i, 0, 0, null);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bi, "png", baos);
+            baos.toByteArray();
+            return new String(base64.encode(baos.toByteArray()));
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean ExportExtendedSheetToFile(ExtendedSheetData esd, String szPath) {
+
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(szPath, false)));
+            for (int x = 0; x < esd.Properties.length; x++) {
+                pw.println(esd.Properties[x] + ": " + esd.Values[x]);
+            }
             pw.close();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
 
-         }
-      } catch (Exception e) {
-         return false;
-      }
+    }
 
-      return true;
+    private boolean ExportCharactersToHTMLFile(String szPath) {
 
-   }
+        SortCharacters();
 
-   private boolean ExportImageToFile(ImageIcon img, String szPath) {
+        try {
 
-      try {
-         BufferedImage bi = new BufferedImage(img.getIconWidth(), img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-         Graphics2D g2 = bi.createGraphics();
-         g2.drawImage(img.getImage(), 0, 0, null);
-         ImageIO.write(bi, "png", new File(szPath));
-      } catch (Exception e) {
-         return false;
-      }
-      return true;
-
-   }
-
-   private String ImageToBase64(ImageIcon img) {
-
-      BufferedImage i = XEED.ImageToBuffered(XEED.RescaleImage(img.getImage(), 800, 800, true));
-       
-      try {
-         Base64 base64 = new Base64();
-         BufferedImage bi = new BufferedImage(i.getWidth(), i.getHeight(), BufferedImage.TYPE_INT_ARGB);
-         Graphics2D g2 = bi.createGraphics();
-         g2.drawImage(i, 0, 0, null);
-         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-         ImageIO.write(bi, "png", baos);
-         baos.toByteArray();
-         return new String(base64.encode(baos.toByteArray()));
-
-      } catch (Exception e) {
-         return null;
-      }
-   }
-
-   private boolean ExportExtendedSheetToFile(ExtendedSheetData esd, String szPath) {
-
-      try {
-         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(szPath, false)));
-         for (int x = 0; x < esd.Properties.length; x++) {
-            pw.println(esd.Properties[x] + ": " + esd.Values[x]);
-         }
-         pw.close();
-      } catch (Exception e) {
-         return false;
-      }
-      return true;
-
-   }
-
-   private boolean ExportCharactersToHTMLFile(String szPath) {
-
-      SortCharacters();
-
-      try {
-
-         String szCharPath;
-         szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
-         new File(szCharPath).mkdirs();
-         if (consolidate) {
-            new File(szCharPath + template.GetName() + "_characters.htm").delete();
-         }
-
-         for (int x = 0; x < chars.length; x++) {
-
-            PrintWriter pw = null;
+            String szCharPath;
+            szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
+            new File(szCharPath).mkdirs();
             if (consolidate) {
-               pw = new PrintWriter(new BufferedWriter(new FileWriter(szCharPath + template.GetName()
-                     + "_characters.htm", true)));
-               if (x == 0) {
-
-                  pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
-                        .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG,
-                              StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
-               }
-            } else {
-               szCharPath = szPath + File.separator + XEED.szSettingName + File.separator + chars[x].GetCharacterName()
-                     + File.separator;
-               new File(szCharPath).mkdirs();
-               pw = new PrintWriter(new BufferedWriter(new FileWriter(
-                     szCharPath + chars[x].GetCharacterName() + ".htm", false)));
-
-               pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
-                     .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG, StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
-
+                new File(szCharPath + template.GetName() + "_characters.htm").delete();
             }
 
-            // Images need to bed added first
-            StringBuilder images = new StringBuilder();
-            for (int y = 0; y < tblData.getRowCount(); y++) {
+            for (int x = 0; x < chars.length; x++) {
 
-               boolean selected = (Boolean) tblData.getValueAt(y, 0);
-               table_item item = (table_item) tblData.getValueAt(y, 1);
+                PrintWriter pw = null;
+                if (consolidate) {
+                    pw = new PrintWriter(new BufferedWriter(new FileWriter(szCharPath + template.GetName()
+                            + "_characters.htm", true)));
+                    if (x == 0) {
 
-               if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
-                  if (chars[x].imgData.containsKey(item.key)) {
-                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     String b64Image = ImageToBase64(img);
-                     if (b64Image == null) {
-                        return false;
-                     }
+                        pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
+                                .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG,
+                                        StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
+                    }
+                } else {
+                    szCharPath = szPath + File.separator + XEED.szSettingName + File.separator + chars[x].GetCharacterName()
+                            + File.separator;
+                    new File(szCharPath).mkdirs();
+                    pw = new PrintWriter(new BufferedWriter(new FileWriter(
+                            szCharPath + chars[x].GetCharacterName() + ".htm", false)));
 
-                     images.append(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "data:image/png;base64," + b64Image));
+                    pw.print(HTMLTemplate.HTML_TEMPLATE_HEADER
+                            .replace(HTMLTemplate.HTML_TEMPLATE_TITLE_TAG, StringEscapeUtils.escapeHtml4(XEED.szSettingName)));
 
-                  }
-               }
-            }
+                }
 
-            //Add table header with name item.
-            pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_HEADER_ROW
-                    .replace(HTMLTemplate.HTML_TEMPLATE_CHARACTER_NAME_TAG,
-                            StringEscapeUtils.escapeHtml4(chars[x].GetCharacterName())).replace(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD_TAG, images.toString()));
+                // Images need to bed added first
+                StringBuilder images = new StringBuilder();
+                for (int y = 0; y < tblData.getRowCount(); y++) {
 
-            // The rest of the fields
-            for (int y = 0; y < tblData.getRowCount(); y++) {
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
 
-               boolean selected = (Boolean) tblData.getValueAt(y, 0);
-               table_item item = (table_item) tblData.getValueAt(y, 1);
+                    if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
+                        if (chars[x].imgData.containsKey(item.key)) {
+                            ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                            String b64Image = ImageToBase64(img);
+                            if (b64Image == null) {
+                                return false;
+                            }
 
-               if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
+                            images.append(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA, "data:image/png;base64," + b64Image));
 
-                  if (chars[x].chrData.containsKey(item.key)) {
-
-                     pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
-                           StringEscapeUtils.escapeHtml4(item.name)).replace(
-                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
-                           StringEscapeUtils.escapeHtml4(chars[x].chrData.get(item.key).toString())));
-
-                  } else if (chars[x].szData.containsKey(item.key)) {
-
-                     pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
-                           StringEscapeUtils.escapeHtml4(item.name)).replace(
-                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
-                           StringEscapeUtils.escapeHtml4(chars[x].szData.get(item.key).toString())
-                                 .replace("\n", "<br>")));
-
-                  } else if (chars[x].extData.containsKey(item.key)) {
-
-                     pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
-                           StringEscapeUtils.escapeHtml4(item.name)).replace(
-                           HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
-                           ExpandedSheetToHTMLTable((ExtendedSheetData) chars[x].extData.get(item.key))));
-                  }
-               }
-
-            }
-
-            //Add table footer.
-            pw.print(HTMLTemplate.HTML_TEMPLATE_FOOTER_ROW);
-            if (!consolidate || (consolidate && x == chars.length - 1)) {
-
-                if(chkIncludeGraph.isSelected()) {
-                    //Add family tree
-                    String dTree = charactersToDtree(false);
-                    if (!dTree.isEmpty()) {
-                        pw.println(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE.replace(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE_DATA, dTree));
+                        }
                     }
                 }
 
-               Calendar currentDate = Calendar.getInstance();
-               SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss d MMM yyyy");
+                //Add table header with name item.
+                pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_HEADER_ROW
+                        .replace(HTMLTemplate.HTML_TEMPLATE_CHARACTER_NAME_TAG,
+                                StringEscapeUtils.escapeHtml4(chars[x].GetCharacterName())).replace(HTMLTemplate.HTML_TEMPLATE_IMAGE_FIELD_TAG, images.toString()));
 
-               pw.print(HTMLTemplate.HTML_TEMPLATE_FOOTER.replace(
-                     HTMLTemplate.HTML_TEMPLATE_FOOTER_TEXT,
-                     "Generated by </i><a href='" + XEED.szHomePage + "'>XEED " + XEED.szVersion + " Build "
-                           + XEED.lngBuild + "." + XEED.GetXEEDCRC32() + "</a><i> at "
-                           + formatter.format(currentDate.getTime())));
-            }
+                // The rest of the fields
+                for (int y = 0; y < tblData.getRowCount(); y++) {
 
-            pw.close();
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
 
-         }
-      } catch (Exception e) {
-         return false;
-      }
+                    if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
 
-      return true;
+                        if (chars[x].chrData.containsKey(item.key)) {
 
-   }
-   
-   /**
-    * Exports the characters to dTree data JSON file.
-    * Format is for dTree v2.0.2.
-    * Always consolidates.
-    */
-   private boolean ExportCharactersToDTreeJson(String szPath) {
+                            pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
+                                    StringEscapeUtils.escapeHtml4(item.name)).replace(
+                                    HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
+                                    StringEscapeUtils.escapeHtml4(chars[x].chrData.get(item.key).toString())));
 
-      SortCharacters();
-      try {
+                        } else if (chars[x].szData.containsKey(item.key)) {
 
-        String szCharPath;
-        szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
-        new File(szCharPath).mkdirs();
-        String path = szCharPath + template.GetName() + "_characters.json";
-        new File(path).delete();
+                            pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
+                                    StringEscapeUtils.escapeHtml4(item.name)).replace(
+                                    HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
+                                    StringEscapeUtils.escapeHtml4(chars[x].szData.get(item.key).toString())
+                                            .replace("\n", "<br>")));
 
-        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path, true)));
-        String data = charactersToDtree(true);
-        pw.write(data);
-        pw.close();
-        
-        for (int x = 0; x < chars.length; x++) {
-            for (int y = 0; y < tblData.getRowCount(); y++) {
+                        } else if (chars[x].extData.containsKey(item.key)) {
 
-                boolean selected = (Boolean) tblData.getValueAt(y, 0);
-                table_item item = (table_item) tblData.getValueAt(y, 1);
+                            pw.print(HTMLTemplate.HTML_TEMPLATE_TABLE_ROW.replace(HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_NAME,
+                                    StringEscapeUtils.escapeHtml4(item.name)).replace(
+                                    HTMLTemplate.HTML_TEMPLATE_TABLE_ITEM_DATA,
+                                    ExpandedSheetToHTMLTable((ExtendedSheetData) chars[x].extData.get(item.key))));
+                        }
+                    }
 
-                if (selected) {
-                    // Export images to file. Storing as b64 encoded doesn't work well.
-                   if (chars[x].imgData.containsKey(item.key)) {
-                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     String imgName = szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png";
-                     ExportImageToFile(img, imgName);
-
-                   }
-                 }
                 }
+
+                //Add table footer.
+                pw.print(HTMLTemplate.HTML_TEMPLATE_FOOTER_ROW);
+                if (!consolidate || (consolidate && x == chars.length - 1)) {
+
+                    if (chkIncludeGraph.isSelected()) {
+                        //Add family tree
+                        String dTree = charactersToDtree(false);
+                        if (!dTree.isEmpty()) {
+                            pw.println(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE.replace(HTMLTemplate.HTML_TEMPLATE_FAMILY_TREE_DATA, dTree));
+                        }
+                    }
+
+                    Calendar currentDate = Calendar.getInstance();
+                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss d MMM yyyy");
+
+                    pw.print(HTMLTemplate.HTML_TEMPLATE_FOOTER.replace(
+                            HTMLTemplate.HTML_TEMPLATE_FOOTER_TEXT,
+                            "Generated by </i><a href='" + XEED.szHomePage + "'>XEED " + XEED.szVersion + " Build "
+                            + XEED.lngBuild + "." + XEED.GetXEEDCRC32() + "</a><i> at "
+                            + formatter.format(currentDate.getTime())));
+                }
+
+                pw.close();
+
+            }
+        } catch (Exception e) {
+            return false;
         }
 
-      } catch (Exception e) {
-         return false;
-      }
-      return true;
+        return true;
 
-   }
+    }
 
     /**
-     * A very simple and hack-ish implementation of generating a dTree graph from characters.
+     * Exports the characters to dTree data JSON file. Format is for dTree
+     * v2.0.2. Always consolidates.
+     */
+    private boolean ExportCharactersToDTreeJson(String szPath) {
+
+        SortCharacters();
+        try {
+
+            String szCharPath;
+            szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
+            new File(szCharPath).mkdirs();
+            String path = szCharPath + template.GetName() + "_characters.json";
+            new File(path).delete();
+
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path, true)));
+            String data = charactersToDtree(true);
+            pw.write(data);
+            pw.close();
+
+            for (int x = 0; x < chars.length; x++) {
+                for (int y = 0; y < tblData.getRowCount(); y++) {
+
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
+
+                    if (selected) {
+                        // Export images to file. Storing as b64 encoded doesn't work well.
+                        if (chars[x].imgData.containsKey(item.key)) {
+                            ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                            String imgName = szCharPath + chars[x].GetCharacterName() + "_" + item.name + ".png";
+                            ExportImageToFile(img, imgName);
+
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+
+    }
+
+    /**
+     * A very simple and hack-ish implementation of generating a dTree graph
+     * from characters.
+     *
      * @return
      */
-   private String charactersToDtree(boolean extraData) {
+    private String charactersToDtree(boolean extraData) {
 
-       Map<Character, DTreeNode> nodeLookup = new HashMap<Character, DTreeNode>();
-       DTreeNode root = new DTreeNode(null);
-       Set<Character> targetCharacters = new HashSet<Character>();
-       targetCharacters.addAll(Arrays.asList(chars));
+        Map<Character, DTreeNode> nodeLookup = new HashMap<Character, DTreeNode>();
+        DTreeNode root = new DTreeNode(null);
+        Set<Character> targetCharacters = new HashSet<Character>();
+        targetCharacters.addAll(Arrays.asList(chars));
 
-       // Validate data
-       for(Character c: chars){
-           // Check that we don't have multiple parents, that makes this more complicated.
-           if(c.chrData.size() > 1) {
-               JOptionPane.showMessageDialog(null,
-                       "Exporting to a family tree is currently limited max one parent field per character.",
-                       "Attention", JOptionPane.WARNING_MESSAGE);
-               return "";
-           }
-       }
+        // Validate data
+        for (Character c : chars) {
+            // Check that we don't have multiple parents, that makes this more complicated.
+            if (c.chrData.size() > 1) {
+                JOptionPane.showMessageDialog(null,
+                        "Exporting to a family tree is currently limited max one parent field per character.",
+                        "Attention", JOptionPane.WARNING_MESSAGE);
+                return "";
+            }
+        }
 
-       for(Character c: chars){
-           addCharacterToTree(c, targetCharacters, nodeLookup, root);
-       }
-       
-       // Hacky solution to make the json multiline. 
-       // The simple json library doesn't support pretty printing.
-       List<String> chars = new LinkedList<String>();
-       for (DTreeNode n : root.children) {
-           chars.add(n.toJSON(extraData).toJSONString());
-       }
-       return "[" + String.join(", \n", chars) + "]";
-   }
+        for (Character c : chars) {
+            addCharacterToTree(c, targetCharacters, nodeLookup, root);
+        }
+
+        // Hacky solution to make the json multiline. 
+        // The simple json library doesn't support pretty printing.
+        List<String> chars = new LinkedList<String>();
+        for (DTreeNode n : root.children) {
+            chars.add(n.toJSON(extraData).toJSONString());
+        }
+        return "[" + String.join(", \n", chars) + "]";
+    }
 
     class DTreeNode {
 
@@ -500,21 +501,21 @@ public class CharacterExporterForm extends javax.swing.JFrame {
         }
 
         public JSONObject toJSON(boolean extraData) {
-            
+
             JSONObject json = new JSONObject();
             json.put("name", character.GetCharacterName());
             json.put("class", "node");
 
             if (children.size() > 0) {
                 JSONArray children = new JSONArray();
-                for(DTreeNode n : this.children) {
+                for (DTreeNode n : this.children) {
                     children.add(n.toJSON(extraData));
                 }
                 json.put("children", children);
             }
-            
+
             if (extraData) {
-                
+
                 JSONObject extra = new JSONObject();
                 for (int y = 0; y < tblData.getRowCount(); y++) {
 
@@ -523,288 +524,287 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
                     if (selected) {
 
-                       if (character.chrData.containsKey(item.key)) {
-                         extra.put(item.name, character.chrData.get(item.key).toString());
-                       } else if (character.szData.containsKey(item.key)) {
-                         extra.put(item.name, character.szData.get(item.key));
-                       } else if (character.extData.containsKey(item.key)) {
-                         extra.put(item.name, character.extData.get(item.key));
-                       } else if (character.imgData.containsKey(item.key)) {
-                         String imgName = character.GetCharacterName() + "_" + item.name + ".png";
-                         extra.put(item.name, imgName);
-                       }
-                     }
+                        if (character.chrData.containsKey(item.key)) {
+                            extra.put(item.name, character.chrData.get(item.key).toString());
+                        } else if (character.szData.containsKey(item.key)) {
+                            extra.put(item.name, character.szData.get(item.key));
+                        } else if (character.extData.containsKey(item.key)) {
+                            extra.put(item.name, character.extData.get(item.key));
+                        } else if (character.imgData.containsKey(item.key)) {
+                            String imgName = character.GetCharacterName() + "_" + item.name + ".png";
+                            extra.put(item.name, imgName);
+                        }
                     }
-                
+                }
+
                 json.put("extra", extra);
-                
+
             }
-                         
+
             return json;
         }
     }
 
-   private void addCharacterToTree(Character c, Set<Character> targetCharacters, Map<Character, DTreeNode> nodeMap,
-                                   DTreeNode root) {
+    private void addCharacterToTree(Character c, Set<Character> targetCharacters, Map<Character, DTreeNode> nodeMap,
+            DTreeNode root) {
 
-       if(nodeMap.containsKey(c)) {
-           // Tree already contains the character
-           return;
-       }
+        if (nodeMap.containsKey(c)) {
+            // Tree already contains the character
+            return;
+        }
 
-       if(c.chrData.size() == 0) {
-           // No parents. Add under root
-           DTreeNode n = new DTreeNode(c);
-           root.children.add(n);
-           nodeMap.put(c, n);
-           return;
-       }
+        if (c.chrData.size() == 0) {
+            // No parents. Add under root
+            DTreeNode n = new DTreeNode(c);
+            root.children.add(n);
+            nodeMap.put(c, n);
+            return;
+        }
 
-       Character parent = (Character) c.chrData.values().iterator().next();
-       if(targetCharacters.contains(parent)) {
-           // parent should be part of the graph
-           addCharacterToTree(parent, targetCharacters, nodeMap, root);
-           DTreeNode parentNode = nodeMap.get(parent);
-           DTreeNode n = new DTreeNode(c);
-           parentNode.children.add(n);
-           nodeMap.put(c, n);
-       } else {
-           // Don't show parent. Add under root
-           DTreeNode n = new DTreeNode(c);
-           root.children.add(n);
-           nodeMap.put(c, n);
-       }
+        Character parent = (Character) c.chrData.values().iterator().next();
+        if (targetCharacters.contains(parent)) {
+            // parent should be part of the graph
+            addCharacterToTree(parent, targetCharacters, nodeMap, root);
+            DTreeNode parentNode = nodeMap.get(parent);
+            DTreeNode n = new DTreeNode(c);
+            parentNode.children.add(n);
+            nodeMap.put(c, n);
+        } else {
+            // Don't show parent. Add under root
+            DTreeNode n = new DTreeNode(c);
+            root.children.add(n);
+            nodeMap.put(c, n);
+        }
 
-   }
+    }
 
+    private String ExpandedSheetToHTMLTable(ExtendedSheetData esd) {
 
-   private String ExpandedSheetToHTMLTable(ExtendedSheetData esd) {
+        String table = "";
+        table += "<table border='0'>\n";
 
-      String table = "";
-      table += "<table border='0'>\n";
+        for (int x = 0; x < esd.Properties.length; x++) {
+            table += "<tr>\n";
+            table += "<td width='35%'><PRE>" + StringEscapeUtils.escapeHtml4(esd.Properties[x]) + "</PRE></td>";
+            table += "<td width='65%'>" + StringEscapeUtils.escapeHtml4(esd.Values[x]) + "</td>";
+            table += "</tr>\n";
+        }
 
-      for (int x = 0; x < esd.Properties.length; x++) {
-         table += "<tr>\n";
-         table += "<td width='35%'><PRE>" + StringEscapeUtils.escapeHtml4(esd.Properties[x]) + "</PRE></td>";
-         table += "<td width='65%'>" + StringEscapeUtils.escapeHtml4(esd.Values[x]) + "</td>";
-         table += "</tr>\n";
-      }
+        table += "</table>";
+        return table;
 
-      table += "</table>";
-      return table;
+    }
 
-   }
+    private PdfPTable ExpandedSheetToPDFTable(ExtendedSheetData esd, Font f) {
 
-   private PdfPTable ExpandedSheetToPDFTable(ExtendedSheetData esd, Font f) {
+        PdfPTable table = new PdfPTable(new float[]{2, 8, 10, 2}); //kanske måste ändra proportionerna
 
-      PdfPTable table = new PdfPTable(new float[] { 2, 8, 10, 2 }); //kanske måste ändra proportionerna
+        for (int x = 0; x < esd.Properties.length; x++) {
 
-      for (int x = 0; x < esd.Properties.length; x++) {
+            PdfPCell cell = new PdfPCell(new Phrase(""));
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
 
-         PdfPCell cell = new PdfPCell(new Phrase(""));
-         cell.setBorder(PdfPCell.NO_BORDER);
-         table.addCell(cell);
+            cell = new PdfPCell(new Phrase(esd.Properties[x], f));
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
 
-         cell = new PdfPCell(new Phrase(esd.Properties[x], f));
-         cell.setBorder(PdfPCell.NO_BORDER);
-         table.addCell(cell);
+            cell = new PdfPCell(new Phrase(esd.Values[x], f));
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
 
-         cell = new PdfPCell(new Phrase(esd.Values[x], f));
-         cell.setBorder(PdfPCell.NO_BORDER);
-         table.addCell(cell);
+            cell = new PdfPCell(new Phrase(""));
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
 
-         cell = new PdfPCell(new Phrase(""));
-         cell.setBorder(PdfPCell.NO_BORDER);
-         table.addCell(cell);
+        }
 
-      }
+        table.setSplitLate(false);
+        table.setKeepTogether(false);
+        table.setComplete(true);
+        return table;
 
-      table.setSplitLate(false);
-      table.setKeepTogether(false);
-      table.setComplete(true);
-      return table;
+    }
 
-   }
+    private String GenerateIDList(String id, int i) {
 
-   private String GenerateIDList(String id, int i) {
+        String list = "";
 
-      String list = "";
+        for (int y = 0; y < i; y++) {
+            list += "#" + id + y;
+            if (y != i - 1) {
+                list += ",";
+            }
+        }
 
-      for (int y = 0; y < i; y++) {
-         list += "#" + id + y;
-         if (y != i - 1) {
-            list += ",";
-         }
-      }
+        return list;
+    }
 
-      return list;
-   }
+    private boolean ExportCharactersToPDF(String szPath) {
 
-   private boolean ExportCharactersToPDF(String szPath) {
+        Document document = null;
+        final Font titleFont = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD);
+        final Font characterNameFont = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
+        final Font tableBodyFont = new Font(FontFamily.HELVETICA, 12, Font.NORMAL);
+        final Font subTableBodyFont = new Font(FontFamily.COURIER, 11, Font.NORMAL);
+        final Font footerFont = new Font(FontFamily.HELVETICA, 10, Font.ITALIC);
+        final Font footerFont_link = new Font(FontFamily.HELVETICA, 10);
+        SortCharacters();
 
-      Document document = null;
-      final Font titleFont = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD);
-      final Font characterNameFont = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
-      final Font tableBodyFont = new Font(FontFamily.HELVETICA, 12, Font.NORMAL);
-      final Font subTableBodyFont = new Font(FontFamily.COURIER, 11, Font.NORMAL);
-      final Font footerFont = new Font(FontFamily.HELVETICA, 10, Font.ITALIC);
-      final Font footerFont_link = new Font(FontFamily.HELVETICA, 10);
-      SortCharacters();
+        //Generate footer.
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss d MMM yyyy");
 
-      //Generate footer.
-      Calendar currentDate = Calendar.getInstance();
-      SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss d MMM yyyy");
+        Anchor anchor = new Anchor("XEED " + XEED.szVersion + " Build " + XEED.lngBuild + "." + XEED.GetXEEDCRC32(),
+                footerFont_link);
+        anchor.setReference(XEED.szHomePage);
 
-      Anchor anchor = new Anchor("XEED " + XEED.szVersion + " Build " + XEED.lngBuild + "." + XEED.GetXEEDCRC32(),
-            footerFont_link);
-      anchor.setReference(XEED.szHomePage);
+        Phrase footer = new Phrase("Generated by ", footerFont);
+        footer.add(anchor);
+        footer.add(new Phrase(" at " + formatter.format(currentDate.getTime()), footerFont));
 
-      Phrase footer = new Phrase("Generated by ", footerFont);
-      footer.add(anchor);
-      footer.add(new Phrase(" at " + formatter.format(currentDate.getTime()), footerFont));
+        try {
 
-      try {
+            String szCharPath;
+            szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
+            new File(szCharPath).mkdirs(); //create the directory
 
-         String szCharPath;
-         szCharPath = szPath + File.separator + XEED.szSettingName + File.separator;
-         new File(szCharPath).mkdirs(); //create the directory
+            for (int x = 0; x < chars.length; x++) {
 
-         for (int x = 0; x < chars.length; x++) {
+                if (consolidate) {
 
-            if (consolidate) {
+                    if (x == 0) {
 
-               if (x == 0) {
+                        new File(szCharPath + template.GetName() + "_characters.pdf").delete(); //remove an old file.
+                        document = new Document(PageSize.A4, 36, 36, 54, 54); //open the document
+                        PdfWriter writer = PdfWriter.getInstance(document,
+                                new FileOutputStream(szCharPath + template.GetName() + "_characters.pdf")); //start outputting.
+                        HeaderFooter event = new HeaderFooter();
+                        event.setFooter(footer);
+                        writer.setBoxSize("art", new Rectangle(36, 30, 559, 800));
+                        writer.setPageEvent(event);
+                        document.open();
 
-                  new File(szCharPath + template.GetName() + "_characters.pdf").delete(); //remove an old file.
-                  document = new Document(PageSize.A4, 36, 36, 54, 54); //open the document
-                  PdfWriter writer = PdfWriter.getInstance(document,
-                        new FileOutputStream(szCharPath + template.GetName() + "_characters.pdf")); //start outputting.
-                  HeaderFooter event = new HeaderFooter();
-                  event.setFooter(footer);
-                  writer.setBoxSize("art", new Rectangle(36, 30, 559, 800));
-                  writer.setPageEvent(event);
-                  document.open();
+                        Paragraph title = new Paragraph(XEED.szSettingName, titleFont); //Add title
+                        title.setAlignment(Paragraph.ALIGN_CENTER);
+                        document.add(title);
 
-                  Paragraph title = new Paragraph(XEED.szSettingName, titleFont); //Add title
-                  title.setAlignment(Paragraph.ALIGN_CENTER);
-                  document.add(title);
+                    }
 
-               }
+                } else {
 
-            } else {
+                    new File(szCharPath + chars[x].GetCharacterName() + ".pdf").delete(); //remove an old file.
+                    document = new Document(PageSize.A4, 36, 36, 54, 54); //open the document
+                    PdfWriter writer = PdfWriter.getInstance(document,
+                            new FileOutputStream(szCharPath + chars[x].GetCharacterName() + ".pdf")); //start outputting.
+                    HeaderFooter event = new HeaderFooter();
+                    event.setFooter(footer);
+                    writer.setBoxSize("art", new Rectangle(36, 30, 559, 800));
+                    writer.setPageEvent(event);
+                    document.open();
 
-               new File(szCharPath + chars[x].GetCharacterName() + ".pdf").delete(); //remove an old file.
-               document = new Document(PageSize.A4, 36, 36, 54, 54); //open the document
-               PdfWriter writer = PdfWriter.getInstance(document,
-                     new FileOutputStream(szCharPath + chars[x].GetCharacterName() + ".pdf")); //start outputting.
-               HeaderFooter event = new HeaderFooter();
-               event.setFooter(footer);
-               writer.setBoxSize("art", new Rectangle(36, 30, 559, 800));
-               writer.setPageEvent(event);
-               document.open();
+                    Paragraph title = new Paragraph(XEED.szSettingName, titleFont); //Add title
+                    title.setAlignment(Paragraph.ALIGN_CENTER);
+                    document.add(title);
 
-               Paragraph title = new Paragraph(XEED.szSettingName, titleFont); //Add title
-               title.setAlignment(Paragraph.ALIGN_CENTER);
-               document.add(title);
+                }
+
+                //construct table
+                PdfPTable characterTable = new PdfPTable(new float[]{1, 3}); //kanske måste ändra proportionerna
+                characterTable.setWidthPercentage(100f);
+                characterTable.setSpacingBefore(15f);
+                characterTable.setKeepTogether(false);
+                characterTable.setSplitLate(false); //En lång rad delas i raden och inte före. Bra med tanke på extended sheets.
+
+                //add character name
+                PdfPCell characterName = new PdfPCell(new Phrase(chars[x].GetCharacterName(), characterNameFont));
+                characterName.setBackgroundColor(BaseColor.BLACK);
+                characterName.setHorizontalAlignment(Element.ALIGN_LEFT);
+                characterName.setColspan(2);
+                characterName.setBorder(PdfPCell.NO_BORDER);
+                characterTable.addCell(characterName);
+
+                for (int y = 0; y < tblData.getRowCount(); y++) {
+
+                    boolean selected = (Boolean) tblData.getValueAt(y, 0);
+                    table_item item = (table_item) tblData.getValueAt(y, 1);
+
+                    if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
+
+                        if (chars[x].chrData.containsKey(item.key)) {
+
+                            PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                            cell = new PdfPCell(new Phrase(chars[x].chrData.get(item.key).toString(), tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                        } else if (chars[x].szData.containsKey(item.key)) {
+
+                            PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                            cell = new PdfPCell(new Phrase(chars[x].szData.get(item.key).toString(), tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                        } else if (chars[x].extData.containsKey(item.key)) {
+
+                            PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                            cell = new PdfPCell(ExpandedSheetToPDFTable((ExtendedSheetData) chars[x].extData.get(item.key),
+                                    subTableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                            characterTable.addCell(cell);
+
+                        } else if (chars[x].imgData.containsKey(item.key)) {
+
+                            PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                            ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
+                            com.itextpdf.text.Image pdfImg = com.itextpdf.text.Image.getInstance(img.getImage(), null);
+
+                            cell = new PdfPCell(pdfImg);
+                            cell.setBorder(PdfPCell.NO_BORDER);
+                            cell.setPadding(2f);
+                            characterTable.addCell(cell);
+
+                        }
+                    }
+
+                }
+
+                characterTable.setComplete(true);
+                document.add(characterTable);
+
+                if (!consolidate || (consolidate && x == chars.length - 1)) {
+                    document.close();
+                }
 
             }
+        } catch (Exception e) {
+            return false;
+        }
 
-            //construct table
-            PdfPTable characterTable = new PdfPTable(new float[] { 1, 3 }); //kanske måste ändra proportionerna
-            characterTable.setWidthPercentage(100f);
-            characterTable.setSpacingBefore(15f);
-            characterTable.setKeepTogether(false);
-            characterTable.setSplitLate(false); //En lång rad delas i raden och inte före. Bra med tanke på extended sheets.
+        return true;
+    }
 
-            //add character name
-            PdfPCell characterName = new PdfPCell(new Phrase(chars[x].GetCharacterName(), characterNameFont));
-            characterName.setBackgroundColor(BaseColor.BLACK);
-            characterName.setHorizontalAlignment(Element.ALIGN_LEFT);
-            characterName.setColspan(2);
-            characterName.setBorder(PdfPCell.NO_BORDER);
-            characterTable.addCell(characterName);
-
-            for (int y = 0; y < tblData.getRowCount(); y++) {
-
-               boolean selected = (Boolean) tblData.getValueAt(y, 0);
-               table_item item = (table_item) tblData.getValueAt(y, 1);
-
-               if (selected && !item.key.equals(Constants.CHARACTER_NAME)) {
-
-                  if (chars[x].chrData.containsKey(item.key)) {
-
-                     PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                     cell = new PdfPCell(new Phrase(chars[x].chrData.get(item.key).toString(), tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                  } else if (chars[x].szData.containsKey(item.key)) {
-
-                     PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                     cell = new PdfPCell(new Phrase(chars[x].szData.get(item.key).toString(), tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                  } else if (chars[x].extData.containsKey(item.key)) {
-
-                     PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                     cell = new PdfPCell(ExpandedSheetToPDFTable((ExtendedSheetData) chars[x].extData.get(item.key),
-                           subTableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                     characterTable.addCell(cell);
-
-                  } else if (chars[x].imgData.containsKey(item.key)) {
-
-                     PdfPCell cell = new PdfPCell(new Phrase(item.name, tableBodyFont));
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                     ImageIcon img = (ImageIcon) chars[x].imgData.get(item.key);
-                     com.itextpdf.text.Image pdfImg = com.itextpdf.text.Image.getInstance(img.getImage(), null);
-
-                     cell = new PdfPCell(pdfImg);
-                     cell.setBorder(PdfPCell.NO_BORDER);
-                     cell.setPadding(2f);
-                     characterTable.addCell(cell);
-
-                  }
-               }
-
-            }
-
-            characterTable.setComplete(true);
-            document.add(characterTable);
-
-            if (!consolidate || (consolidate && x == chars.length - 1)) {
-               document.close();
-            }
-
-         }
-      } catch (Exception e) {
-         return false;
-      }
-
-      return true;
-   }
-
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -990,101 +990,101 @@ public class CharacterExporterForm extends javax.swing.JFrame {
 
    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
 
-      if (chars.length == 0) {
-         JOptionPane
-               .showMessageDialog(
-                     null,
-                     "No characters selected. Please select characters in the main window and restart the character exporter. ",
-                     "Attention", JOptionPane.INFORMATION_MESSAGE);
-         XEED.hwndCharacterExporter = null;
-         dispose();
-         return;
-      }
+       if (chars.length == 0) {
+           JOptionPane
+                   .showMessageDialog(
+                           null,
+                           "No characters selected. Please select characters in the main window and restart the character exporter. ",
+                           "Attention", JOptionPane.INFORMATION_MESSAGE);
+           XEED.hwndCharacterExporter = null;
+           dispose();
+           return;
+       }
 
-      JFileChooser fc = new JFileChooser();
-      fc.setDialogTitle("Select output folder");
-      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+       JFileChooser fc = new JFileChooser();
+       fc.setDialogTitle("Select output folder");
+       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-      int intRet = fc.showSaveDialog(null);
-      if (intRet != JFileChooser.APPROVE_OPTION) {
-         JOptionPane.showMessageDialog(null, "Characters not exported", "Attention", JOptionPane.INFORMATION_MESSAGE);
-         return;
-      }
+       int intRet = fc.showSaveDialog(null);
+       if (intRet != JFileChooser.APPROVE_OPTION) {
+           JOptionPane.showMessageDialog(null, "Characters not exported", "Attention", JOptionPane.INFORMATION_MESSAGE);
+           return;
+       }
 
-      boolean ret = false;
-      if (comboFormat.getSelectedIndex() == 0) {
-         ret = ExportCharactersToHTMLFile(fc.getSelectedFile().getAbsolutePath());
-      } else if (comboFormat.getSelectedIndex() == 1) {
-         ret = ExportCharactersToPDF(fc.getSelectedFile().getAbsolutePath());
-      } else if (comboFormat.getSelectedIndex() == 2) {
-         ret = ExportCharactersToTextFile(fc.getSelectedFile().getAbsolutePath());
-      } else if (comboFormat.getSelectedIndex() == 3) {
-         ret = ExportCharactersToDTreeJson(fc.getSelectedFile().getAbsolutePath());
-      }
+       boolean ret = false;
+       if (comboFormat.getSelectedIndex() == 0) {
+           ret = ExportCharactersToHTMLFile(fc.getSelectedFile().getAbsolutePath());
+       } else if (comboFormat.getSelectedIndex() == 1) {
+           ret = ExportCharactersToPDF(fc.getSelectedFile().getAbsolutePath());
+       } else if (comboFormat.getSelectedIndex() == 2) {
+           ret = ExportCharactersToTextFile(fc.getSelectedFile().getAbsolutePath());
+       } else if (comboFormat.getSelectedIndex() == 3) {
+           ret = ExportCharactersToDTreeJson(fc.getSelectedFile().getAbsolutePath());
+       }
 
-      if (ret) {
-         JOptionPane.showMessageDialog(null, "Characters succesfully exported!", "Success!",
-               JOptionPane.INFORMATION_MESSAGE);
-      } else {
-         JOptionPane.showMessageDialog(null, "Error while exporting characters!", "Error!", JOptionPane.ERROR_MESSAGE);
-      }
+       if (ret) {
+           JOptionPane.showMessageDialog(null, "Characters succesfully exported!", "Success!",
+                   JOptionPane.INFORMATION_MESSAGE);
+       } else {
+           JOptionPane.showMessageDialog(null, "Error while exporting characters!", "Error!", JOptionPane.ERROR_MESSAGE);
+       }
 
    }//GEN-LAST:event_btnExportActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndCharacterExporter = null;
-      dispose();
+       XEED.hwndCharacterExporter = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void btnMoveRowUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveRowUpActionPerformed
 
-      if (tblData.getSelectedRow() == -1) {
-         return;
-      }
+       if (tblData.getSelectedRow() == -1) {
+           return;
+       }
 
-      int intSelected[] = tblData.getSelectedRows();
-      if (intSelected[0] - 1 < 0) {
-         return;
-      }
+       int intSelected[] = tblData.getSelectedRows();
+       if (intSelected[0] - 1 < 0) {
+           return;
+       }
 
-      df.moveRow(intSelected[0], intSelected[intSelected.length - 1], intSelected[0] - 1);
-      df.fireTableDataChanged();
-      tblData.getSelectionModel().setSelectionInterval(intSelected[0] - 1, intSelected[intSelected.length - 1] - 1);
+       df.moveRow(intSelected[0], intSelected[intSelected.length - 1], intSelected[0] - 1);
+       df.fireTableDataChanged();
+       tblData.getSelectionModel().setSelectionInterval(intSelected[0] - 1, intSelected[intSelected.length - 1] - 1);
 
    }//GEN-LAST:event_btnMoveRowUpActionPerformed
 
    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 
-      if (tblData.getSelectedRow() == -1) {
-         return;
-      }
+       if (tblData.getSelectedRow() == -1) {
+           return;
+       }
 
-      int intSelected[] = tblData.getSelectedRows();
-      if (intSelected[intSelected.length - 1] + 1 >= tblData.getRowCount()) {
-         return;
-      }
-      df.moveRow(intSelected[0], intSelected[intSelected.length - 1], intSelected[0] + 1);
-      df.fireTableDataChanged();
-      tblData.getSelectionModel().setSelectionInterval(intSelected[0] + 1, intSelected[intSelected.length - 1] + 1);
+       int intSelected[] = tblData.getSelectedRows();
+       if (intSelected[intSelected.length - 1] + 1 >= tblData.getRowCount()) {
+           return;
+       }
+       df.moveRow(intSelected[0], intSelected[intSelected.length - 1], intSelected[0] + 1);
+       df.fireTableDataChanged();
+       tblData.getSelectionModel().setSelectionInterval(intSelected[0] + 1, intSelected[intSelected.length - 1] + 1);
 
    }//GEN-LAST:event_jButton5ActionPerformed
 
    private void tblDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblDataKeyPressed
-      if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_A) {
+       if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_A) {
 
-         for (int x = 0; x < tblData.getRowCount(); x++) {
-            Vector o = (Vector) jTableModel.get(x);
-            o.set(0, true);
-            jTableModel.set(x, o);
-         }
+           for (int x = 0; x < tblData.getRowCount(); x++) {
+               Vector o = (Vector) jTableModel.get(x);
+               o.set(0, true);
+               jTableModel.set(x, o);
+           }
 
-         df.fireTableDataChanged();
+           df.fireTableDataChanged();
 
-      }
+       }
    }//GEN-LAST:event_tblDataKeyPressed
 
    private void chkConsolidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConsolidateActionPerformed
-      consolidate = chkConsolidate.isSelected();
+       consolidate = chkConsolidate.isSelected();
    }//GEN-LAST:event_chkConsolidateActionPerformed
 
     private void chkIncludeGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkIncludeGraphActionPerformed
@@ -1106,61 +1106,61 @@ public class CharacterExporterForm extends javax.swing.JFrame {
     private javax.swing.JTable tblData;
     // End of variables declaration//GEN-END:variables
 
-   private class table_item {
+    private class table_item {
 
-      public String name;
-      public String key;
+        public String name;
+        public String key;
 
-      public String toString() {
-         return name;
-      }
-   }
+        public String toString() {
+            return name;
+        }
+    }
 
-   private class combo_item {
+    private class combo_item {
 
-      String name;
-      String key;
-      boolean isChrData = false;
-      boolean isSzData = false;
-      boolean isExtData = false;
-      boolean isImgData = false;
+        String name;
+        String key;
+        boolean isChrData = false;
+        boolean isSzData = false;
+        boolean isExtData = false;
+        boolean isImgData = false;
 
-      public String toString() {
-         return name;
-      }
-   }
+        public String toString() {
+            return name;
+        }
+    }
 
-   private class sort_item implements Comparable<sort_item> {
+    private class sort_item implements Comparable<sort_item> {
 
-      Character c;
-      String sortString;
+        Character c;
+        String sortString;
 
-      @Override
-      public int compareTo(sort_item o) {
-         int ret = sortString.compareTo(o.sortString);
-         if (ret == 0 && !sortString.equals(c.GetCharacterName())) {
-            return c.GetCharacterName().compareTo(o.c.GetCharacterName());
-         } else {
-            return ret;
-         }
-      }
-   }
+        @Override
+        public int compareTo(sort_item o) {
+            int ret = sortString.compareTo(o.sortString);
+            if (ret == 0 && !sortString.equals(c.GetCharacterName())) {
+                return c.GetCharacterName().compareTo(o.c.GetCharacterName());
+            } else {
+                return ret;
+            }
+        }
+    }
 
-   class HeaderFooter extends PdfPageEventHelper {
+    class HeaderFooter extends PdfPageEventHelper {
 
-      Phrase footer;
+        Phrase footer;
 
-      public void setFooter(Phrase s) {
-         this.footer = s;
-      }
+        public void setFooter(Phrase s) {
+            this.footer = s;
+        }
 
-      @Override
-      public void onEndPage(PdfWriter writer, Document document) {
-         Rectangle rect = writer.getBoxSize("art");
-         ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT,
-               new Phrase(Integer.toString(writer.getPageNumber())), rect.getRight(), rect.getTop(), 0);
-         ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer,
-               (rect.getLeft() + rect.getRight()) / 2, rect.getBottom() - 18, 0);
-      }
-   }
+        @Override
+        public void onEndPage(PdfWriter writer, Document document) {
+            Rectangle rect = writer.getBoxSize("art");
+            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT,
+                    new Phrase(Integer.toString(writer.getPageNumber())), rect.getRight(), rect.getTop(), 0);
+            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer,
+                    (rect.getLeft() + rect.getRight()) / 2, rect.getBottom() - 18, 0);
+        }
+    }
 }

@@ -13,63 +13,63 @@ import xeed.XEED;
  */
 public class ListRowPanel extends javax.swing.JPanel {
 
-   public Character character;
-   public String itemIdentifier;
-   private boolean loaded = false;
+    public Character character;
+    public String itemIdentifier;
+    private boolean loaded = false;
 
-   public ListRowPanel(Character c, String id, String name, String data[]) {
-      itemIdentifier = id;
-      character = c;
-      initComponents();
-      lblName.setText(name);
+    public ListRowPanel(Character c, String id, String name, String data[]) {
+        itemIdentifier = id;
+        character = c;
+        initComponents();
+        lblName.setText(name);
 
-      comboList.addItem("");
-      for (int x = 0; x < data.length; x++) {
-         comboList.addItem(data[x]);
-      }
-      LoadData();
-      loaded = true;
-   }
+        comboList.addItem("");
+        for (int x = 0; x < data.length; x++) {
+            comboList.addItem(data[x]);
+        }
+        LoadData();
+        loaded = true;
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      String s = (String) comboList.getSelectedItem();
-      if (s.isEmpty()) {
-         character.szData.remove(itemIdentifier);
-      } else {
-         character.szData.put(itemIdentifier, comboList.getSelectedItem());
-      }
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = character;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+        String s = (String) comboList.getSelectedItem();
+        if (s.isEmpty()) {
+            character.szData.remove(itemIdentifier);
+        } else {
+            character.szData.put(itemIdentifier, comboList.getSelectedItem());
+        }
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = character;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
 
-   }
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.szData.get(itemIdentifier);
+        Object o = character.szData.get(itemIdentifier);
 
-      if (o == null) {
-         return;
-      }
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(String.class)) {
-         comboList.setSelectedItem(o);
-      } else {
-         System.out.println(lblName.getText() + " loaded invalid data");
-      }
+        if (o.getClass().equals(String.class)) {
+            comboList.setSelectedItem(o);
+        } else {
+            System.out.println(lblName.getText() + " loaded invalid data");
+        }
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -103,11 +103,11 @@ public class ListRowPanel extends javax.swing.JPanel {
 
    private void comboListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboListActionPerformed
 
-      if (!loaded) {
-         return;
-      }
+       if (!loaded) {
+           return;
+       }
 
-      SaveData();
+       SaveData();
    }//GEN-LAST:event_comboListActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

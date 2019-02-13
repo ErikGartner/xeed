@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * pnlGroups.java
  *
  * Created on 2011-feb-11, 09:34:45
@@ -25,89 +25,89 @@ import xeed.Group;
  */
 public final class GroupsPanel extends javax.swing.JPanel implements TableModelListener {
 
-   private Vector jTableModel = new Vector(0, 3); // Model för tabellen
-   private Vector jTableHeader = new Vector(0);
-   private Character characterHandle = null;
-   private boolean boolReloading = false; //Förhindrara update loopar
+    private Vector jTableModel = new Vector(0, 3); // Model för tabellen
+    private Vector jTableHeader = new Vector(0);
+    private Character characterHandle = null;
+    private boolean boolReloading = false; //Förhindrara update loopar
 
-   /**
-    * Creates new form pnlGroups
-    */
-   public GroupsPanel(Character c) {
-      initComponents();
-      setVisible(true);
+    /**
+     * Creates new form pnlGroups
+     */
+    public GroupsPanel(Character c) {
+        initComponents();
+        setVisible(true);
 
-      characterHandle = c;
-      tblGroups.getModel().addTableModelListener(this);
-      LoadGroups();
-   }
+        characterHandle = c;
+        tblGroups.getModel().addTableModelListener(this);
+        LoadGroups();
+    }
 
-   public void JustifyColumns() {
+    public void JustifyColumns() {
 
-      tblGroups.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblGroups.getColumnModel().getColumn(0).setResizable(false);
-      tblGroups.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblGroups.getColumnModel().getColumn(1).setPreferredWidth(100);
-      tblGroups.getColumnModel().getColumn(2).setPreferredWidth(tblGroups.getWidth() - 120);
+        tblGroups.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblGroups.getColumnModel().getColumn(0).setResizable(false);
+        tblGroups.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblGroups.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tblGroups.getColumnModel().getColumn(2).setPreferredWidth(tblGroups.getWidth() - 120);
 
-   }
+    }
 
-   public void LoadGroups() {
+    public void LoadGroups() {
 
-      boolReloading = true;
-      jTableModel.clear();
-      for (int x = 0; x < XEED.groupDB.size(); x++) {
+        boolReloading = true;
+        jTableModel.clear();
+        for (int x = 0; x < XEED.groupDB.size(); x++) {
 
-         Vector o = new Vector(0);
+            Vector o = new Vector(0);
 
-         o.add(XEED.groupDB.get(x).IsMember(characterHandle.characterID));
-         o.add(XEED.groupDB.get(x));
-         o.add(XEED.groupDB.get(x).szDescription);
+            o.add(XEED.groupDB.get(x).IsMember(characterHandle.characterID));
+            o.add(XEED.groupDB.get(x));
+            o.add(XEED.groupDB.get(x).szDescription);
 
-         jTableModel.add(o);
+            jTableModel.add(o);
 
-      }
-      DefaultTableModel df = (DefaultTableModel) tblGroups.getModel();
-      df.fireTableDataChanged();
-      boolReloading = false;
-   }
+        }
+        DefaultTableModel df = (DefaultTableModel) tblGroups.getModel();
+        df.fireTableDataChanged();
+        boolReloading = false;
+    }
 
-   @Override
-   public void tableChanged(TableModelEvent e) {
+    @Override
+    public void tableChanged(TableModelEvent e) {
 
-      if (e.getType() != TableModelEvent.UPDATE) {
-         return;
-      }
+        if (e.getType() != TableModelEvent.UPDATE) {
+            return;
+        }
 
-      if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
-         return;
-      }
+        if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
+            return;
+        }
 
-      if (jTableModel.isEmpty()) {
-         return;
-      }
+        if (jTableModel.isEmpty()) {
+            return;
+        }
 
-      if (boolReloading) {
-         return;
-      }
+        if (boolReloading) {
+            return;
+        }
 
-      for (int x = 0; x < jTableModel.size(); x++) {
-         Vector o = (Vector) jTableModel.get(x);
-         Group g = (Group) o.get(1);
-         boolean b = (Boolean) o.get(0);
-         if (b) {
-            g.AddMember(characterHandle.characterID);
-         } else {
-            g.DeleteMember(characterHandle.characterID);
-         }
-      }
+        for (int x = 0; x < jTableModel.size(); x++) {
+            Vector o = (Vector) jTableModel.get(x);
+            Group g = (Group) o.get(1);
+            boolean b = (Boolean) o.get(0);
+            if (b) {
+                g.AddMember(characterHandle.characterID);
+            } else {
+                g.DeleteMember(characterHandle.characterID);
+            }
+        }
 
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = characterHandle;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, true, false, true, false, false, false);
-   }
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = characterHandle;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, true, false, true, false, false, false);
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -161,7 +161,7 @@ public final class GroupsPanel extends javax.swing.JPanel implements TableModelL
    }// </editor-fold>//GEN-END:initComponents
 
    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-      JustifyColumns();
+       JustifyColumns();
    }//GEN-LAST:event_formComponentShown
 
    // Variables declaration - do not modify//GEN-BEGIN:variables

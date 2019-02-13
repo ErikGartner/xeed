@@ -24,142 +24,142 @@ import javax.swing.table.TableCellEditor;
  */
 public class CharacterConverterForm extends javax.swing.JFrame {
 
-   public xeed.Character[] characters;
-   private Vector jTableModel = new Vector(0);
-   private Vector jTableHeader = new Vector(0);
-   private property[] oldTemplate;
-   private property[] newTemplate;
-   private boolean working = false;
+    public xeed.Character[] characters;
+    private Vector jTableModel = new Vector(0);
+    private Vector jTableHeader = new Vector(0);
+    private property[] oldTemplate;
+    private property[] newTemplate;
+    private boolean working = false;
 
-   public CharacterConverterForm(Character[] cs) {
-      characters = cs;
-      initComponents();
+    public CharacterConverterForm(Character[] cs) {
+        characters = cs;
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/user_edit.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/user_edit.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      oldTemplate = LoadTemplate(characters[0].template);
-      LoadTemplateList();
-      LoadTableAndEditor();
+        oldTemplate = LoadTemplate(characters[0].template);
+        LoadTemplateList();
+        LoadTableAndEditor();
 
-      String comp = "";
-      for (int x = 0; x < characters.length; x++) {
-         comp += characters[x].GetCharacterName();
-         if (x != characters.length - 1) {
-            comp += ", ";
-         }
-      }
-      txtCharacters.setText(comp);
+        String comp = "";
+        for (int x = 0; x < characters.length; x++) {
+            comp += characters[x].GetCharacterName();
+            if (x != characters.length - 1) {
+                comp += ", ";
+            }
+        }
+        txtCharacters.setText(comp);
 
-   }
+    }
 
-   //call to verfiy that a character loaded isn't removed.
-   public void CharacterRemoved(Character c) {
-      if (working) {
-         return;
-      }
-      for (int x = 0; x < characters.length; x++) {
-         if (c == characters[x]) {
-            JOptionPane
-                  .showMessageDialog(
-                        null,
-                        "One of the characters selected for conversion was removed!\nThe characater converter will now close.",
-                        "Selected character was removed.", JOptionPane.WARNING_MESSAGE);
+    //call to verfiy that a character loaded isn't removed.
+    public void CharacterRemoved(Character c) {
+        if (working) {
+            return;
+        }
+        for (int x = 0; x < characters.length; x++) {
+            if (c == characters[x]) {
+                JOptionPane
+                        .showMessageDialog(
+                                null,
+                                "One of the characters selected for conversion was removed!\nThe characater converter will now close.",
+                                "Selected character was removed.", JOptionPane.WARNING_MESSAGE);
+                XEED.hwndCharacterConverter = null;
+                dispose();
+            }
+        }
+    }
+
+    public void LoadTemplateList() {
+
+        comboTemplates.removeAllItems();
+        for (int x = 0; x < XEED.templateDB.size(); x++) {
+            if (XEED.templateDB.get(x) != characters[0].template) {
+                comboTemplates.addItem(XEED.templateDB.get(x));
+            }
+        }
+        if (comboTemplates.getItemCount() < 1) {
+            JOptionPane.showMessageDialog(null, "You need atleast 2 templates loaded to use the converter.",
+                    "Not enough templates", JOptionPane.WARNING_MESSAGE);
             XEED.hwndCharacterConverter = null;
             dispose();
-         }
-      }
-   }
+        }
 
-   public void LoadTemplateList() {
+    }
 
-      comboTemplates.removeAllItems();
-      for (int x = 0; x < XEED.templateDB.size(); x++) {
-         if (XEED.templateDB.get(x) != characters[0].template) {
-            comboTemplates.addItem(XEED.templateDB.get(x));
-         }
-      }
-      if (comboTemplates.getItemCount() < 1) {
-         JOptionPane.showMessageDialog(null, "You need atleast 2 templates loaded to use the converter.",
-               "Not enough templates", JOptionPane.WARNING_MESSAGE);
-         XEED.hwndCharacterConverter = null;
-         dispose();
-      }
+    private void LoadTableAndEditor() {
 
-   }
+        if (newTemplate == null) {
+            return;
+        }
 
-   private void LoadTableAndEditor() {
+        jTableModel.clear();
 
-      if (newTemplate == null) {
-         return;
-      }
+        for (int x = 0; x < newTemplate.length; x++) {
+            Vector o = new Vector(0);
+            o.add(null);
+            o.add(newTemplate[x]);
+            if (!newTemplate[x].key.equals(Constants.CHARACTER_GROUPS)) {
+                jTableModel.add(o);
+            }
+        }
 
-      jTableModel.clear();
+        tblOverview.getColumnModel().getColumn(0).setCellEditor(new PropertyEditor(oldTemplate));
+        DefaultTableModel df = (DefaultTableModel) tblOverview.getModel();
+        df.fireTableDataChanged();
 
-      for (int x = 0; x < newTemplate.length; x++) {
-         Vector o = new Vector(0);
-         o.add(null);
-         o.add(newTemplate[x]);
-         if (!newTemplate[x].key.equals(Constants.CHARACTER_GROUPS)) {
-            jTableModel.add(o);
-         }
-      }
+    }
 
-      tblOverview.getColumnModel().getColumn(0).setCellEditor(new PropertyEditor(oldTemplate));
-      DefaultTableModel df = (DefaultTableModel) tblOverview.getModel();
-      df.fireTableDataChanged();
+    private property[] LoadTemplate(Template t) {
 
-   }
+        if (t == null) {
+            return null;
+        }
 
-   private property[] LoadTemplate(Template t) {
+        String[] keys = t.GetAllTemplateKeys();
+        String[] names = t.GetAllTemplateNames();
 
-      if (t == null) {
-         return null;
-      }
+        property[] props = new property[keys.length];
+        for (int x = 0; x < keys.length; x++) {
 
-      String[] keys = t.GetAllTemplateKeys();
-      String[] names = t.GetAllTemplateNames();
+            property prop = new property();
+            prop.key = keys[x];
+            prop.name = names[x];
+            boolean type[] = t.GetDataTypeArray(keys[x]);
 
-      property[] props = new property[keys.length];
-      for (int x = 0; x < keys.length; x++) {
+            prop.isChrData = type[0];
+            prop.isExtData = type[1];
+            prop.isImgData = type[2];
+            prop.isSzData = type[3];
 
-         property prop = new property();
-         prop.key = keys[x];
-         prop.name = names[x];
-         boolean type[] = t.GetDataTypeArray(keys[x]);
+            props[x] = prop;
+        }
 
-         prop.isChrData = type[0];
-         prop.isExtData = type[1];
-         prop.isImgData = type[2];
-         prop.isSzData = type[3];
+        return props;
 
-         props[x] = prop;
-      }
+    }
 
-      return props;
+    private class property {
 
-   }
+        String name;
+        String key;
+        boolean isChrData = false;
+        boolean isSzData = false;
+        boolean isExtData = false;
+        boolean isImgData = false;
 
-   private class property {
+        public String toString() {
+            return name;
+        }
+    }
 
-      String name;
-      String key;
-      boolean isChrData = false;
-      boolean isSzData = false;
-      boolean isExtData = false;
-      boolean isImgData = false;
-
-      public String toString() {
-         return name;
-      }
-   }
-
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -304,24 +304,24 @@ public class CharacterConverterForm extends javax.swing.JFrame {
    }// </editor-fold>//GEN-END:initComponents
 
    private void chkAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAcceptActionPerformed
-      btnGo.setEnabled(chkAccept.isSelected());
-      if (chkAccept.isSelected()) {
-         if (JOptionPane
-               .showOptionDialog(
-                     null,
-                     "You are about to perform a character conversion.\nPlease note that is an irreversible action.\nIf an error occur it may result in data loss and/or corruption.\nDo you want to save the setting before you continue?",
-                     "Save?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
-            XEED.SaveSetting(false, true);
-         }
-      }
+       btnGo.setEnabled(chkAccept.isSelected());
+       if (chkAccept.isSelected()) {
+           if (JOptionPane
+                   .showOptionDialog(
+                           null,
+                           "You are about to perform a character conversion.\nPlease note that is an irreversible action.\nIf an error occur it may result in data loss and/or corruption.\nDo you want to save the setting before you continue?",
+                           "Save?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
+               XEED.SaveSetting(false, true);
+           }
+       }
    }//GEN-LAST:event_chkAcceptActionPerformed
 
    private void comboTemplatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTemplatesActionPerformed
 
-      if (comboTemplates.getSelectedItem() != null) {
-         newTemplate = LoadTemplate((Template) comboTemplates.getSelectedItem());
-         LoadTableAndEditor();
-      }
+       if (comboTemplates.getSelectedItem() != null) {
+           newTemplate = LoadTemplate((Template) comboTemplates.getSelectedItem());
+           LoadTableAndEditor();
+       }
 
    }//GEN-LAST:event_comboTemplatesActionPerformed
 
@@ -330,63 +330,63 @@ public class CharacterConverterForm extends javax.swing.JFrame {
 
    private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
 
-      Template targetTemplate = (Template) comboTemplates.getSelectedItem();
-      if (targetTemplate == null) {
-         JOptionPane.showMessageDialog(null, "Please select a target template!", "Missing data",
-               JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       Template targetTemplate = (Template) comboTemplates.getSelectedItem();
+       if (targetTemplate == null) {
+           JOptionPane.showMessageDialog(null, "Please select a target template!", "Missing data",
+                   JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      working = true;
+       working = true;
 
-      for (int x = 0; x < characters.length; x++) {
+       for (int x = 0; x < characters.length; x++) {
 
-         HashMap old_chrData = characters[x].chrData;
-         HashMap old_extData = characters[x].extData;
-         HashMap old_imgData = characters[x].imgData;
-         HashMap old_szData = characters[x].szData;
+           HashMap old_chrData = characters[x].chrData;
+           HashMap old_extData = characters[x].extData;
+           HashMap old_imgData = characters[x].imgData;
+           HashMap old_szData = characters[x].szData;
 
-         characters[x].ChangeTemplate(targetTemplate);
+           characters[x].ChangeTemplate(targetTemplate);
 
-         for (int y = 0; y < tblOverview.getRowCount(); y++) {
+           for (int y = 0; y < tblOverview.getRowCount(); y++) {
 
-            property oldprop = (property) tblOverview.getValueAt(y, 0);
-            if (oldprop != null) {
-               property newprop = (property) tblOverview.getValueAt(y, 1);
+               property oldprop = (property) tblOverview.getValueAt(y, 0);
+               if (oldprop != null) {
+                   property newprop = (property) tblOverview.getValueAt(y, 1);
 
-               if (newprop.isChrData && old_chrData.containsKey(oldprop.key)) {
-                  characters[x].chrData.put(newprop.key, old_chrData.get(oldprop.key));
+                   if (newprop.isChrData && old_chrData.containsKey(oldprop.key)) {
+                       characters[x].chrData.put(newprop.key, old_chrData.get(oldprop.key));
+                   }
+
+                   if (newprop.isExtData && old_extData.containsKey(oldprop.key)) {
+                       characters[x].extData.put(newprop.key, old_extData.get(oldprop.key));
+                   }
+
+                   if (newprop.isImgData && old_imgData.containsKey(oldprop.key)) {
+                       characters[x].imgData.put(newprop.key, old_imgData.get(oldprop.key));
+                   }
+
+                   if (newprop.isSzData && old_szData.containsKey(oldprop.key)) {
+                       characters[x].szData.put(newprop.key, old_szData.get(oldprop.key));
+                   }
                }
 
-               if (newprop.isExtData && old_extData.containsKey(oldprop.key)) {
-                  characters[x].extData.put(newprop.key, old_extData.get(oldprop.key));
-               }
+           }
 
-               if (newprop.isImgData && old_imgData.containsKey(oldprop.key)) {
-                  characters[x].imgData.put(newprop.key, old_imgData.get(oldprop.key));
-               }
+           Group.UpdateCharactersGroupList(characters[x].characterID);
 
-               if (newprop.isSzData && old_szData.containsKey(oldprop.key)) {
-                  characters[x].szData.put(newprop.key, old_szData.get(oldprop.key));
-               }
-            }
+       }
 
-         }
-
-         Group.UpdateCharactersGroupList(characters[x].characterID);
-
-      }
-
-      JOptionPane.showMessageDialog(null, "Conversion complete!", "Done", JOptionPane.INFORMATION_MESSAGE);
-      XEED.hwndCharacterConverter = null;
-      dispose();
+       JOptionPane.showMessageDialog(null, "Conversion complete!", "Done", JOptionPane.INFORMATION_MESSAGE);
+       XEED.hwndCharacterConverter = null;
+       dispose();
 
    }//GEN-LAST:event_btnGoActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
-      XEED.hwndCharacterConverter = null;
-      dispose();
+       XEED.hwndCharacterConverter = null;
+       dispose();
 
    }//GEN-LAST:event_formWindowClosing
 
@@ -394,7 +394,7 @@ public class CharacterConverterForm extends javax.swing.JFrame {
    }//GEN-LAST:event_tblOverviewMousePressed
 
    private void tblOverviewMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOverviewMouseReleased
-      // TODO add your handling code here:
+       // TODO add your handling code here:
    }//GEN-LAST:event_tblOverviewMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
 
@@ -409,60 +409,59 @@ public class CharacterConverterForm extends javax.swing.JFrame {
    private javax.swing.JTextField txtCharacters;
 
    // End of variables declaration//GEN-END:variables
+    private class PropertyEditor extends AbstractCellEditor implements TableCellEditor {
 
-   private class PropertyEditor extends AbstractCellEditor implements TableCellEditor {
+        JComponent component = new JComboBox();
+        private property[] oldTemplate;
 
-      JComponent component = new JComboBox();
-      private property[] oldTemplate;
+        public PropertyEditor(property[] props) {
+            oldTemplate = props;
+        }
 
-      public PropertyEditor(property[] props) {
-         oldTemplate = props;
-      }
+        private void LoadProperties(property new_prop) {
 
-      private void LoadProperties(property new_prop) {
+            JComboBox comboProperties = (JComboBox) component;
 
-         JComboBox comboProperties = (JComboBox) component;
+            comboProperties.removeAllItems();
+            comboProperties.addItem(null);
 
-         comboProperties.removeAllItems();
-         comboProperties.addItem(null);
+            for (int x = 0; x < oldTemplate.length; x++) {
 
-         for (int x = 0; x < oldTemplate.length; x++) {
+                boolean add = false;
+                if (new_prop.isChrData && oldTemplate[x].isChrData == new_prop.isChrData) {
+                    add = true;
+                }
+                if (new_prop.isExtData && oldTemplate[x].isExtData == new_prop.isExtData) {
+                    add = true;
+                }
+                if (new_prop.isImgData && oldTemplate[x].isImgData == new_prop.isImgData) {
+                    add = true;
+                }
+                if (new_prop.isSzData && oldTemplate[x].isSzData == new_prop.isSzData) {
+                    add = true;
+                }
 
-            boolean add = false;
-            if (new_prop.isChrData && oldTemplate[x].isChrData == new_prop.isChrData) {
-               add = true;
+                if (add) {
+                    comboProperties.addItem(oldTemplate[x]);
+                }
+
             }
-            if (new_prop.isExtData && oldTemplate[x].isExtData == new_prop.isExtData) {
-               add = true;
-            }
-            if (new_prop.isImgData && oldTemplate[x].isImgData == new_prop.isImgData) {
-               add = true;
-            }
-            if (new_prop.isSzData && oldTemplate[x].isSzData == new_prop.isSzData) {
-               add = true;
-            }
 
-            if (add) {
-               comboProperties.addItem(oldTemplate[x]);
-            }
+        }
 
-         }
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex,
+                int vColIndex) {
 
-      }
+            property new_prop = (property) table.getValueAt(rowIndex, vColIndex + 1);
+            LoadProperties(new_prop);
 
-      public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex,
-            int vColIndex) {
+            ((JComboBox) component).setSelectedItem(value);
+            return component;
 
-         property new_prop = (property) table.getValueAt(rowIndex, vColIndex + 1);
-         LoadProperties(new_prop);
+        }
 
-         ((JComboBox) component).setSelectedItem(value);
-         return component;
-
-      }
-
-      public Object getCellEditorValue() {
-         return ((JComboBox) component).getSelectedItem();
-      }
-   }
+        public Object getCellEditorValue() {
+            return ((JComboBox) component).getSelectedItem();
+        }
+    }
 }

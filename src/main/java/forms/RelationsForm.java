@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmRelations.java
  *
  * Created on 2011-feb-10, 19:19:16
@@ -24,157 +24,157 @@ import javax.imageio.ImageIO;
  */
 public class RelationsForm extends javax.swing.JFrame {
 
-   /**
-    * Creates new form frmRelations
-    */
-   public RelationsForm() {
-      initComponents();
+    /**
+     * Creates new form frmRelations
+     */
+    public RelationsForm() {
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/group_link.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/group_link.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      LoadLists();
-   }
+        LoadLists();
+    }
 
-   public void LoadLists() {
+    public void LoadLists() {
 
-      Object o1 = comboFrom.getSelectedItem();
-      comboFrom.removeAllItems();
-      if (XEED.charDB.size() > 0) {
-         comboFrom.addItem("");
-         comboFrom.addItem("Characters:");
-         for (int x = 0; x < XEED.charDB.size(); x++) {
-            comboFrom.addItem(XEED.charDB.get(x));
-         }
-      }
-      if (XEED.groupDB.size() > 0) {
-         comboFrom.addItem("");
-         comboFrom.addItem("Groups:");
-         for (int x = 0; x < XEED.groupDB.size(); x++) {
-            comboFrom.addItem(XEED.groupDB.get(x));
-         }
-      }
-      comboFrom.setSelectedItem(o1);
+        Object o1 = comboFrom.getSelectedItem();
+        comboFrom.removeAllItems();
+        if (XEED.charDB.size() > 0) {
+            comboFrom.addItem("");
+            comboFrom.addItem("Characters:");
+            for (int x = 0; x < XEED.charDB.size(); x++) {
+                comboFrom.addItem(XEED.charDB.get(x));
+            }
+        }
+        if (XEED.groupDB.size() > 0) {
+            comboFrom.addItem("");
+            comboFrom.addItem("Groups:");
+            for (int x = 0; x < XEED.groupDB.size(); x++) {
+                comboFrom.addItem(XEED.groupDB.get(x));
+            }
+        }
+        comboFrom.setSelectedItem(o1);
 
-      Object o2 = comboTo.getSelectedItem();
-      comboTo.removeAllItems();
-      if (XEED.charDB.size() > 0) {
-         comboTo.addItem("");
-         comboTo.addItem("Characters:");
-         for (int x = 0; x < XEED.charDB.size(); x++) {
-            comboTo.addItem(XEED.charDB.get(x));
-         }
-      }
-      if (XEED.groupDB.size() > 0) {
-         comboTo.addItem("");
-         comboTo.addItem("Groups:");
-         for (int x = 0; x < XEED.groupDB.size(); x++) {
-            comboTo.addItem(XEED.groupDB.get(x));
-         }
-      }
-      comboTo.setSelectedItem(o2);
+        Object o2 = comboTo.getSelectedItem();
+        comboTo.removeAllItems();
+        if (XEED.charDB.size() > 0) {
+            comboTo.addItem("");
+            comboTo.addItem("Characters:");
+            for (int x = 0; x < XEED.charDB.size(); x++) {
+                comboTo.addItem(XEED.charDB.get(x));
+            }
+        }
+        if (XEED.groupDB.size() > 0) {
+            comboTo.addItem("");
+            comboTo.addItem("Groups:");
+            for (int x = 0; x < XEED.groupDB.size(); x++) {
+                comboTo.addItem(XEED.groupDB.get(x));
+            }
+        }
+        comboTo.setSelectedItem(o2);
 
-   }
+    }
 
-   public void LoadRelationship() {
+    public void LoadRelationship() {
 
-      Object o1 = comboFrom.getSelectedItem();
-      Object o2 = comboTo.getSelectedItem();
+        Object o1 = comboFrom.getSelectedItem();
+        Object o2 = comboTo.getSelectedItem();
 
-      if (o1 == null || o2 == null) {
-         lblTo.setText("");
-         lblFrom.setText("");
-         txtDescriptionTo.setText("");
-         txtDescriptionTo.setEditable(false);
-         txtDescriptionFrom.setText("");
-         txtDescriptionFrom.setEditable(false);
-         return;
-      }
+        if (o1 == null || o2 == null) {
+            lblTo.setText("");
+            lblFrom.setText("");
+            txtDescriptionTo.setText("");
+            txtDescriptionTo.setEditable(false);
+            txtDescriptionFrom.setText("");
+            txtDescriptionFrom.setEditable(false);
+            return;
+        }
 
-      if (o1.getClass() == String.class || o2.getClass() == String.class) {
-         lblTo.setText("");
-         lblFrom.setText("");
-         txtDescriptionTo.setText("");
-         txtDescriptionTo.setEditable(false);
-         txtDescriptionFrom.setText("");
-         txtDescriptionFrom.setEditable(false);
-         return;
-      }
+        if (o1.getClass() == String.class || o2.getClass() == String.class) {
+            lblTo.setText("");
+            lblFrom.setText("");
+            txtDescriptionTo.setText("");
+            txtDescriptionTo.setEditable(false);
+            txtDescriptionFrom.setText("");
+            txtDescriptionFrom.setEditable(false);
+            return;
+        }
 
-      if (o1 == o2) {
-         lblTo.setText("");
-         lblFrom.setText("");
-         txtDescriptionTo.setText("");
-         txtDescriptionTo.setEditable(false);
-         txtDescriptionFrom.setText("");
-         txtDescriptionFrom.setEditable(false);
-         return;
-      }
+        if (o1 == o2) {
+            lblTo.setText("");
+            lblFrom.setText("");
+            txtDescriptionTo.setText("");
+            txtDescriptionTo.setEditable(false);
+            txtDescriptionFrom.setText("");
+            txtDescriptionFrom.setEditable(false);
+            return;
+        }
 
-      if (o1.getClass() == xeed.Character.class) {
-         if (o2.getClass() == Character.class) {
+        if (o1.getClass() == xeed.Character.class) {
+            if (o2.getClass() == Character.class) {
 
-            Character c1 = (Character) o1;
-            Character c2 = (Character) o2;
+                Character c1 = (Character) o1;
+                Character c2 = (Character) o2;
 
-            lblTo.setText(c2.GetCharacterName());
-            txtDescriptionTo.setText(c1.GetRelation(c2.characterID, 0));
-            lblFrom.setText(c1.GetCharacterName());
-            txtDescriptionFrom.setText(c2.GetRelation(c1.characterID, 0));
+                lblTo.setText(c2.GetCharacterName());
+                txtDescriptionTo.setText(c1.GetRelation(c2.characterID, 0));
+                lblFrom.setText(c1.GetCharacterName());
+                txtDescriptionFrom.setText(c2.GetRelation(c1.characterID, 0));
 
-         } else if (o2.getClass() == Group.class) {
+            } else if (o2.getClass() == Group.class) {
 
-            Character c1 = (Character) o1;
-            Group g2 = (Group) o2;
-            lblTo.setText(g2.szName);
-            txtDescriptionTo.setText(c1.GetRelation(g2.lngID, 1));
-            lblFrom.setText(c1.GetCharacterName());
-            txtDescriptionFrom.setText(g2.GetRelation(c1.characterID, 0));
+                Character c1 = (Character) o1;
+                Group g2 = (Group) o2;
+                lblTo.setText(g2.szName);
+                txtDescriptionTo.setText(c1.GetRelation(g2.lngID, 1));
+                lblFrom.setText(c1.GetCharacterName());
+                txtDescriptionFrom.setText(g2.GetRelation(c1.characterID, 0));
 
-         }
-      } else if (o1.getClass() == Group.class) {
-         if (o2.getClass() == Character.class) {
+            }
+        } else if (o1.getClass() == Group.class) {
+            if (o2.getClass() == Character.class) {
 
-            Group g1 = (Group) o1;
-            Character c2 = (Character) o2;
-            lblTo.setText(c2.GetCharacterName());
-            txtDescriptionTo.setText(g1.GetRelation(c2.characterID, 0));
-            lblFrom.setText(g1.szName);
-            txtDescriptionFrom.setText(c2.GetRelation(g1.lngID, 1));
+                Group g1 = (Group) o1;
+                Character c2 = (Character) o2;
+                lblTo.setText(c2.GetCharacterName());
+                txtDescriptionTo.setText(g1.GetRelation(c2.characterID, 0));
+                lblFrom.setText(g1.szName);
+                txtDescriptionFrom.setText(c2.GetRelation(g1.lngID, 1));
 
-         } else if (o2.getClass() == Group.class) {
+            } else if (o2.getClass() == Group.class) {
 
-            Group g1 = (Group) o1;
-            Group g2 = (Group) o2;
-            lblTo.setText(g1.szName + g2.szName);
-            txtDescriptionTo.setText(g1.GetRelation(g2.lngID, 1));
-            lblFrom.setText(g2.szName + g1.szName);
-            txtDescriptionFrom.setText(g2.GetRelation(g1.lngID, 1));
+                Group g1 = (Group) o1;
+                Group g2 = (Group) o2;
+                lblTo.setText(g1.szName + g2.szName);
+                txtDescriptionTo.setText(g1.GetRelation(g2.lngID, 1));
+                lblFrom.setText(g2.szName + g1.szName);
+                txtDescriptionFrom.setText(g2.GetRelation(g1.lngID, 1));
 
-         }
-      }
+            }
+        }
 
-      txtDescriptionFrom.setEditable(true);
-      txtDescriptionTo.setEditable(true);
-      txtDescriptionTo.setCaretPosition(0);
-      txtDescriptionFrom.setCaretPosition(0);
+        txtDescriptionFrom.setEditable(true);
+        txtDescriptionTo.setEditable(true);
+        txtDescriptionTo.setCaretPosition(0);
+        txtDescriptionFrom.setCaretPosition(0);
 
-   }
+    }
 
-   public void LoadSpecificRelation(Object o1, Object o2) {
+    public void LoadSpecificRelation(Object o1, Object o2) {
 
-      LoadLists();
-      comboFrom.setSelectedItem(o1);
-      comboTo.setSelectedItem(o2);
+        LoadLists();
+        comboFrom.setSelectedItem(o1);
+        comboTo.setSelectedItem(o2);
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -303,137 +303,137 @@ public class RelationsForm extends javax.swing.JFrame {
 
    private void txtDescriptionToKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionToKeyReleased
 
-      Object o1 = comboFrom.getSelectedItem();
-      Object o2 = comboTo.getSelectedItem();
-      if (o1 == null || o2 == null) {
-         return;
-      }
-      if (o1.getClass() == String.class || o2.getClass() == String.class) {
-         return;
-      }
+       Object o1 = comboFrom.getSelectedItem();
+       Object o2 = comboTo.getSelectedItem();
+       if (o1 == null || o2 == null) {
+           return;
+       }
+       if (o1.getClass() == String.class || o2.getClass() == String.class) {
+           return;
+       }
 
-      if (o1.getClass() == Character.class) {
-         if (o2.getClass() == Character.class) {
+       if (o1.getClass() == Character.class) {
+           if (o2.getClass() == Character.class) {
 
-            Character c1 = (Character) o1;
-            Character c2 = (Character) o2;
-            c1.AddRelation(c2.characterID, 0, txtDescriptionTo.getText());
+               Character c1 = (Character) o1;
+               Character c2 = (Character) o2;
+               c1.AddRelation(c2.characterID, 0, txtDescriptionTo.getText());
 
-            Character[] affectedcharacters = new Character[2];
-            affectedcharacters[0] = c1;
-            affectedcharacters[1] = c2;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[2];
+               affectedcharacters[0] = c1;
+               affectedcharacters[1] = c2;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, false, false, true,
+                       false);
 
-         } else if (o2.getClass() == Group.class) {
+           } else if (o2.getClass() == Group.class) {
 
-            Character c1 = (Character) o1;
-            Group g2 = (Group) o2;
-            c1.AddRelation(g2.lngID, 1, txtDescriptionTo.getText());
+               Character c1 = (Character) o1;
+               Group g2 = (Group) o2;
+               c1.AddRelation(g2.lngID, 1, txtDescriptionTo.getText());
 
-            Character[] affectedcharacters = new Character[1];
-            affectedcharacters[0] = c1;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[1];
+               affectedcharacters[0] = c1;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
+                       false);
 
-         }
-      } else if (o1.getClass() == Group.class) {
-         if (o2.getClass() == Character.class) {
+           }
+       } else if (o1.getClass() == Group.class) {
+           if (o2.getClass() == Character.class) {
 
-            Group g1 = (Group) o1;
-            Character c2 = (Character) o2;
-            g1.AddRelation(c2.characterID, 0, txtDescriptionTo.getText());
+               Group g1 = (Group) o1;
+               Character c2 = (Character) o2;
+               g1.AddRelation(c2.characterID, 0, txtDescriptionTo.getText());
 
-            Character[] affectedcharacters = new Character[1];
-            affectedcharacters[0] = c2;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[1];
+               affectedcharacters[0] = c2;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
+                       false);
 
-         } else if (o2.getClass() == Group.class) {
+           } else if (o2.getClass() == Group.class) {
 
-            Group g1 = (Group) o1;
-            Group g2 = (Group) o2;
-            g1.AddRelation(g2.lngID, 1, txtDescriptionTo.getText());
+               Group g1 = (Group) o1;
+               Group g2 = (Group) o2;
+               g1.AddRelation(g2.lngID, 1, txtDescriptionTo.getText());
 
-            XEED.hwndNotifier.FireUpdate(null, false, false, false, false, true, false, false, true, false);
+               XEED.hwndNotifier.FireUpdate(null, false, false, false, false, true, false, false, true, false);
 
-         }
-      }
+           }
+       }
 
    }//GEN-LAST:event_txtDescriptionToKeyReleased
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndRelations = null;
-      dispose();
+       XEED.hwndRelations = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void txtDescriptionFromKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionFromKeyReleased
 
-      Object o1 = comboFrom.getSelectedItem();
-      Object o2 = comboTo.getSelectedItem();
-      if (o1 == null || o2 == null) {
-         return;
-      }
-      if (o1.getClass() == String.class || o2.getClass() == String.class) {
-         return;
-      }
+       Object o1 = comboFrom.getSelectedItem();
+       Object o2 = comboTo.getSelectedItem();
+       if (o1 == null || o2 == null) {
+           return;
+       }
+       if (o1.getClass() == String.class || o2.getClass() == String.class) {
+           return;
+       }
 
-      if (o1.getClass() == Character.class) {
-         if (o2.getClass() == Character.class) {
+       if (o1.getClass() == Character.class) {
+           if (o2.getClass() == Character.class) {
 
-            Character c1 = (Character) o1;
-            Character c2 = (Character) o2;
-            c2.AddRelation(c1.characterID, 0, txtDescriptionFrom.getText());
+               Character c1 = (Character) o1;
+               Character c2 = (Character) o2;
+               c2.AddRelation(c1.characterID, 0, txtDescriptionFrom.getText());
 
-            Character[] affectedcharacters = new Character[2];
-            affectedcharacters[0] = c1;
-            affectedcharacters[1] = c2;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[2];
+               affectedcharacters[0] = c1;
+               affectedcharacters[1] = c2;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, false, false, true,
+                       false);
 
-         } else if (o2.getClass() == Group.class) {
+           } else if (o2.getClass() == Group.class) {
 
-            Character c1 = (Character) o1;
-            Group g2 = (Group) o2;
-            g2.AddRelation(c1.characterID, 0, txtDescriptionFrom.getText());
+               Character c1 = (Character) o1;
+               Group g2 = (Group) o2;
+               g2.AddRelation(c1.characterID, 0, txtDescriptionFrom.getText());
 
-            Character[] affectedcharacters = new Character[1];
-            affectedcharacters[0] = c1;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[1];
+               affectedcharacters[0] = c1;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
+                       false);
 
-         }
-      } else if (o1.getClass() == Group.class) {
-         if (o2.getClass() == Character.class) {
+           }
+       } else if (o1.getClass() == Group.class) {
+           if (o2.getClass() == Character.class) {
 
-            Group g1 = (Group) o1;
-            Character c2 = (Character) o2;
-            c2.AddRelation(g1.lngID, 1, txtDescriptionFrom.getText());
+               Group g1 = (Group) o1;
+               Character c2 = (Character) o2;
+               c2.AddRelation(g1.lngID, 1, txtDescriptionFrom.getText());
 
-            Character[] affectedcharacters = new Character[1];
-            affectedcharacters[0] = c2;
-            XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
-                  false);
+               Character[] affectedcharacters = new Character[1];
+               affectedcharacters[0] = c2;
+               XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, true, false, false, true,
+                       false);
 
-         } else if (o2.getClass() == Group.class) {
+           } else if (o2.getClass() == Group.class) {
 
-            Group g1 = (Group) o1;
-            Group g2 = (Group) o2;
-            g2.AddRelation(g1.lngID, 1, txtDescriptionFrom.getText());
+               Group g1 = (Group) o1;
+               Group g2 = (Group) o2;
+               g2.AddRelation(g1.lngID, 1, txtDescriptionFrom.getText());
 
-            XEED.hwndNotifier.FireUpdate(null, false, false, false, false, true, false, false, true, false);
+               XEED.hwndNotifier.FireUpdate(null, false, false, false, false, true, false, false, true, false);
 
-         }
-      }
+           }
+       }
 
    }//GEN-LAST:event_txtDescriptionFromKeyReleased
 
    private void comboFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFromActionPerformed
-      LoadRelationship();
+       LoadRelationship();
    }//GEN-LAST:event_comboFromActionPerformed
 
    private void comboToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboToActionPerformed
-      LoadRelationship();
+       LoadRelationship();
    }//GEN-LAST:event_comboToActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

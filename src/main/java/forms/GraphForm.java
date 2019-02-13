@@ -15,297 +15,296 @@ import javax.swing.table.DefaultTableModel;
 
 public final class GraphForm extends javax.swing.JFrame {
 
-   /*
+    /*
     * Relations character table
-    */
-   private Vector jTableModelRelChar = new Vector(0, 2);
-   private Vector jTableHeaderRelChar = new Vector(0);
-   private RelationGraphPanel RelationPanel = null;
-   private GenealogyGraphPanel GenealogyPanel = null;
-   /*
+     */
+    private Vector jTableModelRelChar = new Vector(0, 2);
+    private Vector jTableHeaderRelChar = new Vector(0);
+    private RelationGraphPanel RelationPanel = null;
+    private GenealogyGraphPanel GenealogyPanel = null;
+    /*
     * Relations groups table
-    */
-   private Vector jTableModelRelGroup = new Vector(0, 2);
-   private Vector jTableHeaderRelGroup = new Vector(0);
-   /*
+     */
+    private Vector jTableModelRelGroup = new Vector(0, 2);
+    private Vector jTableHeaderRelGroup = new Vector(0);
+    /*
     * Genealogy character table
-    */
-   private Vector jTableModelGenChar = new Vector(0, 2);
-   private Vector jTableHeaderGenChar = new Vector(0);
-   private boolean reloading_template_options = false;
+     */
+    private Vector jTableModelGenChar = new Vector(0, 2);
+    private Vector jTableHeaderGenChar = new Vector(0);
+    private boolean reloading_template_options = false;
 
-   /**
-    * Creates new form frmGraph
-    */
-   public GraphForm() {
-      initComponents();
+    /**
+     * Creates new form frmGraph
+     */
+    public GraphForm() {
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/chart_organisation.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/chart_organisation.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      LoadCharactersAndGroups();
-      JustifyColumns();
+        LoadCharactersAndGroups();
+        JustifyColumns();
 
-      LoadTemplates();
-   }
+        LoadTemplates();
+    }
 
-   private void JustifyColumns() {
+    private void JustifyColumns() {
 
-      tblRelChars.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-      tblRelChars.getColumnModel().getColumn(0).setResizable(false);
-      tblRelChars.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblRelChars.getColumnModel().getColumn(1).setPreferredWidth(tblRelChars.getWidth() - 20);
+        tblRelChars.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblRelChars.getColumnModel().getColumn(0).setResizable(false);
+        tblRelChars.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblRelChars.getColumnModel().getColumn(1).setPreferredWidth(tblRelChars.getWidth() - 20);
 
-      tblRelGroups.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-      tblRelGroups.getColumnModel().getColumn(0).setResizable(false);
-      tblRelGroups.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblRelGroups.getColumnModel().getColumn(1).setPreferredWidth(tblRelGroups.getWidth() - 20);
+        tblRelGroups.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblRelGroups.getColumnModel().getColumn(0).setResizable(false);
+        tblRelGroups.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblRelGroups.getColumnModel().getColumn(1).setPreferredWidth(tblRelGroups.getWidth() - 20);
 
-      tblGenChars.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-      tblGenChars.getColumnModel().getColumn(0).setResizable(false);
-      tblGenChars.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblGenChars.getColumnModel().getColumn(1).setPreferredWidth(tblGenChars.getWidth() - 20);
+        tblGenChars.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblGenChars.getColumnModel().getColumn(0).setResizable(false);
+        tblGenChars.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblGenChars.getColumnModel().getColumn(1).setPreferredWidth(tblGenChars.getWidth() - 20);
 
-   }
+    }
 
-   public void LoadTemplates() {
+    public void LoadTemplates() {
 
-      comboGenTemplate.removeAllItems();
-      for (int x = 0; x < XEED.templateDB.size(); x++) {
-         comboGenTemplate.addItem(new TemplateOption(XEED.templateDB.get(x)));
-      }
+        comboGenTemplate.removeAllItems();
+        for (int x = 0; x < XEED.templateDB.size(); x++) {
+            comboGenTemplate.addItem(new TemplateOption(XEED.templateDB.get(x)));
+        }
 
-   }
+    }
 
-   private void LoadGenTemplateOptions() {
+    private void LoadGenTemplateOptions() {
 
-      reloading_template_options = true;
+        reloading_template_options = true;
 
-      comboGenExtra.removeAllItems();
-      comboGenExtra.addItem(new PropertyItem());
-      comboGenPicture.removeAllItems();
-      comboGenPicture.addItem(new PropertyItem());
+        comboGenExtra.removeAllItems();
+        comboGenExtra.addItem(new PropertyItem());
+        comboGenPicture.removeAllItems();
+        comboGenPicture.addItem(new PropertyItem());
 
-      TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
-      lblGenColor.setBackground(to.c);
+        TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
+        lblGenColor.setBackground(to.c);
 
-      String[] keys = to.t.GetAllTemplateKeys();
-      String[] names = to.t.GetAllTemplateNames();
+        String[] keys = to.t.GetAllTemplateKeys();
+        String[] names = to.t.GetAllTemplateNames();
 
-      for (int x = 0; x < keys.length; x++) {
+        for (int x = 0; x < keys.length; x++) {
 
-         boolean[] bs = to.t.GetDataTypeArray(keys[x]);
-         if (bs[3]) {
-            PropertyItem pi = new PropertyItem();
-            pi.key = keys[x];
-            pi.name = names[x];
-            comboGenExtra.addItem(pi);
+            boolean[] bs = to.t.GetDataTypeArray(keys[x]);
+            if (bs[3]) {
+                PropertyItem pi = new PropertyItem();
+                pi.key = keys[x];
+                pi.name = names[x];
+                comboGenExtra.addItem(pi);
 
-            if (pi.key.equals(to.extra.key)) {
-               comboGenExtra.setSelectedItem(pi);
+                if (pi.key.equals(to.extra.key)) {
+                    comboGenExtra.setSelectedItem(pi);
+                }
             }
-         }
 
-         if (bs[2]) {
-            PropertyItem pi = new PropertyItem();
-            pi.key = keys[x];
-            pi.name = names[x];
-            comboGenPicture.addItem(pi);
+            if (bs[2]) {
+                PropertyItem pi = new PropertyItem();
+                pi.key = keys[x];
+                pi.name = names[x];
+                comboGenPicture.addItem(pi);
 
-            if (pi.key.equals(to.picture.key)) {
-               comboGenPicture.setSelectedItem(pi);
+                if (pi.key.equals(to.picture.key)) {
+                    comboGenPicture.setSelectedItem(pi);
+                }
             }
-         }
-      }
+        }
 
-      reloading_template_options = false;
+        reloading_template_options = false;
 
-   }
+    }
 
-   public void LoadCharactersAndGroups() {
+    public void LoadCharactersAndGroups() {
 
-      /*
+        /*
        * Store selection
-       */
-
-      ArrayList<xeed.Character> selectedrelchars = new ArrayList(0);
-      for (int x = 0; x < jTableModelRelChar.size(); x++) {
-         Vector o = (Vector) jTableModelRelChar.get(x);
-         if ((Boolean) o.get(0) == true) {
-            selectedrelchars.add((Character) o.get(1));
-         }
-      }
-
-      ArrayList<Group> selectedgroups = new ArrayList(0);
-      for (int x = 0; x < jTableModelRelGroup.size(); x++) {
-         Vector o = (Vector) jTableModelRelGroup.get(x);
-         if ((Boolean) o.get(0) == true) {
-            selectedgroups.add((Group) o.get(1));
-         }
-      }
-
-      ArrayList<Character> selectedgenchars = new ArrayList(0);
-      for (int x = 0; x < jTableModelGenChar.size(); x++) {
-         Vector o = (Vector) jTableModelGenChar.get(x);
-         if ((Boolean) o.get(0) == true) {
-            selectedgenchars.add((Character) o.get(1));
-         }
-      }
-
-      jTableModelRelChar.clear();
-      jTableModelRelGroup.clear();
-      jTableModelGenChar.clear();
-
-      for (int x = 0; x < XEED.charDB.size(); x++) {
-         Vector o2 = new Vector(0);
-         o2.add(selectedrelchars.contains(XEED.charDB.get(x)));
-         o2.add(XEED.charDB.get(x));
-         jTableModelRelChar.add(o2);
-      }
-
-      for (int x = 0; x < XEED.groupDB.size(); x++) {
-         Vector o = new Vector(0);
-         o.add(selectedgroups.contains(XEED.groupDB.get(x)));
-         o.add(XEED.groupDB.get(x));
-         jTableModelRelGroup.add(o);
-      }
-
-      for (int x = 0; x < XEED.charDB.size(); x++) {
-         Vector o2 = new Vector(0);
-         o2.add(jTableModelGenChar.contains(XEED.charDB.get(x)));
-         o2.add(XEED.charDB.get(x));
-         jTableModelGenChar.add(o2);
-      }
-
-      DefaultTableModel df;
-      df = (DefaultTableModel) tblRelChars.getModel();
-      df.fireTableDataChanged();
-      df = (DefaultTableModel) tblRelGroups.getModel();
-      df.fireTableDataChanged();
-      df = (DefaultTableModel) tblGenChars.getModel();
-      df.fireTableDataChanged();
-
-   }
-
-   private void LoadRelationGraph() {
-
-      UnloadAllGraphs();
-
-      RelationPanel = new RelationGraphPanel();
-      RelationPanel.setSize(500, 500);
-      pnlGraph.add(RelationPanel, BorderLayout.CENTER);
-      pnlGraph.validate();
-
-   }
-
-   private void LoadGenealogyGraph() {
-
-      UnloadAllGraphs();
-
-      ArrayList<Character> selectedgenchars = new ArrayList(0);
-      for (int x = 0; x < jTableModelGenChar.size(); x++) {
-         Vector o = (Vector) jTableModelGenChar.get(x);
-         if ((Boolean) o.get(0) == true) {
-            selectedgenchars.add((Character) o.get(1));
-         }
-      }
-
-      Character[] cs = new Character[selectedgenchars.size()];
-      selectedgenchars.toArray(cs);
-
-      Template[] ts = new Template[comboGenTemplate.getItemCount()];
-      Color[] c = new Color[comboGenTemplate.getItemCount()];
-      String[] pics = new String[comboGenTemplate.getItemCount()];
-      String[] extras = new String[comboGenTemplate.getItemCount()];
-      for (int x = 0; x < ts.length; x++) {
-         TemplateOption to = (TemplateOption) comboGenTemplate.getItemAt(x);
-         ts[x] = to.t;
-         c[x] = to.c;
-         pics[x] = to.picture.key;
-         extras[x] = to.extra.key;
-      }
-
-      if (cs.length > 0 && ts.length > 0) {
-
-         GenealogyPanel = new GenealogyGraphPanel();
-         GenealogyPanel.setSize(500, 500);
-         pnlGraph.add(GenealogyPanel, BorderLayout.CENTER);
-         pnlGraph.validate();
-         GenealogyPanel.InitiateGraph(cs, ts, c, pics, extras);
-         GenealogyPanel.setVisible(true);
-
-      }
-
-   }
-
-   private void UnloadAllGraphs() {
-      pnlGraph.removeAll();
-      RelationPanel = null;
-      GenealogyPanel = null;
-      pnlGraph.validate();
-   }
-
-   private void UpdateRelations() {
-      if (RelationPanel == null) {
-         return;
-      }
-
-      Group[] g = null;
-      Character[] c = null;
-
-      ArrayList<Character> tmp = new ArrayList(0);
-      for (int x = 0; x < jTableModelRelChar.size(); x++) {
-         Vector o = (Vector) jTableModelRelChar.get(x);
-         if ((Boolean) o.get(0) == true) {
-            tmp.add((Character) o.get(1));
-         }
-      }
-
-      ArrayList<Group> tmp2 = new ArrayList(0);
-      for (int x = 0; x < jTableModelRelGroup.size(); x++) {
-         Vector o = (Vector) jTableModelRelGroup.get(x);
-         if ((Boolean) o.get(0) == true) {
-
-            if (chkUseMembers.isSelected()) {
-               long[] members = ((Group) o.get(1)).GetMemebers();
-               for (int y = 0; y < members.length; y++) {
-                  Character member = XEED.GetCharacterByID(members[y]);
-                  if (!tmp.contains(member)) {
-                     tmp.add(member);
-                  }
-               }
-            } else {
-               tmp2.add((Group) o.get(1));
+         */
+        ArrayList<xeed.Character> selectedrelchars = new ArrayList(0);
+        for (int x = 0; x < jTableModelRelChar.size(); x++) {
+            Vector o = (Vector) jTableModelRelChar.get(x);
+            if ((Boolean) o.get(0) == true) {
+                selectedrelchars.add((Character) o.get(1));
             }
+        }
 
-         }
-      }
-      if (tmp.size() > 0) {
-         c = new Character[tmp.size()];
-         tmp.toArray(c);
-      } else {
-         c = null;
-      }
-      if (tmp2.size() > 0) {
-         g = new Group[tmp2.size()];
-         tmp2.toArray(g);
-      } else {
-         g = null;
-      }
-      if (tmp.size() + tmp2.size() > 1) {
-         RelationPanel.LoadData(c, g);
-         RelationPanel.setVisible(true);
-      } else {
-         RelationPanel.setVisible(false);
-      }
-   }
+        ArrayList<Group> selectedgroups = new ArrayList(0);
+        for (int x = 0; x < jTableModelRelGroup.size(); x++) {
+            Vector o = (Vector) jTableModelRelGroup.get(x);
+            if ((Boolean) o.get(0) == true) {
+                selectedgroups.add((Group) o.get(1));
+            }
+        }
 
-   @SuppressWarnings("unchecked")
+        ArrayList<Character> selectedgenchars = new ArrayList(0);
+        for (int x = 0; x < jTableModelGenChar.size(); x++) {
+            Vector o = (Vector) jTableModelGenChar.get(x);
+            if ((Boolean) o.get(0) == true) {
+                selectedgenchars.add((Character) o.get(1));
+            }
+        }
+
+        jTableModelRelChar.clear();
+        jTableModelRelGroup.clear();
+        jTableModelGenChar.clear();
+
+        for (int x = 0; x < XEED.charDB.size(); x++) {
+            Vector o2 = new Vector(0);
+            o2.add(selectedrelchars.contains(XEED.charDB.get(x)));
+            o2.add(XEED.charDB.get(x));
+            jTableModelRelChar.add(o2);
+        }
+
+        for (int x = 0; x < XEED.groupDB.size(); x++) {
+            Vector o = new Vector(0);
+            o.add(selectedgroups.contains(XEED.groupDB.get(x)));
+            o.add(XEED.groupDB.get(x));
+            jTableModelRelGroup.add(o);
+        }
+
+        for (int x = 0; x < XEED.charDB.size(); x++) {
+            Vector o2 = new Vector(0);
+            o2.add(jTableModelGenChar.contains(XEED.charDB.get(x)));
+            o2.add(XEED.charDB.get(x));
+            jTableModelGenChar.add(o2);
+        }
+
+        DefaultTableModel df;
+        df = (DefaultTableModel) tblRelChars.getModel();
+        df.fireTableDataChanged();
+        df = (DefaultTableModel) tblRelGroups.getModel();
+        df.fireTableDataChanged();
+        df = (DefaultTableModel) tblGenChars.getModel();
+        df.fireTableDataChanged();
+
+    }
+
+    private void LoadRelationGraph() {
+
+        UnloadAllGraphs();
+
+        RelationPanel = new RelationGraphPanel();
+        RelationPanel.setSize(500, 500);
+        pnlGraph.add(RelationPanel, BorderLayout.CENTER);
+        pnlGraph.validate();
+
+    }
+
+    private void LoadGenealogyGraph() {
+
+        UnloadAllGraphs();
+
+        ArrayList<Character> selectedgenchars = new ArrayList(0);
+        for (int x = 0; x < jTableModelGenChar.size(); x++) {
+            Vector o = (Vector) jTableModelGenChar.get(x);
+            if ((Boolean) o.get(0) == true) {
+                selectedgenchars.add((Character) o.get(1));
+            }
+        }
+
+        Character[] cs = new Character[selectedgenchars.size()];
+        selectedgenchars.toArray(cs);
+
+        Template[] ts = new Template[comboGenTemplate.getItemCount()];
+        Color[] c = new Color[comboGenTemplate.getItemCount()];
+        String[] pics = new String[comboGenTemplate.getItemCount()];
+        String[] extras = new String[comboGenTemplate.getItemCount()];
+        for (int x = 0; x < ts.length; x++) {
+            TemplateOption to = (TemplateOption) comboGenTemplate.getItemAt(x);
+            ts[x] = to.t;
+            c[x] = to.c;
+            pics[x] = to.picture.key;
+            extras[x] = to.extra.key;
+        }
+
+        if (cs.length > 0 && ts.length > 0) {
+
+            GenealogyPanel = new GenealogyGraphPanel();
+            GenealogyPanel.setSize(500, 500);
+            pnlGraph.add(GenealogyPanel, BorderLayout.CENTER);
+            pnlGraph.validate();
+            GenealogyPanel.InitiateGraph(cs, ts, c, pics, extras);
+            GenealogyPanel.setVisible(true);
+
+        }
+
+    }
+
+    private void UnloadAllGraphs() {
+        pnlGraph.removeAll();
+        RelationPanel = null;
+        GenealogyPanel = null;
+        pnlGraph.validate();
+    }
+
+    private void UpdateRelations() {
+        if (RelationPanel == null) {
+            return;
+        }
+
+        Group[] g = null;
+        Character[] c = null;
+
+        ArrayList<Character> tmp = new ArrayList(0);
+        for (int x = 0; x < jTableModelRelChar.size(); x++) {
+            Vector o = (Vector) jTableModelRelChar.get(x);
+            if ((Boolean) o.get(0) == true) {
+                tmp.add((Character) o.get(1));
+            }
+        }
+
+        ArrayList<Group> tmp2 = new ArrayList(0);
+        for (int x = 0; x < jTableModelRelGroup.size(); x++) {
+            Vector o = (Vector) jTableModelRelGroup.get(x);
+            if ((Boolean) o.get(0) == true) {
+
+                if (chkUseMembers.isSelected()) {
+                    long[] members = ((Group) o.get(1)).GetMemebers();
+                    for (int y = 0; y < members.length; y++) {
+                        Character member = XEED.GetCharacterByID(members[y]);
+                        if (!tmp.contains(member)) {
+                            tmp.add(member);
+                        }
+                    }
+                } else {
+                    tmp2.add((Group) o.get(1));
+                }
+
+            }
+        }
+        if (tmp.size() > 0) {
+            c = new Character[tmp.size()];
+            tmp.toArray(c);
+        } else {
+            c = null;
+        }
+        if (tmp2.size() > 0) {
+            g = new Group[tmp2.size()];
+            tmp2.toArray(g);
+        } else {
+            g = null;
+        }
+        if (tmp.size() + tmp2.size() > 1) {
+            RelationPanel.LoadData(c, g);
+            RelationPanel.setVisible(true);
+        } else {
+            RelationPanel.setVisible(false);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -661,79 +660,79 @@ public final class GraphForm extends javax.swing.JFrame {
    }// </editor-fold>//GEN-END:initComponents
 
    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-      JTabbedPane pane = (JTabbedPane) evt.getSource();
+       JTabbedPane pane = (JTabbedPane) evt.getSource();
 
-      int sel = pane.getSelectedIndex();
-      if (sel == 1) {
-         LoadRelationGraph();
-         UpdateRelations();
-      } else if (sel == 0) {
-         LoadGenealogyGraph();
-      }
+       int sel = pane.getSelectedIndex();
+       if (sel == 1) {
+           LoadRelationGraph();
+           UpdateRelations();
+       } else if (sel == 0) {
+           LoadGenealogyGraph();
+       }
    }//GEN-LAST:event_jTabbedPane1StateChanged
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndGraph = null;
-      dispose();
+       XEED.hwndGraph = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void tblRelCharsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblRelCharsPropertyChange
-      UpdateRelations();
+       UpdateRelations();
    }//GEN-LAST:event_tblRelCharsPropertyChange
 
    private void tblRelGroupsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblRelGroupsPropertyChange
-      UpdateRelations();
+       UpdateRelations();
    }//GEN-LAST:event_tblRelGroupsPropertyChange
 
    private void chkUseMembersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseMembersActionPerformed
-      UpdateRelations();
+       UpdateRelations();
    }//GEN-LAST:event_chkUseMembersActionPerformed
 
    private void tblGenCharsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblGenCharsPropertyChange
-      LoadGenealogyGraph();
+       LoadGenealogyGraph();
    }//GEN-LAST:event_tblGenCharsPropertyChange
 
    private void lblGenColorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblGenColorMouseClicked
 
-      TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
-      if (to == null) {
-         return;
-      }
+       TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
+       if (to == null) {
+           return;
+       }
 
-      JColorChooser cc = new JColorChooser();
-      Color c = JColorChooser.showDialog(null, "Select node colour", Color.RED);
-      lblGenColor.setBackground(c);
-      to.c = c;
+       JColorChooser cc = new JColorChooser();
+       Color c = JColorChooser.showDialog(null, "Select node colour", Color.RED);
+       lblGenColor.setBackground(c);
+       to.c = c;
 
-      LoadGenealogyGraph();
+       LoadGenealogyGraph();
 
    }//GEN-LAST:event_lblGenColorMouseClicked
 
    private void comboGenTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboGenTemplateActionPerformed
-      LoadGenTemplateOptions();
+       LoadGenTemplateOptions();
    }//GEN-LAST:event_comboGenTemplateActionPerformed
 
    private void comboGenPictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboGenPictureActionPerformed
 
-      if (reloading_template_options) {
-         return;
-      }
+       if (reloading_template_options) {
+           return;
+       }
 
-      TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
-      to.picture = (PropertyItem) comboGenPicture.getSelectedItem();
-      LoadGenealogyGraph();
+       TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
+       to.picture = (PropertyItem) comboGenPicture.getSelectedItem();
+       LoadGenealogyGraph();
 
    }//GEN-LAST:event_comboGenPictureActionPerformed
 
    private void comboGenExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboGenExtraActionPerformed
 
-      if (reloading_template_options) {
-         return;
-      }
+       if (reloading_template_options) {
+           return;
+       }
 
-      TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
-      to.extra = (PropertyItem) comboGenExtra.getSelectedItem();
-      LoadGenealogyGraph();
+       TemplateOption to = (TemplateOption) comboGenTemplate.getSelectedItem();
+       to.extra = (PropertyItem) comboGenExtra.getSelectedItem();
+       LoadGenealogyGraph();
 
    }//GEN-LAST:event_comboGenExtraActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -764,32 +763,31 @@ public final class GraphForm extends javax.swing.JFrame {
    private javax.swing.JTable tblRelGroups;
 
    // End of variables declaration//GEN-END:variables
+    class TemplateOption {
 
-   class TemplateOption {
+        Template t;
+        Color c = Color.RED;
+        PropertyItem picture = new PropertyItem();
+        PropertyItem extra = new PropertyItem();
 
-      Template t;
-      Color c = Color.RED;
-      PropertyItem picture = new PropertyItem();
-      PropertyItem extra = new PropertyItem();
+        public TemplateOption(Template t) {
+            this.t = t;
+        }
 
-      public TemplateOption(Template t) {
-         this.t = t;
-      }
+        @Override
+        public String toString() {
+            return t.GetName();
+        }
+    }
 
-      @Override
-      public String toString() {
-         return t.GetName();
-      }
-   }
+    class PropertyItem {
 
-   class PropertyItem {
+        String name = "";
+        String key = "";
 
-      String name = "";
-      String key = "";
-
-      @Override
-      public String toString() {
-         return name;
-      }
-   }
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 }

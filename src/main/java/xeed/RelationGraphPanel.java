@@ -5,7 +5,6 @@ package xeed;
  *
  * 
  */
-
 import forms.RelationsForm;
 
 import java.awt.*;

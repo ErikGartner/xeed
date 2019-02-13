@@ -35,164 +35,164 @@ import xeed.XEED;
  */
 public class TemplateCreatorForm extends javax.swing.JFrame {
 
-   DefaultMutableTreeNode rootNode;
-   TreeItem rootItem;
-   public TreeItem nameRow = null;
+    DefaultMutableTreeNode rootNode;
+    TreeItem rootItem;
+    public TreeItem nameRow = null;
 
-   public TemplateCreatorForm() {
+    public TemplateCreatorForm() {
 
-      initComponents();
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/layout_add.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/layout_add.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      treeOverview.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        treeOverview.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-      rootItem = new TreeItem();
-      rootItem.boolRoot = true;
-      rootItem.intType = 0;
-      rootItem.szName = "Template";
+        rootItem = new TreeItem();
+        rootItem.boolRoot = true;
+        rootItem.intType = 0;
+        rootItem.szName = "Template";
 
-      rootNode = new DefaultMutableTreeNode(rootItem);
-      DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-      treeOverview.setModel(treeModel);
-      treeOverview.setCellRenderer(new CustomRenderer(new javax.swing.ImageIcon(getClass().getResource(
-            "/application_xp.png")), new javax.swing.ImageIcon(getClass().getResource("/layout.png")),
-            new javax.swing.ImageIcon(getClass().getResource("/brick.png"))));
+        rootNode = new DefaultMutableTreeNode(rootItem);
+        DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+        treeOverview.setModel(treeModel);
+        treeOverview.setCellRenderer(new CustomRenderer(new javax.swing.ImageIcon(getClass().getResource(
+                "/application_xp.png")), new javax.swing.ImageIcon(getClass().getResource("/layout.png")),
+                new javax.swing.ImageIcon(getClass().getResource("/brick.png"))));
 
-   }
+    }
 
-   public Template GenerateTemplate() {
+    public Template GenerateTemplate() {
 
-      Template t = new Template();
-      for (int x = 0; x < rootNode.getChildCount(); x++) {
+        Template t = new Template();
+        for (int x = 0; x < rootNode.getChildCount(); x++) {
 
-         TreeItem sectionObject = (TreeItem) ((DefaultMutableTreeNode) rootNode.getChildAt(x)).getUserObject();
-         int SectionIndex = t.AddSection(sectionObject.szName);
-         String szDataArray[];
+            TreeItem sectionObject = (TreeItem) ((DefaultMutableTreeNode) rootNode.getChildAt(x)).getUserObject();
+            int SectionIndex = t.AddSection(sectionObject.szName);
+            String szDataArray[];
 
-         for (int y = 0; y < rootNode.getChildAt(x).getChildCount(); y++) {
+            for (int y = 0; y < rootNode.getChildAt(x).getChildCount(); y++) {
 
-            TreeItem ti = (TreeItem) ((DefaultMutableTreeNode) rootNode.getChildAt(x).getChildAt(y)).getUserObject();
+                TreeItem ti = (TreeItem) ((DefaultMutableTreeNode) rootNode.getChildAt(x).getChildAt(y)).getUserObject();
 
-            switch (ti.intType) {
+                switch (ti.intType) {
 
-            case 1: //TextRow
-               t.AddTextRow(ti.szName, SectionIndex);
-               break;
+                    case 1: //TextRow
+                        t.AddTextRow(ti.szName, SectionIndex);
+                        break;
 
-            case 2:
-               t.AddTextBox(ti.szName, SectionIndex);
-               break;
+                    case 2:
+                        t.AddTextBox(ti.szName, SectionIndex);
+                        break;
 
-            case 3:
-               szDataArray = ti.szData.split("\n");
-               t.AddListRow(ti.szName, szDataArray, SectionIndex);
-               break;
+                    case 3:
+                        szDataArray = ti.szData.split("\n");
+                        t.AddListRow(ti.szName, szDataArray, SectionIndex);
+                        break;
 
-            case 4:
-               t.AddIntegerRow(ti.szName, SectionIndex);
-               break;
+                    case 4:
+                        t.AddIntegerRow(ti.szName, SectionIndex);
+                        break;
 
-            case 5:
-               t.AddIntegerADBCRow(ti.szName, SectionIndex);
-               break;
+                    case 5:
+                        t.AddIntegerADBCRow(ti.szName, SectionIndex);
+                        break;
 
-            case 6:
-               t.AddNameRow(ti.szName, SectionIndex);
-               break;
+                    case 6:
+                        t.AddNameRow(ti.szName, SectionIndex);
+                        break;
 
-            case 7:
-               t.AddCheckboxRow(ti.szName, SectionIndex);
-               break;
+                    case 7:
+                        t.AddCheckboxRow(ti.szName, SectionIndex);
+                        break;
 
-            case 8:
-               t.AddTextBoxNoTitle(ti.szName, SectionIndex);
-               break;
+                    case 8:
+                        t.AddTextBoxNoTitle(ti.szName, SectionIndex);
+                        break;
 
-            case 9:
-               t.AddTitle(ti.szName, SectionIndex);
-               break;
+                    case 9:
+                        t.AddTitle(ti.szName, SectionIndex);
+                        break;
 
-            case 10:
-               t.AddImageBox(ti.szName, SectionIndex);
-               break;
+                    case 10:
+                        t.AddImageBox(ti.szName, SectionIndex);
+                        break;
 
-            case 11:
-               t.AddParentRow(ti.szName, SectionIndex);
-               break;
+                    case 11:
+                        t.AddParentRow(ti.szName, SectionIndex);
+                        break;
 
-            case 12:
-               t.AddOffspringBox(ti.szName, SectionIndex);
-               break;
+                    case 12:
+                        t.AddOffspringBox(ti.szName, SectionIndex);
+                        break;
 
-            case 13:
-               szDataArray = ti.szData.split("\n");
-               t.AddExtendedRow(ti.szName, szDataArray, SectionIndex);
-               break;
+                    case 13:
+                        szDataArray = ti.szData.split("\n");
+                        t.AddExtendedRow(ti.szName, szDataArray, SectionIndex);
+                        break;
 
-            case 14:
-               szDataArray = ti.szData.split("\n");
-               t.AddListBox(ti.szName, szDataArray, SectionIndex);
-               break;
+                    case 14:
+                        szDataArray = ti.szData.split("\n");
+                        t.AddListBox(ti.szName, szDataArray, SectionIndex);
+                        break;
+
+                }
 
             }
 
-         }
+        }
 
-      }
+        return t;
 
-      return t;
+    }
 
-   }
+    private boolean UploadTemplateToXEEDOnline(String szFile) {
 
-   private boolean UploadTemplateToXEEDOnline(String szFile) {
+        HttpClient httpclient = new DefaultHttpClient();
+        httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
+                "XEED v" + XEED.szVersion + " Build " + XEED.lngBuild + "." + XEED.GetXEEDCRC32());
+        httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-      HttpClient httpclient = new DefaultHttpClient();
-      httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
-            "XEED v" + XEED.szVersion + " Build " + XEED.lngBuild + "." + XEED.GetXEEDCRC32());
-      httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        HttpPost httppost = new HttpPost(XEED.szTemplateUploadURL);
+        File file = new File(szFile);
 
-      HttpPost httppost = new HttpPost(XEED.szTemplateUploadURL);
-      File file = new File(szFile);
+        MultipartEntity mpEntity = new MultipartEntity();
+        ContentBody cbFile = new FileBody(file, "text/plain");
+        mpEntity.addPart("template", cbFile);
 
-      MultipartEntity mpEntity = new MultipartEntity();
-      ContentBody cbFile = new FileBody(file, "text/plain");
-      mpEntity.addPart("template", cbFile);
+        httppost.setEntity(mpEntity);
+        System.out.println("Uploading template " + httppost.getRequestLine());
 
-      httppost.setEntity(mpEntity);
-      System.out.println("Uploading template " + httppost.getRequestLine());
+        try {
 
-      try {
+            HttpResponse response = httpclient.execute(httppost);
 
-         HttpResponse response = httpclient.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
 
-         HttpEntity resEntity = response.getEntity();
+            System.out.println(response.getStatusLine());
+            if (resEntity != null) {
+                System.out.println(EntityUtils.toString(resEntity));
+            }
+            if (resEntity != null) {
+                EntityUtils.consume(resEntity);
+            }
 
-         System.out.println(response.getStatusLine());
-         if (resEntity != null) {
-            System.out.println(EntityUtils.toString(resEntity));
-         }
-         if (resEntity != null) {
-            EntityUtils.consume(resEntity);
-         }
+            httpclient.getConnectionManager().shutdown();
 
-         httpclient.getConnectionManager().shutdown();
+        } catch (Exception e) {
+            return false;
+        }
+        chkSubmit.setSelected(false);
+        return true;
 
-      } catch (Exception e) {
-         return false;
-      }
-      chkSubmit.setSelected(false);
-      return true;
+    }
 
-   }
-
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -482,282 +482,282 @@ public class TemplateCreatorForm extends javax.swing.JFrame {
 
    private void btnAddSectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSectionActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (!selectedNode.getAllowsChildren()) { //if the selected node is an item 
-         selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
-      }
+       if (!selectedNode.getAllowsChildren()) { //if the selected node is an item 
+           selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
+       }
 
-      if (selectedNode == null) {
-         return;
-      }
+       if (selectedNode == null) {
+           return;
+       }
 
-      TreeItem ti = new TreeItem();
-      ti.intType = 0; //Section type id
-      ti.szName = JOptionPane.showInputDialog(null, "Enter the name of the new section:", "Enter name",
-            JOptionPane.PLAIN_MESSAGE);
-      if (ti.szName == null) {
-         return;
-      }
-      if (ti.szName.isEmpty()) {
-         return;
-      }
+       TreeItem ti = new TreeItem();
+       ti.intType = 0; //Section type id
+       ti.szName = JOptionPane.showInputDialog(null, "Enter the name of the new section:", "Enter name",
+               JOptionPane.PLAIN_MESSAGE);
+       if (ti.szName == null) {
+           return;
+       }
+       if (ti.szName.isEmpty()) {
+           return;
+       }
 
-      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(ti);
-      newNode.setAllowsChildren(true);
+       DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(ti);
+       newNode.setAllowsChildren(true);
 
-      if (selectedNode.isRoot()) { //inserts node after selected node
-         rootNode.insert(newNode, 0);
-      } else {
-         rootNode.insert(newNode, rootNode.getIndex(selectedNode) + 1);
-      }
+       if (selectedNode.isRoot()) { //inserts node after selected node
+           rootNode.insert(newNode, 0);
+       } else {
+           rootNode.insert(newNode, rootNode.getIndex(selectedNode) + 1);
+       }
 
-      for (int i = 0; i < treeOverview.getRowCount(); i++) {
-         treeOverview.expandRow(i);
-      }
+       for (int i = 0; i < treeOverview.getRowCount(); i++) {
+           treeOverview.expandRow(i);
+       }
 
-      treeOverview.setSelectionPath(new TreePath(newNode.getPath()));
-      UpdateTree();
+       treeOverview.setSelectionPath(new TreePath(newNode.getPath()));
+       UpdateTree();
 
    }//GEN-LAST:event_btnAddSectionActionPerformed
 
    private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (selectedNode.isRoot()) {
-         JOptionPane.showMessageDialog(null,
-               "An item must be subsidiary to a section, please select a section or item to insert below.",
-               "Invalid node selected!", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (selectedNode.isRoot()) {
+           JOptionPane.showMessageDialog(null,
+                   "An item must be subsidiary to a section, please select a section or item to insert below.",
+                   "Invalid node selected!", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      TreeItem ti = new TreeItem();
-      ti.szName = "New Item";
-      ti.intType = 1; //anything but 0 so that it gets the right icon.
-      if (ti.szName == null) {
-         return;
-      }
-      if (ti.szName.isEmpty()) {
-         return;
-      }
+       TreeItem ti = new TreeItem();
+       ti.szName = "New Item";
+       ti.intType = 1; //anything but 0 so that it gets the right icon.
+       if (ti.szName == null) {
+           return;
+       }
+       if (ti.szName.isEmpty()) {
+           return;
+       }
 
-      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(ti);
-      newNode.setAllowsChildren(false);
-      if (!selectedNode.getAllowsChildren()) {
-         DefaultMutableTreeNode sectionNode = (DefaultMutableTreeNode) selectedNode.getParent();
-         sectionNode.insert(newNode, sectionNode.getIndex(selectedNode) + 1);
+       DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(ti);
+       newNode.setAllowsChildren(false);
+       if (!selectedNode.getAllowsChildren()) {
+           DefaultMutableTreeNode sectionNode = (DefaultMutableTreeNode) selectedNode.getParent();
+           sectionNode.insert(newNode, sectionNode.getIndex(selectedNode) + 1);
 
-      } else {
-         selectedNode.insert(newNode, 0);
-      }
+       } else {
+           selectedNode.insert(newNode, 0);
+       }
 
-      this.setEnabled(false);
-      TemplateItemPalettForm dp = new TemplateItemPalettForm(this, newNode, false);
-      dp.setVisible(true);
+       this.setEnabled(false);
+       TemplateItemPalettForm dp = new TemplateItemPalettForm(this, newNode, false);
+       dp.setVisible(true);
 
-      for (int i = 0; i < treeOverview.getRowCount(); i++) {
-         treeOverview.expandRow(i);
-      }
+       for (int i = 0; i < treeOverview.getRowCount(); i++) {
+           treeOverview.expandRow(i);
+       }
 
-      treeOverview.setSelectionPath(new TreePath(newNode.getPath()));
-      UpdateTree();
+       treeOverview.setSelectionPath(new TreePath(newNode.getPath()));
+       UpdateTree();
 
    }//GEN-LAST:event_btnAddItemActionPerformed
 
    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (selectedNode.isRoot()) {
-         return;
-      }
+       if (selectedNode.isRoot()) {
+           return;
+       }
 
-      TreeItem selectedObject = (TreeItem) selectedNode.getUserObject();
-      if (selectedObject.intType == 6) {
-         nameRow = null;
-      }
+       TreeItem selectedObject = (TreeItem) selectedNode.getUserObject();
+       if (selectedObject.intType == 6) {
+           nameRow = null;
+       }
 
-      selectedNode.removeFromParent();
-      UpdateTree();
+       selectedNode.removeFromParent();
+       UpdateTree();
 
    }//GEN-LAST:event_btnRemoveActionPerformed
 
    private void txtTemplateNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTemplateNameKeyReleased
-      rootItem.szName = txtTemplateName.getText();
-      treeOverview.repaint();
-      treeOverview.updateUI();
+       rootItem.szName = txtTemplateName.getText();
+       treeOverview.repaint();
+       treeOverview.updateUI();
    }//GEN-LAST:event_txtTemplateNameKeyReleased
 
    private void btnPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviewActionPerformed
 
-      Template t = GenerateTemplate();
-      t.PreviewTemplate(txtTemplateName.getText());
+       Template t = GenerateTemplate();
+       t.PreviewTemplate(txtTemplateName.getText());
 
    }//GEN-LAST:event_btnPreviewActionPerformed
 
    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
 
-      if (txtTemplateName.getText().isEmpty() || txtGame.getText().isEmpty() || txtAuthor.getText().isEmpty()
-            || txtDescription.getText().isEmpty()) {
-         JOptionPane.showMessageDialog(null, "All fields are required", "Missing data", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (txtTemplateName.getText().isEmpty() || txtGame.getText().isEmpty() || txtAuthor.getText().isEmpty()
+               || txtDescription.getText().isEmpty()) {
+           JOptionPane.showMessageDialog(null, "All fields are required", "Missing data", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      int i;
-      try {
-         i = Integer.parseInt(txtVersion.getText());
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "Version must be a valid integer and a postivive value greater than 0",
-               "Invalid data", JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       int i;
+       try {
+           i = Integer.parseInt(txtVersion.getText());
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null, "Version must be a valid integer and a postivive value greater than 0",
+                   "Invalid data", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      if (nameRow == null) {
-         JOptionPane.showMessageDialog(null, "A template MUST contain 1 'Name Row'", "Missing data",
-               JOptionPane.WARNING_MESSAGE);
-         return;
-      }
+       if (nameRow == null) {
+           JOptionPane.showMessageDialog(null, "A template MUST contain 1 'Name Row'", "Missing data",
+                   JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-      setEnabled(false);
+       setEnabled(false);
 
-      Template t = GenerateTemplate();
-      if (t.FinalizeTemplate(txtTemplateName.getText(), txtAuthor.getText(), txtGame.getText(),
-            txtDescription.getText(), i)) {
+       Template t = GenerateTemplate();
+       if (t.FinalizeTemplate(txtTemplateName.getText(), txtAuthor.getText(), txtGame.getText(),
+               txtDescription.getText(), i)) {
 
-         XEED.LoadTemplate(t);
+           XEED.LoadTemplate(t);
 
-         String msg = "Template sucessfully created!";
-         if (chkSubmit.isSelected()) {
-            if (UploadTemplateToXEEDOnline(t.GetFilePath())) {
-               msg += "\nThank you for submitting your template to XEED Online.\nYour template will be manually reviewed by the development team before being added to the public database.";
-            } else {
-               msg += "\nFailed to submited template to XEED online.";
-            }
-         }
+           String msg = "Template sucessfully created!";
+           if (chkSubmit.isSelected()) {
+               if (UploadTemplateToXEEDOnline(t.GetFilePath())) {
+                   msg += "\nThank you for submitting your template to XEED Online.\nYour template will be manually reviewed by the development team before being added to the public database.";
+               } else {
+                   msg += "\nFailed to submited template to XEED online.";
+               }
+           }
 
-         JOptionPane.showMessageDialog(null, msg, "Success", JOptionPane.INFORMATION_MESSAGE);
-      }
+           JOptionPane.showMessageDialog(null, msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+       }
 
-      setEnabled(true);
+       setEnabled(true);
 
    }//GEN-LAST:event_btnCreateActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndTemplateCreator = null;
-      dispose();
+       XEED.hwndTemplateCreator = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void treeOverviewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeOverviewMouseClicked
 
-      //Edit selected node
-      if (evt.getButton() != MouseEvent.BUTTON1 || evt.getClickCount() != 2) {
-         return;
-      }
+       //Edit selected node
+       if (evt.getButton() != MouseEvent.BUTTON1 || evt.getClickCount() != 2) {
+           return;
+       }
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeOverview.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (selectedNode.isRoot()) {
-         return;
-      }
+       if (selectedNode.isRoot()) {
+           return;
+       }
 
-      TreeItem ti = (TreeItem) selectedNode.getUserObject();
+       TreeItem ti = (TreeItem) selectedNode.getUserObject();
 
-      if (ti.intType == 0) { //section
+       if (ti.intType == 0) { //section
 
-         String szName = JOptionPane.showInputDialog("Select the new name for the section '" + ti.szName + "'",
-               ti.szName);
-         if (szName != null) {
-            if (!szName.isEmpty()) {
-               ti.szName = szName;
-            }
-         }
-         UpdateTree();
+           String szName = JOptionPane.showInputDialog("Select the new name for the section '" + ti.szName + "'",
+                   ti.szName);
+           if (szName != null) {
+               if (!szName.isEmpty()) {
+                   ti.szName = szName;
+               }
+           }
+           UpdateTree();
 
-      } else { //property
+       } else { //property
 
-         this.setEnabled(false);
-         TemplateItemPalettForm dp = new TemplateItemPalettForm(this, selectedNode, true);
-         dp.setVisible(true);
+           this.setEnabled(false);
+           TemplateItemPalettForm dp = new TemplateItemPalettForm(this, selectedNode, true);
+           dp.setVisible(true);
 
-         selectedNode.removeFromParent();
+           selectedNode.removeFromParent();
 
-      }
+       }
 
    }//GEN-LAST:event_treeOverviewMouseClicked
 
-   public void ReturnFocus() {
-      this.setEnabled(true);
-   }
+    public void ReturnFocus() {
+        this.setEnabled(true);
+    }
 
-   public void UpdateTree() {
-      treeOverview.updateUI();
-      treeOverview.repaint();
-   }
+    public void UpdateTree() {
+        treeOverview.updateUI();
+        treeOverview.repaint();
+    }
 
-   public class TreeItem {
+    public class TreeItem {
 
-      String szName;
-      String szData;
-      int intType;
-      boolean boolRoot = false;
+        String szName;
+        String szData;
+        int intType;
+        boolean boolRoot = false;
 
-      @Override
-      public String toString() {
-         return szName;
-      }
-   }
+        @Override
+        public String toString() {
+            return szName;
+        }
+    }
 
-   private class CustomRenderer extends DefaultTreeCellRenderer {
+    private class CustomRenderer extends DefaultTreeCellRenderer {
 
-      Icon iconSection;
-      Icon iconItem;
-      Icon iconRoot;
+        Icon iconSection;
+        Icon iconItem;
+        Icon iconRoot;
 
-      public CustomRenderer(Icon root, Icon section, Icon item) {
-         iconSection = section;
-         iconItem = item;
-         iconRoot = root;
-      }
+        public CustomRenderer(Icon root, Icon section, Icon item) {
+            iconSection = section;
+            iconItem = item;
+            iconRoot = root;
+        }
 
-      @Override
-      public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
-            boolean leaf, int row, boolean hasFocus) {
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
 
-         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-         if (isRoot(value)) {
-            setIcon(iconRoot);
-         } else {
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            if (isRoot(value)) {
+                setIcon(iconRoot);
+            } else {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                TreeItem nodeInfo = (TreeItem) (node.getUserObject());
+                if (nodeInfo.intType == 0) {
+                    setIcon(iconSection);
+                } else {
+                    setIcon(iconItem);
+                }
+            }
+
+            return this;
+        }
+
+        protected boolean isRoot(Object value) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             TreeItem nodeInfo = (TreeItem) (node.getUserObject());
-            if (nodeInfo.intType == 0) {
-               setIcon(iconSection);
-            } else {
-               setIcon(iconItem);
-            }
-         }
-
-         return this;
-      }
-
-      protected boolean isRoot(Object value) {
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-         TreeItem nodeInfo = (TreeItem) (node.getUserObject());
-         return nodeInfo.boolRoot;
-      }
-   }
+            return nodeInfo.boolRoot;
+        }
+    }
 
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JButton btnAddItem;

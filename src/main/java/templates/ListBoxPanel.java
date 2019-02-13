@@ -19,134 +19,134 @@ import xeed.XEED;
  */
 public class ListBoxPanel extends javax.swing.JPanel implements TableModelListener {
 
-   public Character character;
-   public String itemIdentifier;
-   private boolean loaded = false;
-   private Vector jTableModel = new Vector(0, 2); // Model för tabellen
-   private Vector jTableHeader = new Vector(0);
-   private String[] properties;
+    public Character character;
+    public String itemIdentifier;
+    private boolean loaded = false;
+    private Vector jTableModel = new Vector(0, 2); // Model för tabellen
+    private Vector jTableHeader = new Vector(0);
+    private String[] properties;
 
-   public ListBoxPanel(Character c, String id, String name, String data[]) {
-      itemIdentifier = id;
-      character = c;
-      properties = data;
+    public ListBoxPanel(Character c, String id, String name, String data[]) {
+        itemIdentifier = id;
+        character = c;
+        properties = data;
 
-      initComponents();
+        initComponents();
 
-      lblName.setText(name);
-      LoadData();
-      loaded = true;
+        lblName.setText(name);
+        LoadData();
+        loaded = true;
 
-      tblList.setTableHeader(null);
+        tblList.setTableHeader(null);
 
-      //ful hack för att componentshown ska bliv invokad.
-      tblList.setVisible(false);
-      tblList.setVisible(true);
+        //ful hack för att componentshown ska bliv invokad.
+        tblList.setVisible(false);
+        tblList.setVisible(true);
 
-      tblList.getModel().addTableModelListener(this);
+        tblList.getModel().addTableModelListener(this);
 
-   }
+    }
 
-   private void LoadProperties() {
+    private void LoadProperties() {
 
-      jTableModel.clear();
-      for (int x = 0; x < properties.length; x++) {
-         Vector o = new Vector(0);
-         o.add(false);
-         o.add(properties[x]);
-         jTableModel.add(o);
-      }
+        jTableModel.clear();
+        for (int x = 0; x < properties.length; x++) {
+            Vector o = new Vector(0);
+            o.add(false);
+            o.add(properties[x]);
+            jTableModel.add(o);
+        }
 
-   }
+    }
 
-   public void CalculateTableSizes() {
+    public void CalculateTableSizes() {
 
-      tblList.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblList.getColumnModel().getColumn(0).setResizable(false);
-      tblList.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblList.getColumnModel().getColumn(1).setPreferredWidth(tblList.getWidth() - 20);
+        tblList.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblList.getColumnModel().getColumn(0).setResizable(false);
+        tblList.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblList.getColumnModel().getColumn(1).setPreferredWidth(tblList.getWidth() - 20);
 
-      setMaximumSize(new Dimension(this.getMaximumSize().width, tblList.getHeight() + 5));
-   }
+        setMaximumSize(new Dimension(this.getMaximumSize().width, tblList.getHeight() + 5));
+    }
 
-   public void SaveData() {
+    public void SaveData() {
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      String comp = "";
-      for (int x = 0; x < jTableModel.size(); x++) {
-         Vector v = (Vector) jTableModel.get(x);
-         if ((Boolean) v.get(0)) {
-            if (comp.isEmpty()) {
-               comp = (String) v.get(1);
-            } else {
-               comp += ",\n" + v.get(1);
+        String comp = "";
+        for (int x = 0; x < jTableModel.size(); x++) {
+            Vector v = (Vector) jTableModel.get(x);
+            if ((Boolean) v.get(0)) {
+                if (comp.isEmpty()) {
+                    comp = (String) v.get(1);
+                } else {
+                    comp += ",\n" + v.get(1);
+                }
             }
-         }
-      }
+        }
 
-      character.szData.put(itemIdentifier, comp);
+        character.szData.put(itemIdentifier, comp);
 
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = character;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = character;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
 
-   }
+    }
 
-   public void LoadData() {
+    public void LoadData() {
 
-      LoadProperties();
-      CalculateTableSizes();
+        LoadProperties();
+        CalculateTableSizes();
 
-      if (character == null) {
-         return;
-      }
+        if (character == null) {
+            return;
+        }
 
-      Object o = character.szData.get(itemIdentifier);
+        Object o = character.szData.get(itemIdentifier);
 
-      if (o == null) {
-         return;
-      }
+        if (o == null) {
+            return;
+        }
 
-      if (o.getClass().equals(String.class)) {
+        if (o.getClass().equals(String.class)) {
 
-         String[] props = ((String) o).split(",\n");
+            String[] props = ((String) o).split(",\n");
 
-         for (int y = 0; y < jTableModel.size(); y++) {
-            Vector v = (Vector) jTableModel.get(y);
-            String prop = (String) v.get(1);
-            for (int x = 0; x < props.length; x++) {
-               if (prop.equalsIgnoreCase((String) props[x])) {
-                  v.set(0, true);
-                  jTableModel.set(y, v);
-               }
+            for (int y = 0; y < jTableModel.size(); y++) {
+                Vector v = (Vector) jTableModel.get(y);
+                String prop = (String) v.get(1);
+                for (int x = 0; x < props.length; x++) {
+                    if (prop.equalsIgnoreCase((String) props[x])) {
+                        v.set(0, true);
+                        jTableModel.set(y, v);
+                    }
+                }
             }
-         }
 
-         ((DefaultTableModel) tblList.getModel()).fireTableDataChanged();
+            ((DefaultTableModel) tblList.getModel()).fireTableDataChanged();
 
-      } else {
-         System.out.println(lblName.getText() + " loaded invalid data");
-      }
+        } else {
+            System.out.println(lblName.getText() + " loaded invalid data");
+        }
 
-   }
+    }
 
-   @Override
-   public void tableChanged(TableModelEvent e) {
-      if (e.getType() != TableModelEvent.UPDATE) {
-         return;
-      }
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType() != TableModelEvent.UPDATE) {
+            return;
+        }
 
-      if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
-         return;
-      }
+        if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
+            return;
+        }
 
-      SaveData();
-   }
+        SaveData();
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -205,11 +205,11 @@ public class ListBoxPanel extends javax.swing.JPanel implements TableModelListen
    }// </editor-fold>//GEN-END:initComponents
 
    private void tblListComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblListComponentShown
-      CalculateTableSizes();
+       CalculateTableSizes();
    }//GEN-LAST:event_tblListComponentShown
 
    private void tblListComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblListComponentResized
-      CalculateTableSizes();
+       CalculateTableSizes();
    }//GEN-LAST:event_tblListComponentResized
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

@@ -32,10 +32,10 @@ public class XEED {
     public static final String szCompiledOn = "2019-02-10";
     public static final String szHomePage = "https://gartner.io";
     public static final String[] szCredits = {
-            "All registered trademarks belong to their respective owners.",
-            "Most icons come from famfamfam.com.", "Uses the JUNG library.",
-            "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
-            "Kuslix"
+        "All registered trademarks belong to their respective owners.",
+        "Most icons come from famfamfam.com.", "Uses the JUNG library.",
+        "Uses several libraries from Apache Commons.", "Uses the iText library.", "Beta testers:", "Sagemaster",
+        "Kuslix"
     };
     public static String szArguments[] = null;
     /*
@@ -549,8 +549,8 @@ public class XEED {
      * they want to name their setting and load templates.
      *
      * @param ask If true, the user is asked to save the current setting and
-     *            asked if he he wishes to name the new setting and load templates. If
-     *            false, all these question defaults to no.
+     * asked if he he wishes to name the new setting and load templates. If
+     * false, all these question defaults to no.
      */
     public static void NewSetting(boolean ask) {
 
@@ -693,7 +693,7 @@ public class XEED {
                         + "\\bin\\javaw.exe"
                         + " -jar \""
                         + new File(MainForm.class.getProtectionDomain().getCodeSource().getLocation().toURI())
-                        .getAbsolutePath() + "\" /l:%1 %*");
+                                .getAbsolutePath() + "\" /l:%1 %*");
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
@@ -717,18 +717,18 @@ public class XEED {
             return null;
         }
         BufferedImage img = ImageToBuffered(i);
-        
+
         if (ForceSquare) {
             int w = img.getWidth();
             int h = img.getHeight();
             int m = Math.max(h, w);
             BufferedImage square = new BufferedImage(m, m, BufferedImage.TYPE_INT_ARGB);
-            square.getGraphics().drawImage(img, (m - w) / 2, (m - h) / 2, null);            
+            square.getGraphics().drawImage(img, (m - w) / 2, (m - h) / 2, null);
             img = square;
         }
-                         
-        if (img.getWidth()> ImageMaxWidth || img.getHeight() > ImageMaxHeight) {
-            if (img.getWidth()> img.getHeight()) {
+
+        if (img.getWidth() > ImageMaxWidth || img.getHeight() > ImageMaxHeight) {
+            if (img.getWidth() > img.getHeight()) {
                 return img.getScaledInstance(ImageMaxWidth, -1, Image.SCALE_SMOOTH);
             } else {
                 return img.getScaledInstance(-1, ImageMaxHeight, Image.SCALE_SMOOTH);
@@ -737,11 +737,9 @@ public class XEED {
 
         return img;
     }
-    
-    public static BufferedImage ImageToBuffered(Image img)
-    {
-        if (img instanceof BufferedImage)
-        {
+
+    public static BufferedImage ImageToBuffered(Image img) {
+        if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
 
@@ -840,7 +838,7 @@ public class XEED {
 
         if (IsTemplateLoaded(t)) {
             JOptionPane.showMessageDialog(null, "A template (" + t.GetName()
-                            + ") with the same ID is already loaded.\nTherefore the new template wasn't loaded.",
+                    + ") with the same ID is already loaded.\nTherefore the new template wasn't loaded.",
                     "Error while loading: " + t.GetName(), JOptionPane.ERROR_MESSAGE);
             return false;
         }

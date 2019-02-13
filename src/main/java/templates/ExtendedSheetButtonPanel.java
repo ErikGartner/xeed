@@ -13,21 +13,21 @@ import xeed.ExtendedSheetData;
  */
 public class ExtendedSheetButtonPanel extends javax.swing.JPanel {
 
-   public Character character;
-   private String itemIdentifier;
-   private String[] template;
-   private String name;
+    public Character character;
+    private String itemIdentifier;
+    private String[] template;
+    private String name;
 
-   public ExtendedSheetButtonPanel(Character c, String id, String[] data, String n) {
-      character = c;
-      template = data;
-      itemIdentifier = id;
-      name = n;
-      initComponents();
-      btnExtend.setText(name);
-   }
+    public ExtendedSheetButtonPanel(Character c, String id, String[] data, String n) {
+        character = c;
+        template = data;
+        itemIdentifier = id;
+        name = n;
+        initComponents();
+        btnExtend.setText(name);
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -60,19 +60,19 @@ public class ExtendedSheetButtonPanel extends javax.swing.JPanel {
    }// </editor-fold>//GEN-END:initComponents
 
    private void btnExtendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExtendActionPerformed
-      if (character == null) {
-         return;
-      }
+       if (character == null) {
+           return;
+       }
 
-      ExtendedSheetData esd = (ExtendedSheetData) character.extData.get(itemIdentifier);
-      if (esd == null) {
-         esd = new ExtendedSheetData();
-         character.extData.put(itemIdentifier, esd);
-      }
-      if (esd.form == null) {
-         esd.form = new ExtendedForm(character, itemIdentifier, template, name);
-      }
-      esd.form.setVisible(true);
+       ExtendedSheetData esd = (ExtendedSheetData) character.extData.get(itemIdentifier);
+       if (esd == null) {
+           esd = new ExtendedSheetData();
+           character.extData.put(itemIdentifier, esd);
+       }
+       if (esd.form == null) {
+           esd.form = new ExtendedForm(character, itemIdentifier, template, name);
+       }
+       esd.form.setVisible(true);
    }//GEN-LAST:event_btnExtendActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
 

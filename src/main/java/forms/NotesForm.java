@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * setting.java
  *
  * Created on 2010-nov-24, 12:27:56
@@ -35,106 +35,106 @@ import javax.swing.undo.UndoManager;
 
 public class NotesForm extends javax.swing.JFrame {
 
-   DefaultMutableTreeNode top;
-   public Note openFile = null;
-   private UndoManager undo = new UndoManager();
-   private Document doc;
+    DefaultMutableTreeNode top;
+    public Note openFile = null;
+    private UndoManager undo = new UndoManager();
+    private Document doc;
 
-   /**
-    * Creates new form setting
-    */
-   public NotesForm() {
+    /**
+     * Creates new form setting
+     */
+    public NotesForm() {
 
-      initComponents();
+        initComponents();
 
-      //Undo listeners
-      txtInformation.getDocument().addUndoableEditListener(new UndoableEditListener() {
-         @Override
-         public void undoableEditHappened(UndoableEditEvent evt) {
-            undo.addEdit(evt.getEdit());
-         }
-      });
-
-      txtInformation.getActionMap().put("Undo", new AbstractAction("Undo") {
-         @Override
-         public void actionPerformed(ActionEvent evt) {
-            try {
-               if (undo.canUndo()) {
-                  undo.undo();
-               }
-            } catch (CannotUndoException e) {
+        //Undo listeners
+        txtInformation.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent evt) {
+                undo.addEdit(evt.getEdit());
             }
-         }
-      });
+        });
 
-      txtInformation.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
-
-      txtInformation.getActionMap().put("Redo", new AbstractAction("Redo") {
-         @Override
-         public void actionPerformed(ActionEvent evt) {
-            try {
-               if (undo.canRedo()) {
-                  undo.redo();
-               }
-            } catch (CannotRedoException e) {
+        txtInformation.getActionMap().put("Undo", new AbstractAction("Undo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undo.canUndo()) {
+                        undo.undo();
+                    }
+                } catch (CannotUndoException e) {
+                }
             }
-         }
-      });
+        });
 
-      txtInformation.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
+        txtInformation.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/page_edit.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
-
-      treeCategory.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-      top = null;
-      top = new DefaultMutableTreeNode(XEED.rootNode);
-
-      DefaultTreeModel treeModel = new DefaultTreeModel(top);
-      treeCategory.setModel(treeModel);
-      treeCategory.setCellRenderer(new CustomRenderer(new javax.swing.ImageIcon(getClass().getResource("/page.png")),
-            new javax.swing.ImageIcon(getClass().getResource("/folder.png"))));
-
-      PurgeThenPrintInfo();
-
-   }
-
-   private void OpenNote() {
-
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
-      if (node == null) {
-         return;
-      }
-
-      Object nodeInfo = node.getUserObject();
-      Note s = (Note) nodeInfo;
-      if (!s.boolFolder) {
-         txtInformation.setText(s.szData);
-
-         TreeNode nodes[] = (TreeNode[]) node.getPath();
-         String szPath = "";
-         for (int x = 0; x < nodes.length; x++) {
-            szPath += ((Note) ((DefaultMutableTreeNode) nodes[x]).getUserObject()).szTitle;
-            if (x != nodes.length - 1) {
-               szPath += " > ";
+        txtInformation.getActionMap().put("Redo", new AbstractAction("Redo") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undo.canRedo()) {
+                        undo.redo();
+                    }
+                } catch (CannotRedoException e) {
+                }
             }
-         }
-         lblContent.setText("Viewing: " + szPath);
-         openFile = s;
-         txtInformation.setEnabled(true);
-         txtInformation.setCaretPosition(0);
-         undo.discardAllEdits();
-      }
+        });
 
-   }
+        txtInformation.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
 
-   @SuppressWarnings("unchecked")
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/page_edit.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
+
+        treeCategory.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        top = null;
+        top = new DefaultMutableTreeNode(XEED.rootNode);
+
+        DefaultTreeModel treeModel = new DefaultTreeModel(top);
+        treeCategory.setModel(treeModel);
+        treeCategory.setCellRenderer(new CustomRenderer(new javax.swing.ImageIcon(getClass().getResource("/page.png")),
+                new javax.swing.ImageIcon(getClass().getResource("/folder.png"))));
+
+        PurgeThenPrintInfo();
+
+    }
+
+    private void OpenNote() {
+
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
+        if (node == null) {
+            return;
+        }
+
+        Object nodeInfo = node.getUserObject();
+        Note s = (Note) nodeInfo;
+        if (!s.boolFolder) {
+            txtInformation.setText(s.szData);
+
+            TreeNode nodes[] = (TreeNode[]) node.getPath();
+            String szPath = "";
+            for (int x = 0; x < nodes.length; x++) {
+                szPath += ((Note) ((DefaultMutableTreeNode) nodes[x]).getUserObject()).szTitle;
+                if (x != nodes.length - 1) {
+                    szPath += " > ";
+                }
+            }
+            lblContent.setText("Viewing: " + szPath);
+            openFile = s;
+            txtInformation.setEnabled(true);
+            txtInformation.setCaretPosition(0);
+            undo.discardAllEdits();
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -280,188 +280,188 @@ public class NotesForm extends javax.swing.JFrame {
       pack();
    }// </editor-fold>//GEN-END:initComponents
 
-   public final void PurgeThenPrintInfo() {
+    public final void PurgeThenPrintInfo() {
 
-      /*
+        /*
        * Not much purging to do...
-       */
-      top = new DefaultMutableTreeNode(XEED.rootNode);
+         */
+        top = new DefaultMutableTreeNode(XEED.rootNode);
 
-      DefaultTreeModel treeModel = new DefaultTreeModel(top);
-      PrintChildren(XEED.rootNode.GetChildren(), top);
-      treeCategory.setModel(treeModel);
+        DefaultTreeModel treeModel = new DefaultTreeModel(top);
+        PrintChildren(XEED.rootNode.GetChildren(), top);
+        treeCategory.setModel(treeModel);
 
-   }
+    }
 
-   public void PrintChildren(Note[] s, DefaultMutableTreeNode parent) {
+    public void PrintChildren(Note[] s, DefaultMutableTreeNode parent) {
 
-      if (s == null) {
-         return;
-      }
+        if (s == null) {
+            return;
+        }
 
-      for (int x = 0; x < s.length; x++) {
-         DefaultMutableTreeNode node = new DefaultMutableTreeNode(s[x]);
-         parent.add(node);
-         PrintChildren(s[x].GetChildren(), node);
-      }
-   }
+        for (int x = 0; x < s.length; x++) {
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(s[x]);
+            parent.add(node);
+            PrintChildren(s[x].GetChildren(), node);
+        }
+    }
 
    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      Object nodeInfo = selectedNode.getUserObject();
-      Note selectedObj = (Note) nodeInfo;
-      if (!selectedObj.boolFolder || !selectedNode.getAllowsChildren()) {
-         Object[] set = selectedNode.getUserObjectPath();
-         selectedObj = (Note) set[set.length - 2];
-         selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
-      }
+       Object nodeInfo = selectedNode.getUserObject();
+       Note selectedObj = (Note) nodeInfo;
+       if (!selectedObj.boolFolder || !selectedNode.getAllowsChildren()) {
+           Object[] set = selectedNode.getUserObjectPath();
+           selectedObj = (Note) set[set.length - 2];
+           selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
+       }
 
-      Note s = new Note();
-      s.boolFolder = false;
-      s.szTitle = JOptionPane.showInputDialog(null, "Enter the name of the new file:", "Enter name",
-            JOptionPane.PLAIN_MESSAGE);
-      if (s.szTitle == null) {
-         return;
-      }
-      if (s.szTitle.isEmpty()) {
-         return;
-      }
+       Note s = new Note();
+       s.boolFolder = false;
+       s.szTitle = JOptionPane.showInputDialog(null, "Enter the name of the new file:", "Enter name",
+               JOptionPane.PLAIN_MESSAGE);
+       if (s.szTitle == null) {
+           return;
+       }
+       if (s.szTitle.isEmpty()) {
+           return;
+       }
 
-      selectedObj.AddChild(s);
+       selectedObj.AddChild(s);
 
-      DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(s);
-      new_node.setAllowsChildren(false);
-      selectedNode.add(new_node);
-      treeCategory.repaint();
-      treeCategory.updateUI();
+       DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(s);
+       new_node.setAllowsChildren(false);
+       selectedNode.add(new_node);
+       treeCategory.repaint();
+       treeCategory.updateUI();
    }//GEN-LAST:event_btnAddActionPerformed
 
    private void treeCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeCategoryMouseClicked
-      if (evt.getClickCount() != 2) {
-         return;
-      }
+       if (evt.getClickCount() != 2) {
+           return;
+       }
 
-      OpenNote();
+       OpenNote();
 
    }//GEN-LAST:event_treeCategoryMouseClicked
 
    private void btnAddFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFolderActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      Object nodeInfo = selectedNode.getUserObject();
-      Note selectedObj = (Note) nodeInfo;
-      if (!selectedObj.boolFolder || !selectedNode.getAllowsChildren()) {
-         Object[] set = selectedNode.getUserObjectPath();
-         selectedObj = (Note) set[set.length - 2];
-         selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
-      }
+       Object nodeInfo = selectedNode.getUserObject();
+       Note selectedObj = (Note) nodeInfo;
+       if (!selectedObj.boolFolder || !selectedNode.getAllowsChildren()) {
+           Object[] set = selectedNode.getUserObjectPath();
+           selectedObj = (Note) set[set.length - 2];
+           selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
+       }
 
-      Note s = new Note();
-      s.boolFolder = true;
-      s.szTitle = JOptionPane.showInputDialog(null, "Enter the name of the new folder:", "Enter name",
-            JOptionPane.PLAIN_MESSAGE);
-      if (s.szTitle == null) {
-         return;
-      }
-      if (s.szTitle.isEmpty()) {
-         return;
-      }
+       Note s = new Note();
+       s.boolFolder = true;
+       s.szTitle = JOptionPane.showInputDialog(null, "Enter the name of the new folder:", "Enter name",
+               JOptionPane.PLAIN_MESSAGE);
+       if (s.szTitle == null) {
+           return;
+       }
+       if (s.szTitle.isEmpty()) {
+           return;
+       }
 
-      selectedObj.AddChild(s);
+       selectedObj.AddChild(s);
 
-      DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(s);
-      new_node.setAllowsChildren(true);
-      selectedNode.add(new_node);
-      treeCategory.repaint();
-      treeCategory.updateUI();
+       DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(s);
+       new_node.setAllowsChildren(true);
+       selectedNode.add(new_node);
+       treeCategory.repaint();
+       treeCategory.updateUI();
 
    }//GEN-LAST:event_btnAddFolderActionPerformed
 
    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
 
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (selectedNode == top) { //Can't remove header.
-         return;
-      }
+       if (selectedNode == top) { //Can't remove header.
+           return;
+       }
 
-      Object childInfo = selectedNode.getUserObject();
-      Note childObj = (Note) childInfo;
+       Object childInfo = selectedNode.getUserObject();
+       Note childObj = (Note) childInfo;
 
-      DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
-      Object nodeInfo = parentNode.getUserObject();
-      Note parentObj = (Note) nodeInfo;
+       DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
+       Object nodeInfo = parentNode.getUserObject();
+       Note parentObj = (Note) nodeInfo;
 
-      if (openFile == childObj) {
-         openFile = null;
-         txtInformation.setText("");
-         txtInformation.setEnabled(false);
-      }
+       if (openFile == childObj) {
+           openFile = null;
+           txtInformation.setText("");
+           txtInformation.setEnabled(false);
+       }
 
-      parentObj.RemoveChild(childObj);
-      selectedNode.removeFromParent();
+       parentObj.RemoveChild(childObj);
+       selectedNode.removeFromParent();
 
-      treeCategory.repaint();
-      treeCategory.updateUI();
+       treeCategory.repaint();
+       treeCategory.updateUI();
 
    }//GEN-LAST:event_btnRemoveActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndNotes = null;
-      dispose();
+       XEED.hwndNotes = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void txtInformationKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInformationKeyReleased
-      if (openFile == null) {
-         return;
-      }
-      openFile.szData = txtInformation.getText();
+       if (openFile == null) {
+           return;
+       }
+       openFile.szData = txtInformation.getText();
    }//GEN-LAST:event_txtInformationKeyReleased
 
    private void btnRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenameActionPerformed
-      DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
-      if (selectedNode == null) {
-         return;
-      }
+       DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeCategory.getLastSelectedPathComponent();
+       if (selectedNode == null) {
+           return;
+       }
 
-      if (selectedNode == top) { //Can't remove header.
-         return;
-      }
+       if (selectedNode == top) { //Can't remove header.
+           return;
+       }
 
-      Object childInfo = selectedNode.getUserObject();
-      Note childObj = (Note) childInfo;
+       Object childInfo = selectedNode.getUserObject();
+       Note childObj = (Note) childInfo;
 
-      String szNewName = JOptionPane.showInputDialog(null, "Enter the new name:", "Rename " + childObj.szTitle,
-            JOptionPane.PLAIN_MESSAGE);
-      if (szNewName == null) {
-         return;
-      }
-      if (szNewName.isEmpty()) {
-         return;
-      }
+       String szNewName = JOptionPane.showInputDialog(null, "Enter the new name:", "Rename " + childObj.szTitle,
+               JOptionPane.PLAIN_MESSAGE);
+       if (szNewName == null) {
+           return;
+       }
+       if (szNewName.isEmpty()) {
+           return;
+       }
 
-      childObj.szTitle = szNewName;
+       childObj.szTitle = szNewName;
 
-      selectedNode.setUserObject(childObj);
+       selectedNode.setUserObject(childObj);
 
-      if (openFile == childObj) {
-         lblContent.setText("Viewing: " + childObj.szTitle);
-      }
+       if (openFile == childObj) {
+           lblContent.setText("Viewing: " + childObj.szTitle);
+       }
 
-      treeCategory.repaint();
-      treeCategory.updateUI();
+       treeCategory.repaint();
+       treeCategory.updateUI();
    }//GEN-LAST:event_btnRenameActionPerformed
 
    private void txtInformationKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInformationKeyPressed
@@ -469,48 +469,48 @@ public class NotesForm extends javax.swing.JFrame {
 
    private void treeCategoryKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_treeCategoryKeyReleased
 
-      if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
-         return;
-      }
+       if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
+           return;
+       }
 
-      OpenNote();
+       OpenNote();
 
    }//GEN-LAST:event_treeCategoryKeyReleased
 
-   class CustomRenderer extends DefaultTreeCellRenderer {
+    class CustomRenderer extends DefaultTreeCellRenderer {
 
-      Icon iconFolder;
-      Icon iconFile;
+        Icon iconFolder;
+        Icon iconFile;
 
-      public CustomRenderer(Icon file, Icon Folder) {
-         iconFolder = Folder;
-         iconFile = file;
-      }
+        public CustomRenderer(Icon file, Icon Folder) {
+            iconFolder = Folder;
+            iconFile = file;
+        }
 
-      @Override
-      public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
-            boolean leaf, int row, boolean hasFocus) {
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
 
-         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-         if (isFolder(value)) {
-            setIcon(iconFolder);
-         } else {
-            setIcon(iconFile);
-         }
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            if (isFolder(value)) {
+                setIcon(iconFolder);
+            } else {
+                setIcon(iconFile);
+            }
 
-         return this;
-      }
+            return this;
+        }
 
-      protected boolean isFolder(Object value) {
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-         Note nodeInfo = (Note) (node.getUserObject());
-         return nodeInfo.boolFolder;
-      }
-   }
+        protected boolean isFolder(Object value) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+            Note nodeInfo = (Note) (node.getUserObject());
+            return nodeInfo.boolFolder;
+        }
+    }
 
-   /*
+    /*
     * derp
-    */
+     */
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JButton btnAdd;
    private javax.swing.JButton btnAddFolder;

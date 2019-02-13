@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmColumn.java
  *
  * Created on 2011-jan-23, 13:28:53
@@ -30,107 +30,107 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ColumnForm extends javax.swing.JFrame implements TableModelListener {
 
-   private Vector jTableModel = new Vector(0, 2); // Model för tabellen
-   private Vector jTableHeader = new Vector(0);
-   private DefaultTableModel df;
+    private Vector jTableModel = new Vector(0, 2); // Model för tabellen
+    private Vector jTableHeader = new Vector(0);
+    private DefaultTableModel df;
 
-   public ColumnForm() {
+    public ColumnForm() {
 
-      initComponents();
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/table_gear.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
-      df = (DefaultTableModel) tblColumns.getModel();
-      LoadTemplates();
-      LoadColumns();
-      JustifyColumns();
-      tblColumns.getModel().addTableModelListener(this);
-   }
+        initComponents();
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/table_gear.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
+        df = (DefaultTableModel) tblColumns.getModel();
+        LoadTemplates();
+        LoadColumns();
+        JustifyColumns();
+        tblColumns.getModel().addTableModelListener(this);
+    }
 
-   public void LoadTemplates() {
-      comboType.removeAllItems();
-      for (int x = 0; x < XEED.templateDB.size(); x++) {
-         comboType.addItem(XEED.templateDB.get(x));
-      }
-   }
+    public void LoadTemplates() {
+        comboType.removeAllItems();
+        for (int x = 0; x < XEED.templateDB.size(); x++) {
+            comboType.addItem(XEED.templateDB.get(x));
+        }
+    }
 
-   public void JustifyColumns() {
+    public void JustifyColumns() {
 
-      tblColumns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      tblColumns.getColumnModel().getColumn(0).setResizable(false);
-      tblColumns.getColumnModel().getColumn(0).setPreferredWidth(20);
-      tblColumns.getColumnModel().getColumn(1).setPreferredWidth(tblColumns.getWidth() - 20);
+        tblColumns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblColumns.getColumnModel().getColumn(0).setResizable(false);
+        tblColumns.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tblColumns.getColumnModel().getColumn(1).setPreferredWidth(tblColumns.getWidth() - 20);
 
-   }
+    }
 
-   public void UpdateColumns() {
+    public void UpdateColumns() {
 
-      Template t = (Template) comboType.getSelectedItem();
-      String keys[] = t.GetAllTemplateKeys();
+        Template t = (Template) comboType.getSelectedItem();
+        String keys[] = t.GetAllTemplateKeys();
 
-      for (int x = 0; x < jTableModel.size(); x++) {
+        for (int x = 0; x < jTableModel.size(); x++) {
 
-         Vector o = (Vector) jTableModel.get(x);
-         t.SetColumnVisible(keys[x], (Boolean) o.get(0));
+            Vector o = (Vector) jTableModel.get(x);
+            t.SetColumnVisible(keys[x], (Boolean) o.get(0));
 
-      }
+        }
 
-      if (XEED.hwndMain.currentTemplate == t) {
-         XEED.hwndMain.PurgeThenPrintCharacters();
-      }
-   }
+        if (XEED.hwndMain.currentTemplate == t) {
+            XEED.hwndMain.PurgeThenPrintCharacters();
+        }
+    }
 
-   public void LoadColumns() {
+    public void LoadColumns() {
 
-      jTableModel.clear();
-      if (comboType.getItemCount() == 0) {
-         return;
-      }
+        jTableModel.clear();
+        if (comboType.getItemCount() == 0) {
+            return;
+        }
 
-      Template t = (Template) comboType.getSelectedItem();
-      String keys[] = t.GetAllTemplateKeys();
-      String names[] = t.GetAllTemplateNames();
+        Template t = (Template) comboType.getSelectedItem();
+        String keys[] = t.GetAllTemplateKeys();
+        String names[] = t.GetAllTemplateNames();
 
-      for (int x = 0; x < keys.length; x++) {
+        for (int x = 0; x < keys.length; x++) {
 
-         Vector o = new Vector(0);
-         o.add(t.IsToShowColumn(keys[x]));
-         o.add(names[x]);
-         jTableModel.add(o);
+            Vector o = new Vector(0);
+            o.add(t.IsToShowColumn(keys[x]));
+            o.add(names[x]);
+            jTableModel.add(o);
 
-      }
+        }
 
-      df.fireTableDataChanged();
+        df.fireTableDataChanged();
 
-   }
+    }
 
-   @Override
-   public void tableChanged(TableModelEvent e) {
-      if (e.getType() != TableModelEvent.UPDATE) {
-         return;
-      }
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType() != TableModelEvent.UPDATE) {
+            return;
+        }
 
-      if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
-         return;
-      }
+        if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
+            return;
+        }
 
-      if (tblColumns.getRowCount() == 0) {
-         return;
-      }
+        if (tblColumns.getRowCount() == 0) {
+            return;
+        }
 
-      UpdateColumns();
-   }
+        UpdateColumns();
+    }
 
-   /**
-    * This method is called from within the constructor to initialize the form.
-    * WARNING: Do NOT modify this code. The content of this method is always
-    * regenerated by the Form Editor.
-    */
-   @SuppressWarnings("unchecked")
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -217,21 +217,21 @@ public class ColumnForm extends javax.swing.JFrame implements TableModelListener
    }// </editor-fold>//GEN-END:initComponents
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.ReadWriteOptions(true);
-      XEED.hwndColumns = null;
-      super.dispose();
+       XEED.ReadWriteOptions(true);
+       XEED.hwndColumns = null;
+       super.dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void tblColumnsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblColumnsPropertyChange
    }//GEN-LAST:event_tblColumnsPropertyChange
 
    private void comboTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTypeActionPerformed
-      LoadColumns();
+       LoadColumns();
    }//GEN-LAST:event_comboTypeActionPerformed
 
-   /**
-    * @param args the command line arguments
-    */
+    /**
+     * @param args the command line arguments
+     */
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JComboBox comboType;
    private javax.swing.JScrollPane jScrollPane1;

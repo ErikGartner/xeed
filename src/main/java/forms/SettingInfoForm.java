@@ -17,26 +17,26 @@ import javax.imageio.ImageIO;
  */
 public class SettingInfoForm extends javax.swing.JFrame {
 
-   public SettingInfoForm() {
+    public SettingInfoForm() {
 
-      initComponents();
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/world.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/world.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      lblRevision.setText("Revision: " + XEED.lngSettingRevision + " (" + XEED.szLastSaved + ")");
-      txtName.setText(XEED.szSettingName);
-      txtThemes.setText(XEED.szThemes);
-      txtOutline.setText(XEED.szOutline);
+        lblRevision.setText("Revision: " + XEED.lngSettingRevision + " (" + XEED.szLastSaved + ")");
+        txtName.setText(XEED.szSettingName);
+        txtThemes.setText(XEED.szThemes);
+        txtOutline.setText(XEED.szOutline);
 
-   }
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -136,20 +136,20 @@ public class SettingInfoForm extends javax.swing.JFrame {
    }// </editor-fold>//GEN-END:initComponents
 
    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
-      XEED.SetSettingTitle(txtName.getText());
+       XEED.SetSettingTitle(txtName.getText());
    }//GEN-LAST:event_txtNameKeyReleased
 
    private void txtThemesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtThemesKeyReleased
-      XEED.szThemes = txtThemes.getText();
+       XEED.szThemes = txtThemes.getText();
    }//GEN-LAST:event_txtThemesKeyReleased
 
    private void txtOutlineKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutlineKeyReleased
-      XEED.szOutline = txtOutline.getText();
+       XEED.szOutline = txtOutline.getText();
    }//GEN-LAST:event_txtOutlineKeyReleased
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      XEED.hwndSettingInfo = null;
-      dispose();
+       XEED.hwndSettingInfo = null;
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -61,7 +61,7 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
     }
 
     public void InitiateGraph(Character[] cs, Template[] templates, Color[] colors, String[] picture_keys,
-                              String[] extra_keys) {
+            String[] extra_keys) {
 
         Map<CharacterNode, Icon> iconMap = new HashMap<CharacterNode, Icon>();
 
@@ -116,7 +116,6 @@ public class GenealogyGraphPanel extends javax.swing.JPanel {
 
         //Skriva en anpassad metod för att bestämma platser.
         //använd treeLayout.setLocation();
-
         vv = new VisualizationViewer<CharacterNode, Integer>(treeLayout);
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line());
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());

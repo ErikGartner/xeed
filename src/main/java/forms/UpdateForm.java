@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmUpdate.java
  *
  * Created on 2011-apr-05, 14:18:36
@@ -31,144 +31,144 @@ import javax.swing.JOptionPane;
  */
 public class UpdateForm extends javax.swing.JFrame {
 
-   private String URL;
+    private String URL;
 
-   public UpdateForm() {
-      initComponents();
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/drive_web.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+    public UpdateForm() {
+        initComponents();
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/drive_web.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-   }
+    }
 
-   private void CreateMain() {
+    private void CreateMain() {
 
-      if (XEED.hwndMain == null) {
-         XEED.hwndMain = new MainForm();
-         XEED.hwndMain.initMain();
-      }
+        if (XEED.hwndMain == null) {
+            XEED.hwndMain = new MainForm();
+            XEED.hwndMain.initMain();
+        }
 
-      if (XEED.hwndNotifier == null) {
-         XEED.hwndNotifier = new Notifier();
-      }
+        if (XEED.hwndNotifier == null) {
+            XEED.hwndNotifier = new Notifier();
+        }
 
-   }
+    }
 
-   public void CheckForUpdates(boolean verbose) {
+    public void CheckForUpdates(boolean verbose) {
 
-      String szData = XEED.DownloadURLToString(XEED.szUpdateURL);
-      boolean betaData = false;
-      if (szData.isEmpty()) {
-         if (verbose) {
-            JOptionPane.showMessageDialog(null, "An error occured while checking for updates.", "Error",
-                  JOptionPane.ERROR_MESSAGE);
-         }
-         return;
-      }
-
-      long lngLatestBuild = Long.parseLong(XEED.GetElement(szData, Constants.UPDATE_VERSION, false));
-
-      if (XEED.boolUpdateToBeta) {
-         String szBetaUpdate = XEED.DownloadURLToString(XEED.szDevUpdateURL);
-         if (!szBetaUpdate.isEmpty()) {
-            if (Long.parseLong(XEED.GetElement(szBetaUpdate, Constants.UPDATE_VERSION, false)) > lngLatestBuild) {
-               lngLatestBuild = Long.parseLong(XEED.GetElement(szBetaUpdate, Constants.UPDATE_VERSION, false));
-               szData = szBetaUpdate;
-               betaData = true;
-            }
-         }
-      }
-
-      if (XEED.lngBuild > lngLatestBuild) {
-         if (verbose) {
-            JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!", "Up-to-date",
-                  JOptionPane.INFORMATION_MESSAGE);
-         }
-         return;
-      }
-
-      if (XEED.lngBuild == lngLatestBuild) {
-
-         if (!XEED.DeveloperMode) { //Du har samma version och är inte en beta.
+        String szData = XEED.DownloadURLToString(XEED.szUpdateURL);
+        boolean betaData = false;
+        if (szData.isEmpty()) {
             if (verbose) {
-               JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!",
-                     "Up-to-date", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An error occured while checking for updates.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
             return;
-         }
+        }
 
-         if (betaData && XEED.DeveloperMode) { //Du är beta och senaste versionen är beta
+        long lngLatestBuild = Long.parseLong(XEED.GetElement(szData, Constants.UPDATE_VERSION, false));
+
+        if (XEED.boolUpdateToBeta) {
+            String szBetaUpdate = XEED.DownloadURLToString(XEED.szDevUpdateURL);
+            if (!szBetaUpdate.isEmpty()) {
+                if (Long.parseLong(XEED.GetElement(szBetaUpdate, Constants.UPDATE_VERSION, false)) > lngLatestBuild) {
+                    lngLatestBuild = Long.parseLong(XEED.GetElement(szBetaUpdate, Constants.UPDATE_VERSION, false));
+                    szData = szBetaUpdate;
+                    betaData = true;
+                }
+            }
+        }
+
+        if (XEED.lngBuild > lngLatestBuild) {
             if (verbose) {
-               JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!",
-                     "Up-to-date", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!", "Up-to-date",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
             return;
-         }
+        }
 
-      }
+        if (XEED.lngBuild == lngLatestBuild) {
 
-      lblVersion.setText("XEED " + XEED.GetElement(szData, Constants.UPDATE_STRING_VERSION, false));
-      URL = XEED.GetElement(szData, Constants.UPDATE_URL, false);
-      lblUrl.setText(URL);
-      lblUrl.setToolTipText(URL);
-      txtDescription.setText(XEED.GetElement(szData, Constants.UPDATE_INFORMATION, false));
-      txtDescription.setCaretPosition(0);
-      lblDate.setText(XEED.GetElement(szData, Constants.UPDATE_DATE, false));
+            if (!XEED.DeveloperMode) { //Du har samma version och är inte en beta.
+                if (verbose) {
+                    JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!",
+                            "Up-to-date", JOptionPane.INFORMATION_MESSAGE);
+                }
+                return;
+            }
 
-      setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getWidth()) / 2, (int) (Toolkit
-            .getDefaultToolkit().getScreenSize().getHeight() - this.getHeight()) / 2);
-      setVisible(true);
+            if (betaData && XEED.DeveloperMode) { //Du är beta och senaste versionen är beta
+                if (verbose) {
+                    JOptionPane.showMessageDialog(null, "You are currently running the latests version of xeed!",
+                            "Up-to-date", JOptionPane.INFORMATION_MESSAGE);
+                }
+                return;
+            }
 
-   }
+        }
 
-   private boolean UpdateXEED() {
+        lblVersion.setText("XEED " + XEED.GetElement(szData, Constants.UPDATE_STRING_VERSION, false));
+        URL = XEED.GetElement(szData, Constants.UPDATE_URL, false);
+        lblUrl.setText(URL);
+        lblUrl.setToolTipText(URL);
+        txtDescription.setText(XEED.GetElement(szData, Constants.UPDATE_INFORMATION, false));
+        txtDescription.setCaretPosition(0);
+        lblDate.setText(XEED.GetElement(szData, Constants.UPDATE_DATE, false));
 
-      try {
+        setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getWidth()) / 2, (int) (Toolkit
+                .getDefaultToolkit().getScreenSize().getHeight() - this.getHeight()) / 2);
+        setVisible(true);
 
-         File updater = File.createTempFile("xeed_updater", ".jar");
+    }
 
-         BufferedInputStream in = new BufferedInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(
-               "xeed_updater.jar"));
-         FileOutputStream fos = new FileOutputStream(updater);
-         BufferedOutputStream bout = new BufferedOutputStream(fos, 4096);
+    private boolean UpdateXEED() {
 
-         byte data[] = new byte[4096];
-         int count = 0;
-         while ((count = in.read(data)) >= 0) {
-            bout.write(data, 0, count);
-            data = new byte[4096];
-         }
+        try {
 
-         bout.close();
-         fos.close();
-         in.close();
+            File updater = File.createTempFile("xeed_updater", ".jar");
 
-         Process ps = Runtime.getRuntime().exec(
-               new String[] {
-                     "java",
-                     "-jar",
-                     updater.getAbsolutePath(),
-                     URL,
-                     new File(MainForm.class.getProtectionDomain().getCodeSource().getLocation().toURI())
-                           .getAbsolutePath() });
-         //Process p = Runtime.getRuntime().exec(System.getProperties().getProperty("java.home") + "\\bin\\javaw.exe" + " -jar \"" + updater.getAbsolutePath() + "\" " + URL + " \"" + new File(frmMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath() + "\"");
-         System.exit(0);
-         return true;
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "An error occured while preparing updater.\n" + e, "Error",
-               JOptionPane.ERROR_MESSAGE);
-         CreateMain();
-         dispose();
-         return false;
-      }
+            BufferedInputStream in = new BufferedInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(
+                    "xeed_updater.jar"));
+            FileOutputStream fos = new FileOutputStream(updater);
+            BufferedOutputStream bout = new BufferedOutputStream(fos, 4096);
 
-   }
+            byte data[] = new byte[4096];
+            int count = 0;
+            while ((count = in.read(data)) >= 0) {
+                bout.write(data, 0, count);
+                data = new byte[4096];
+            }
 
-   @SuppressWarnings("unchecked")
+            bout.close();
+            fos.close();
+            in.close();
+
+            Process ps = Runtime.getRuntime().exec(
+                    new String[]{
+                        "java",
+                        "-jar",
+                        updater.getAbsolutePath(),
+                        URL,
+                        new File(MainForm.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                                .getAbsolutePath()});
+            //Process p = Runtime.getRuntime().exec(System.getProperties().getProperty("java.home") + "\\bin\\javaw.exe" + " -jar \"" + updater.getAbsolutePath() + "\" " + URL + " \"" + new File(frmMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath() + "\"");
+            System.exit(0);
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error occured while preparing updater.\n" + e, "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            CreateMain();
+            dispose();
+            return false;
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -263,28 +263,28 @@ public class UpdateForm extends javax.swing.JFrame {
    }// </editor-fold>//GEN-END:initComponents
 
    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-      if (!XEED.IsSettingEmpty()) {
-         int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
-               JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-         if (intRet == 0) {
-            if (!XEED.SaveSetting(false, true)) {
+       if (!XEED.IsSettingEmpty()) {
+           int intRet = JOptionPane.showOptionDialog(null, "Do you want to save the current setting?", "Save?",
+                   JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+           if (intRet == 0) {
+               if (!XEED.SaveSetting(false, true)) {
+                   return;
+               }
+           } else if (intRet == -1) {
                return;
-            }
-         } else if (intRet == -1) {
-            return;
-         }
-      }
-      UpdateXEED();
+           }
+       }
+       UpdateXEED();
    }//GEN-LAST:event_btnUpdateActionPerformed
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      CreateMain();
-      dispose();
+       CreateMain();
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
-   /*
+    /*
     * Derp
-    */
+     */
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JButton btnUpdate;
    private javax.swing.JScrollPane jScrollPane1;

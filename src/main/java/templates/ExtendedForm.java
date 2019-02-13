@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * frmExtended.java
  *
  * Created on 2010-nov-28, 19:12:02
@@ -29,128 +29,128 @@ import xeed.ExtendedSheetData;
  */
 public class ExtendedForm extends javax.swing.JFrame {
 
-   //TODO Fixa drag'n'drop
-   private Character characterHandle = null;
-   private Vector jTableModel = new Vector(0, 2); // Model fÃ¶r tabellen
-   private Vector jTableHeader = new Vector(0);
-   private DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-   private DefaultTableModel df = null;
-   private String identifier;
-   private String[] template;
+    //TODO Fixa drag'n'drop
+    private Character characterHandle = null;
+    private Vector jTableModel = new Vector(0, 2); // Model fÃ¶r tabellen
+    private Vector jTableHeader = new Vector(0);
+    private DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+    private DefaultTableModel df = null;
+    private String identifier;
+    private String[] template;
 
-   /**
-    * Creates new form frmExtended
-    */
-   public ExtendedForm(Character c, String id, String[] data, String name) {
+    /**
+     * Creates new form frmExtended
+     */
+    public ExtendedForm(Character c, String id, String[] data, String name) {
 
-      characterHandle = c;
-      identifier = id;
-      template = data;
-      initComponents();
+        characterHandle = c;
+        identifier = id;
+        template = data;
+        initComponents();
 
-      try {
-         ArrayList<Image> images = new ArrayList(0);
-         images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
-         images.add(ImageIO.read(this.getClass().getResource("/book_open.png")));
-         this.setIconImages(images);
-      } catch (IOException e) {
-      }
+        try {
+            ArrayList<Image> images = new ArrayList(0);
+            images.add(ImageIO.read(this.getClass().getResource("/icon.png")));
+            images.add(ImageIO.read(this.getClass().getResource("/book_open.png")));
+            this.setIconImages(images);
+        } catch (IOException e) {
+        }
 
-      jTableHeader.add("Property");
-      jTableHeader.add("Value");
+        jTableHeader.add("Property");
+        jTableHeader.add("Value");
 
-      df = new DefaultTableModel(jTableModel, jTableHeader) {
+        df = new DefaultTableModel(jTableModel, jTableHeader) {
 
-         Class[] types = new Class[] { java.lang.String.class, java.lang.String.class };
+            Class[] types = new Class[]{java.lang.String.class, java.lang.String.class};
 
-         @Override
-         public Class getColumnClass(int columnhandleCharacter) {
-            return types[columnhandleCharacter];
-         }
-      };
-      tblProperties.setModel(df);
-      df.fireTableStructureChanged();
-      setTitle(name + ": " + characterHandle.GetCharacterName());
-      LoadData();
-   }
+            @Override
+            public Class getColumnClass(int columnhandleCharacter) {
+                return types[columnhandleCharacter];
+            }
+        };
+        tblProperties.setModel(df);
+        df.fireTableStructureChanged();
+        setTitle(name + ": " + characterHandle.GetCharacterName());
+        LoadData();
+    }
 
-   public String[] GetArrayOfTableContent(int coloumn) {
+    public String[] GetArrayOfTableContent(int coloumn) {
 
-      if (tblProperties.getRowCount() == 0) {
-         return null;
-      }
+        if (tblProperties.getRowCount() == 0) {
+            return null;
+        }
 
-      String szContent[] = new String[tblProperties.getRowCount()];
+        String szContent[] = new String[tblProperties.getRowCount()];
 
-      for (int x = 0; x < tblProperties.getRowCount(); x++) {
-         szContent[x] = (String) tblProperties.getValueAt(x, coloumn);
-      }
-      return szContent;
+        for (int x = 0; x < tblProperties.getRowCount(); x++) {
+            szContent[x] = (String) tblProperties.getValueAt(x, coloumn);
+        }
+        return szContent;
 
-   }
+    }
 
-   public boolean SaveData() {
-      ExtendedSheetData esd = new ExtendedSheetData();
-      esd.Properties = GetArrayOfTableContent(0);
-      esd.Values = GetArrayOfTableContent(1);
+    public boolean SaveData() {
+        ExtendedSheetData esd = new ExtendedSheetData();
+        esd.Properties = GetArrayOfTableContent(0);
+        esd.Values = GetArrayOfTableContent(1);
 
-      if (esd.Values == null || esd.Properties == null) {
-         characterHandle.extData.put(identifier, null);
-      } else {
-         characterHandle.extData.put(identifier, esd);
-      }
+        if (esd.Values == null || esd.Properties == null) {
+            characterHandle.extData.put(identifier, null);
+        } else {
+            characterHandle.extData.put(identifier, esd);
+        }
 
-      Character[] affectedcharacters = new Character[1];
-      affectedcharacters[0] = characterHandle;
-      XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
-      return true;
-   }
+        Character[] affectedcharacters = new Character[1];
+        affectedcharacters[0] = characterHandle;
+        XEED.hwndNotifier.FireUpdate(affectedcharacters, false, false, false, false, false, true, false, false, false);
+        return true;
+    }
 
-   public boolean LoadData() {
+    public boolean LoadData() {
 
-      jTableModel.clear();
-      ExtendedSheetData esd = (ExtendedSheetData) characterHandle.extData.get(identifier);
-      if (esd == null) {
-         return true;
-      }
+        jTableModel.clear();
+        ExtendedSheetData esd = (ExtendedSheetData) characterHandle.extData.get(identifier);
+        if (esd == null) {
+            return true;
+        }
 
-      if (esd.Properties.length != esd.Values.length) {
-         JOptionPane.showMessageDialog(null, "Error, corrupt/missing data in extended sheet.", "Error",
-               JOptionPane.ERROR_MESSAGE);
-         return false;
-      }
+        if (esd.Properties.length != esd.Values.length) {
+            JOptionPane.showMessageDialog(null, "Error, corrupt/missing data in extended sheet.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-      try {
+        try {
 
-         for (int x = 0; x < esd.Properties.length; x++) {
-            Vector o = new Vector(0);
-            o.add(esd.Properties[x]);
-            o.add(esd.Values[x]);
-            jTableModel.add(o);
-         }
+            for (int x = 0; x < esd.Properties.length; x++) {
+                Vector o = new Vector(0);
+                o.add(esd.Properties[x]);
+                o.add(esd.Values[x]);
+                jTableModel.add(o);
+            }
 
-      } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "Error when loading the character!", "Error", JOptionPane.ERROR_MESSAGE);
-         return false;
-      }
-      df.fireTableDataChanged();
-      return true;
-   }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error when loading the character!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        df.fireTableDataChanged();
+        return true;
+    }
 
-   private String padRight(String s, int n) {
-      return String.format("%1$-" + n + "s", s);
-   }
+    private String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+    }
 
-   public void HandlePopUpRequest(MouseEvent evt) {
+    public void HandlePopUpRequest(MouseEvent evt) {
 
-      if (!evt.isPopupTrigger()) {
-         return;
-      }
+        if (!evt.isPopupTrigger()) {
+            return;
+        }
 
-      mnuPop.show(evt.getComponent(), evt.getX(), evt.getY());
-   }
+        mnuPop.show(evt.getComponent(), evt.getX(), evt.getY());
+    }
 
-   @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
    private void initComponents() {
 
@@ -247,76 +247,76 @@ public class ExtendedForm extends javax.swing.JFrame {
 
    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
-      if (tblProperties.getCellEditor() != null) {
-         tblProperties.getCellEditor().stopCellEditing();
-      }
-      SaveData();
-      ExtendedSheetData esd = (ExtendedSheetData) characterHandle.extData.get(identifier);
-      if (esd != null) {
-         esd.form = null;
-      }
-      dispose();
+       if (tblProperties.getCellEditor() != null) {
+           tblProperties.getCellEditor().stopCellEditing();
+       }
+       SaveData();
+       ExtendedSheetData esd = (ExtendedSheetData) characterHandle.extData.get(identifier);
+       if (esd != null) {
+           esd.form = null;
+       }
+       dispose();
    }//GEN-LAST:event_formWindowClosing
 
    private void mnuAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAddActionPerformed
-      Vector o = new Vector(0);
-      o.add("");
-      o.add("");
-      if (tblProperties.getSelectedRow() != -1) {
-         df.insertRow(tblProperties.getSelectedRow(), o);
-      } else {
-         df.addRow(o);
-      }
-      df.fireTableDataChanged();
+       Vector o = new Vector(0);
+       o.add("");
+       o.add("");
+       if (tblProperties.getSelectedRow() != -1) {
+           df.insertRow(tblProperties.getSelectedRow(), o);
+       } else {
+           df.addRow(o);
+       }
+       df.fireTableDataChanged();
    }//GEN-LAST:event_mnuAddActionPerformed
 
    private void mnuAddTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAddTemplateActionPerformed
-      int sel = tblProperties.getSelectedRow();
-      for (int x = 0; x < template.length; x++) {
-         Vector o = new Vector(0);
-         o.add(template[x]);
-         o.add("");
-         if (sel != -1) {
-            df.insertRow(sel + x, o);
-         } else {
-            df.addRow(o);
-         }
-      }
-      df.fireTableDataChanged();
+       int sel = tblProperties.getSelectedRow();
+       for (int x = 0; x < template.length; x++) {
+           Vector o = new Vector(0);
+           o.add(template[x]);
+           o.add("");
+           if (sel != -1) {
+               df.insertRow(sel + x, o);
+           } else {
+               df.addRow(o);
+           }
+       }
+       df.fireTableDataChanged();
    }//GEN-LAST:event_mnuAddTemplateActionPerformed
 
    private void mnuRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRemoveActionPerformed
-      if (tblProperties.getSelectedRow() == -1) {
-         return;
-      }
+       if (tblProperties.getSelectedRow() == -1) {
+           return;
+       }
 
-      int intSelected[] = tblProperties.getSelectedRows();
-      for (int x = intSelected.length - 1; x >= 0; x--) {
-         jTableModel.remove(intSelected[x]);
-      }
-      df.fireTableDataChanged();
-      tblProperties.clearSelection();
+       int intSelected[] = tblProperties.getSelectedRows();
+       for (int x = intSelected.length - 1; x >= 0; x--) {
+           jTableModel.remove(intSelected[x]);
+       }
+       df.fireTableDataChanged();
+       tblProperties.clearSelection();
    }//GEN-LAST:event_mnuRemoveActionPerformed
 
    private void tblPropertiesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPropertiesMouseReleased
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_tblPropertiesMouseReleased
 
    private void tblPropertiesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPropertiesMousePressed
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_tblPropertiesMousePressed
 
    private void jScrollPane1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseReleased
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_jScrollPane1MouseReleased
 
    private void jScrollPane1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MousePressed
-      HandlePopUpRequest(evt);
+       HandlePopUpRequest(evt);
    }//GEN-LAST:event_jScrollPane1MousePressed
 
-   /*
+    /*
     * derp
-    */
+     */
    // Variables declaration - do not modify//GEN-BEGIN:variables
    private javax.swing.JScrollPane jScrollPane1;
    private javax.swing.JPopupMenu.Separator jSeparator1;
