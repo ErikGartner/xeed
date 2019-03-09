@@ -11,10 +11,10 @@ The goal of XEED is to help the game master to store and organize the vast amoun
 - Visualize your data with graphs.
 - An autosave function ensures your data is safe in case of crashes.
 - Optional autoupdate feature that updates to the latest version.
-- Export your setting information to HTML, PDF or TXT.
+- Export your setting information to HTML, PDF, TXT, or [dTree](https://github.com/ErikGartner/dtree) graphs.
 
 ## Usage
-The latests release can be found under ["releases"](https://github.com/ErikGartner/xeed-legacy/releases).
+The latests release can be found under ["releases"](https://github.com/ErikGartner/xeed/releases).
 
 ### Installation
 XEED uses maven for building executable jars with bundled dependencies.
